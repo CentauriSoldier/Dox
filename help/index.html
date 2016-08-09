@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		
+		<title>Dox Lua Code Viewer</title>
+		<meta name="description" content="Lua Module Viewer">
+		<meta name="author" content="Centauri Soldier https://github.com/CentauriSoldier">	  
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="shortcut icon" href="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAEG0lEQVQ4EQEQBO/7AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHj5G0Zv/hD3b/8P/2//D/9v/w//b/4P/3L8E9GD8ykOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4+Rw8cP4Q9Xv4H2qL7jQgi+40IIvuNCCK8DIgcvwT53b5GUIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAefobNHD+EPFv/w//dPsWTAAAAAAAAAAAAAAAAAAAAABy/BThdfkZRAAAAAAAAAAAAAAAAAAAAAAAAAAAAHn5HSxw/RHtb/8P/2//D/95+hxAAAAAAAAAAAAAAAAAAAAAAHL8FOF1+RlEAAAAAAAAAAAAAAAAAAAAAAB89SIWcf0S43L8FONw/hDlc/wVsY3tOAYAAAAAAAAAAAAAAAAAAAAAcvwU4XX5GUQAAAAAAAAAAAAAAAAAAAAAAHf3HDRy/BTxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABy/BThdfkZRAAAAAAAAAAAAAAAAAAAAAAAd/ccNHL8FPEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHL8FOF1+RlEAAAAAAAAAAAAAAAAAAAAAAB39xw0cvwU8QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcvwU4XX5GUQAAAAAAAAAAAAAAAAAAAAAAHf3HDRy/BTxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABy/BThdfkZRAAAAAAAAAAAAAAAAAAAAAAAd/ccNHL8FPEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHL8FOF1+RlEAAAAAAAAAAAAAAAAAAAAAAB39xw0cvwU8QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcvwU4XX5GUQAAAAAAAAAAAAAAAAAAAAAAHj4HDJx/RPzdPsVFm//DxRv/w8Ub/8PFG//DxRv/w8Ub/8PFHH8EhRy/BPndfkZQgAAAAAAAAAAAAAAAAAAAAAAiu80CHL9E8tv/g//b/4P/2/+D/9v/g//b/4P/2/+D/9v/g//b/4P/3L9E9eC8ykQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKzbYAys3V8MrN1fDH35IFB2+hmbrN1fDKzdXwys3F8MsMlyAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAd/sZVHT7FqEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAhPAuFn72I25+9iNufvYjboHzKFRz/BWHcvwU04LzKDh+9iNufvYjbn72I26D8SscAAAAAAAAAABQheEBkjyb0AAAAABJRU5ErkJggg==">
+		<link rel="icon" href="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAEG0lEQVQ4EQEQBO/7AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHj5G0Zv/hD3b/8P/2//D/9v/w//b/4P/3L8E9GD8ykOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4+Rw8cP4Q9Xv4H2qL7jQgi+40IIvuNCCK8DIgcvwT53b5GUIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAefobNHD+EPFv/w//dPsWTAAAAAAAAAAAAAAAAAAAAABy/BThdfkZRAAAAAAAAAAAAAAAAAAAAAAAAAAAAHn5HSxw/RHtb/8P/2//D/95+hxAAAAAAAAAAAAAAAAAAAAAAHL8FOF1+RlEAAAAAAAAAAAAAAAAAAAAAAB89SIWcf0S43L8FONw/hDlc/wVsY3tOAYAAAAAAAAAAAAAAAAAAAAAcvwU4XX5GUQAAAAAAAAAAAAAAAAAAAAAAHf3HDRy/BTxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABy/BThdfkZRAAAAAAAAAAAAAAAAAAAAAAAd/ccNHL8FPEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHL8FOF1+RlEAAAAAAAAAAAAAAAAAAAAAAB39xw0cvwU8QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcvwU4XX5GUQAAAAAAAAAAAAAAAAAAAAAAHf3HDRy/BTxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABy/BThdfkZRAAAAAAAAAAAAAAAAAAAAAAAd/ccNHL8FPEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHL8FOF1+RlEAAAAAAAAAAAAAAAAAAAAAAB39xw0cvwU8QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcvwU4XX5GUQAAAAAAAAAAAAAAAAAAAAAAHj4HDJx/RPzdPsVFm//DxRv/w8Ub/8PFG//DxRv/w8Ub/8PFHH8EhRy/BPndfkZQgAAAAAAAAAAAAAAAAAAAAAAiu80CHL9E8tv/g//b/4P/2/+D/9v/g//b/4P/2/+D/9v/g//b/4P/3L9E9eC8ykQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKzbYAys3V8MrN1fDH35IFB2+hmbrN1fDKzdXwys3F8MsMlyAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAd/sZVHT7FqEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAhPAuFn72I25+9iNufvYjboHzKFRz/BWHcvwU04LzKDh+9iNufvYjbn72I26D8SscAAAAAAAAAABQheEBkjyb0AAAAABJRU5ErkJggg=="> 
+		
+	</head>
+
+	<body>		
+		<div id="maincontainer">
+			<div id="topsection">
+				<div class="innertube">
+					<h1>Dox Lua Code Viewer</h1>
+				</div>
+			</div>
+			<div id="contentwrapper">
+				<div id="contentcolumn">
+					<iframe id="module" name="module" src="dox/welcome.html"></iframe>
+				</div>
+			</div>
+			<div class="navmenu">
+				<nav class="menu">
+					<ul class="menu">
+						<li>
+							<a href="modules/dox.html" target="module">dox</a>
+							<ul class="menu">
+								<li><a href="modules/dox.html#dox.css.update" target="module">dox.css.update</a></li>
+								<li><a href="modules/dox.html#dox.parse.importBlockToModules" target="module">dox.parse.importBlockToModules</a></li>
+								<li><a href="modules/dox.html#dox.processDir" target="module">dox.processDir</a></li>
+								<li><a href="modules/dox.html#dox.processFile" target="module">dox.processFile</a></li>
+								<li><a href="modules/dox.html#getLocalPath" target="module">getLocalPath</a></li>
+								<li><a href="modules/dox.html#import" target="module">import</a></li>
+								<li><a href="modules/dox.html#writeOutput" target="module">writeOutput</a></li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="menu">
+						<li>
+							<a href="modules/dox.base64.html" target="module">dox.base64</a>
+							<ul class="menu">
+								<li><a href="modules/dox.base64.html#dox.base64.getData" target="module">dox.base64.getData</a></li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="menu">
+						<li>
+							<a href="modules/dox.css.html" target="module">dox.css</a>
+							<ul class="menu">
+								<li><a href="modules/dox.css.html#getParserCSS" target="module">getParserCSS</a></li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="menu">
+						<li>
+							<a href="modules/dox.html.html" target="module">dox.html</a>
+							<ul class="menu">
+								<li><a href="modules/dox.html.html#appendBody" target="module">appendBody</a></li>
+								<li><a href="modules/dox.html.html#dox.html.buildIndex" target="module">dox.html.buildIndex</a></li>
+								<li><a href="modules/dox.html.html#dox.html.buildModule" target="module">dox.html.buildModule</a></li>
+								<li><a href="modules/dox.html.html#dox.html.buildWelcome" target="module">dox.html.buildWelcome</a></li>
+								<li><a href="modules/dox.html.html#getAccordionList" target="module">getAccordionList</a></li>
+								<li><a href="modules/dox.html.html#parseLine" target="module">parseLine</a></li>
+								<li><a href="modules/dox.html.html#tryString" target="module">tryString</a></li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="menu">
+						<li>
+							<a href="modules/dox.parse.html" target="module">dox.parse</a>
+							<ul class="menu">
+								<li><a href="modules/dox.parse.html#blockToTable" target="module">blockToTable</a></li>
+								<li><a href="modules/dox.parse.html#createModuleEntry" target="module">createModuleEntry</a></li>
+								<li><a href="modules/dox.parse.html#dox.parse.getBlocks" target="module">dox.parse.getBlocks</a></li>
+								<li><a href="modules/dox.parse.html#dox.parse.getModuleCount" target="module">dox.parse.getModuleCount</a></li>
+								<li><a href="modules/dox.parse.html#dox.parse.importModuleInfo" target="module">dox.parse.importModuleInfo</a></li>
+								<li><a href="modules/dox.parse.html#dox.parse.processBlock" target="module">dox.parse.processBlock</a></li>
+								<li><a href="modules/dox.parse.html#dox.parse.sortModules" target="module">dox.parse.sortModules</a></li>
+								<li><a href="modules/dox.parse.html#getDefaultValue" target="module">getDefaultValue</a></li>
+								<li><a href="modules/dox.parse.html#getLineType" target="module">getLineType</a></li>
+								<li><a href="modules/dox.parse.html#parseModuleIDs" target="module">parseModuleIDs</a></li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="menu">
+						<li>
+							<a href="modules/dox.theme.html" target="module">dox.theme</a>
+							<ul class="menu">
+								<li><a href="modules/dox.theme.html#dox.theme.getColor" target="module">dox.theme.getColor</a></li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="menu">
+						<li>
+							<a href="modules/dox.util.html" target="module">dox.util</a>
+							<ul class="menu">
+								<li><a href="modules/dox.util.html#dox.util.fileFind" target="module">dox.util.fileFind</a></li>
+								<li><a href="modules/dox.util.html#dox.util.getOSType" target="module">dox.util.getOSType</a></li>
+								<li><a href="modules/dox.util.html#dox.util.interateChar" target="module">dox.util.interateChar</a></li>
+								<li><a href="modules/dox.util.html#dox.util.isEven" target="module">dox.util.isEven</a></li>
+								<li><a href="modules/dox.util.html#dox.util.tab" target="module">dox.util.tab</a></li>
+								<li><a href="modules/dox.util.html#dox.util.trim" target="module">dox.util.trim</a></li>
+							</ul>
+						</li>
+					</ul>
+				</nav>
+			</div>
+			<div id="footer">
+			</div>
+		</div>
+	</body>
+
+</html>

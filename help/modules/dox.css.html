@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		
+		<title>Dox: dox.css</title>
+		<meta name="description" content="Module page auto-generated for the dox.css module.">
+		<meta name="author" content="Dox auto-generator">
+		<link rel="stylesheet" type="text/css" href="../style.css">
+		<style>
+		.accordion {
+			-webkit-box-shadow: 0px 75px 35px -55px rgba(10, 30, 65, 0.6);
+			-moz-box-shadow: 0px 75px 35px -55px rgba(10, 30, 65, 0.6);
+			box-shadow: 0px 75px 35px -55px rgba(10, 30, 65, 0.6);
+			font-family: Arial, Helvetica, sans-serif;
+			border-color: #aaa;
+			border-style: solid;
+			border-width: 3px;
+			border-radius: 20px;
+			margin: 0 auto;
+			height: 310px;
+			width: calc(700px + 280px);
+		}
+		</style>
+		
+	</head>
+
+	<body>
+		<div id="maincontainer">
+			<div id="modulecontentwrapper">
+				<div id="modulecontentcolumn">
+					<div>
+						<h1 id="midisplayname">Dox.CSS
+							<span id="miversion">v0.0.7
+</span>
+						</h1>
+						<h2 id="miauthors">by Centauri Soldier
+</h2>
+						<h3 id="miwebsite"><a href="https://github.com/CentauriSoldier/Dox
+" class="link" target="_blank">https://github.com/CentauriSoldier/Dox
+</a></h3>
+						<div class="accordion">
+							<ul>
+								<li>
+									<input type="radio" name="select" class="accordion-select" checked />
+									<div class="accordion-title">
+										<span>Copyright</span>
+									</div>
+									<div class="accordion-content">
+										Copyright © 2016 Centauri Soldier
+
+									</div>
+									<div class="accordion-separator"></div>
+						</li>
+								<li>
+									<input type="radio" name="select" class="accordion-select" checked />
+									<div class="accordion-title">
+										<span>Description</span>
+									</div>
+									<div class="accordion-content">
+											<h2>Dox</h2>
+	<h3>The Simple Lua Documentation Generator</h3>	
+	<p>Dox is a light-weight script designed to parse crafted lua comments regarding modules and functions and output them to readable, sorted and linked HTML. Dox enables you to quickly and simply create documentation for your lua code without the need to install programs or to run anything other than the Dox script. In fact, it's so simple, you can have documentation in as few as 2 lines of code.</p>
+
+									</div>
+									<div class="accordion-separator"></div>
+						</li>
+								<li>
+									<input type="radio" name="select" class="accordion-select" checked />
+									<div class="accordion-title">
+										<span>Features</span>
+									</div>
+									<div class="accordion-content">
+										
+	<h3>Dox is Robust</h3>
+	<p>Dox is fine with you mixing up your code. Functions from different modules may be in one single file or you may even have a single module spread around different files. Dox is very forgiving in how you organize your modules. You could even have all your dox comments for multiple modules in a single file <i>(although such a practice is not likely to be desired or cenvenient, just meant as demonstration)</i>. Simply put, Dox loves your code no matter where it's at and how it's organized <i>(or unorganized, for that matter)</i>. Dox will sort it all out for you when it's processed. There's no need for you go out of your way to organize functions or modules a certain way. Organize them how you please and Dox will do the rest.</p>
+	<h3>Multiplatform</h3>
+	<p>Dox can be used on unix based systems or Windows without having to convert directory or file paths. Dox will auto-detect and convert paths as needed.</p>
+
+									</div>
+									<div class="accordion-separator"></div>
+						</li>
+								<li>
+									<input type="radio" name="select" class="accordion-select" checked />
+									<div class="accordion-title">
+										<span>License</span>
+									</div>
+									<div class="accordion-content">
+										<p>The MIT License (MIT)<br>
+<br>
+Copyright (c) 2016 Centauri Soldier<br>
+<br>
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:<br>
+<br>
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.<br>
+<br>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</p>
+
+									</div>
+									<div class="accordion-separator"></div>
+						</li>
+								<li>
+									<input type="radio" name="select" class="accordion-select" checked />
+									<div class="accordion-title">
+										<span>Planned Features</span>
+									</div>
+									<div class="accordion-content">
+										<ul>
+	<li>Allow themes to set images</li>
+	<li>Set return section in the html to show no return if none are listed.</li>
+	<li>Finish and port the new util filesystem function to 'os.lua' in the luax module</li>
+	<li>Allow Table Input for themes</li>
+	<li>Responsive CSS for menus</li>
+	<li>Force all menu items into the top menu if there only one module in the output</li>
+	<li>Dox menu item with home, usage and other useful pages</li>
+	<li>Add project info function (for all compiled modules);</li>
+	<li>ADD the ability to get HTML string only without needing to write a file</li>
+	<li>TODO - AddSupport for custom, external css ===>>> PUT INTO HTML HEAD <link rel="stylesheet" href="..dox.PageVars.CSSPathAndVersion.."></li>	
+	<li>Add a 'Custom' line type</li>	
+	<li>Add support for new lines after certain tags in the function block</li>
+	<li>Add Support for TODO, Current Features and Planned Feature</li>
+	<li>Add auto-css assignment if css tag is not present in file (using lua debug library to get directory of this file)</li>	
+	<li>More theme support.</li>
+</ul>
+
+									</div>
+									<div class="accordion-separator"></div>
+						</li>
+								<li>
+									<input type="radio" name="select" class="accordion-select" checked />
+									<div class="accordion-title">
+										<span>Todo</span>
+									</div>
+									<div class="accordion-content">
+										<ul>	
+	<li>Test wrapping block items in '&lt;pre&gt;' html tags</li>
+	<li>Auto-remove parantheses in function name before processing</li>
+	<li>Return the paramters/return as a table instead of a string (convert blockToTable to work for the html)</li>
+	<li>More awareness in function sorting</li>
+	<li>Put question marks where version info goes when the info is not available</li>
+	<li>Redo Block layout to be simpler</li>
+	<li>Fix HTML bug that occurs when module info is not present</li>
+	<li>Create css for inner--module html classes such as 'parameter'.</li>
+	<li>Create code glossary for the terms used within the dox code such as 'module', 'block', etc.</li>
+	<li>Allow multiple types in parameters for functions</li>
+	<li>Clean up css and html (get some help from someone who knows html/css well)</li>
+	<li>Fix the space-finding (%s) pattern matching attempt in gsub</li>
+	<li>Fix the top-right contentwrapper corner, it's cutting off part of the scroll bar</li>
+	<li>CONSIDER AUTO-CHECKING FOR LINKS AND ADDING THEM FOR THE 'getAccordionList()' method in dox.html</li>
+	<li>Deal with module name conflicts</li>
+	<li>Add CSS/HTML validation tags to the footer, update the footer with real data back to the github</li>
+	<li>Fix the width issue in the css #contentwrapper (it's currently using a hack)</li>
+	<li>Write a short guide showing how to add tags to the different block types (HIGH)</li>
+	<li>Create a LOVE-based GUI for making these blocks (LOW)</li>	
+	<li>Find out why 'funct' triggers an error (as it should) but 'function' does not when looking for an extra character on the 'func' tag LOW PRIORITY</li>
+	
+</ul>
+
+									</div>
+									<div class="accordion-separator"></div>
+						</li>
+								<li>
+									<input type="radio" name="select" class="accordion-select" checked />
+									<div class="accordion-title">
+										<span>Usage</span>
+									</div>
+									<div class="accordion-content">
+											<h2>Take a breath...</h2>
+	Now, I know this is a new way to document your code, but I've made it as painless as possible. Once you read this section, you'll be ready to start documenting and you'll see how simple Dox is to use.
+	<h2>Function Info Block</h2>
+		<p>
+		This is primary element of Dox that makes it work. In fact, without at least one function info block, Dox will not process the target module since there would be no information to process.
+		<br><br>
+		The function info block is wrapped in a multi-line lua comment whose start tag is <i><b>--<span>[</span>[!</b></i> and end tag is <i><b>!]<span>]</span></b></i>.						
+		</p>
+	<h3>Function Info Block Block Tags</h3>
+		<p>
+		Elements inside the function info block are designated by an "@" symbol directly followed by the desired tag and tag information.
+		<br>
+		Below is a list of currently usable tags for this block as well as their formatting and usage details.
+		</p>
+		<ul>
+			<li>Description Example Function Module Parameters Return Scope Usage</li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>		
+	<h2>Module Info Block</h2>
+		<p>
+		The module information is wrapped in a multiline lua comment whose start tag is <i><b>--<span>[</span>[</b><b>*</b></i> and end tag is <i><b>*</b></i><b>]<span>]</span></b>. The content of this block is displayed at the top of the module page within and accordion menu (the one you're using right now).
+		<br><br>
+		<b>Note:</b> Unlike (at least one) function info block, the module info block is <b>not</b> required. Dox will function just fine with or without the module info block; you may omit the entire thing if you wish. Additionaly, if you do choose to use the module info block, only one of the tags (listed below) are required: the 'module' tag is required if using the module info block although you may use one, all or none of the remaining tags (or anything in between).
+		<br><br>
+		Unlike the function info block, the module info block has <b>no</b> tags that are sensitive to spaces and new lines. This feature makes it very easy to use html with your module info block. As you can see, you're reading text right now that has been formatted within the comment block of the dox.lua file.
+		<br><br>
+		Within the block are tags. These tags start and end just like html tags do, with <i>&lt;tagname&gt;</i> as the start tag and <i>&lt;/tagname&gt;</i> as the end tag where <i>tagname</i> is the name of the tag. Below is a complete list of supported tags.
+		</p>
+		<ul>
+			<li>authors</li>
+			<li>copyright</li>			
+			<li>dependencies</li>
+			<li>description</li>
+			<li>features</li>
+			<li>email</li>
+			<li>license</li>
+			<li>moduleid<i>(required)</i></li>
+			<li>plannedfeatures</li>
+			<li>todo</li>
+			<li>usage</li>
+			<li>version</li>
+			<li>versionhistory</li>
+			<li>website</li>
+		</ul>
+		<h3>The moduleid Tag</h3>
+		<p>You may enter one to many items for the <i>'moduleid'</i> tag. For example, if your module name is <b><i>myClass</i></b> then you'd enter it exactly as the class name since the <i>'moduleid'</i> tag <b>is</b> case sensitive.; however, you can control how it's displayed at the top of the page. To include a display name, simply use a pipe (<b>|</b>) and type the display next like this <b><code>myClass|MyClass</code></b>.
+		<br><br>
+		If you have sub modules such as <b><i>myClass.otherStuff</i></b> and you'd like the module block for <b><i>myClass</i></b> to display on the <b><i>myClass.otherStuff</i></b> page, use a comma to indicate another module and simlpy add it the <i>'moduleid'</i> tag like so: <b><code>myClass|MyClass,myClass.otherStuff</code></b> and if you'd like a differnt display name for that module too, just add it in: <b><code>myClass|MyClass,myClass.otherStuff|MyClass.otherStuff</code></b>. It's that easy.
+		</p>
+	<h2>Special Characters</h2>
+		<p>The '@' symbol cannot be used in your text without escaping it since it is a special character that tells Dox where to start a line; however, you can escape it in your text using a backslash <i>(\)</i> and the '@' will be put there by Dox when processing is complete: E.g., @. Additionaly, any text inside free-format items (like authors, website, description, etc. as opposed to items like param, function, etc. that are more restricted) is treated like html including any html tags you may want to use. Of course, this means that you'll need to escape the '&lt;' and '&gt;' symbols in your text if you want them to be presented as-is.
+		<br><br>
+		Below is a complete list of special characters that need escaped to be displayed as themselves.
+		</p>
+		<br>
+		<ul>
+			<li>@</li>
+			<li>&gt;</li>
+			<li>&lt;</li>
+		</ul>
+
+									</div>
+									<div class="accordion-separator"></div>
+						</li>
+								<li>
+									<input type="radio" name="select" class="accordion-select" checked />
+									<div class="accordion-title">
+										<span>Version History</span>
+									</div>
+									<div class="accordion-content">
+										<ul>
+	<li>
+		<b>0.0.7</b>
+		<br>		
+		<p>Added the ability to allow a module block to be displayed for multiple modules as desired</p>
+		<p>Module names can now be displayed differently as desired.</p>
+	</li>
+	<li>
+		<b>0.0.6</b>
+		<br>
+		<p>Fixed a bug that was omitting the last entry of blocks.</p>		
+		<p>Added the ability for dox to normally and recursively scan directories and process all files at once.</p>
+	</li>
+	<li>
+		<b>0.0.5</b>
+		<br>
+		<p>Fixed a bug that allowed empty modules and empty blocks.</p>
+		<p>Reconfigured Start and End tags to be easier to use.</p>
+		<p>Reconfigured function blocks tags to be easier to use.</p>
+	</li>
+	<li>
+		<b>0.0.4</b>
+		<br>
+		<p>Added the binary module and included embeded images for the output.</p>
+		<p>Added the <i>Welcome.html</i> page.</p>		
+	</li>
+	<li>
+		<b>0.0.3</b>
+		<br>
+		<p>Moved from a single-page output to a multi-page one.</p>
+		<p>Added the Module Info panel for each module.</p>
+		<p>Output CSS to and external file (style.css).</p>
+	</li>
+	<li>
+		<b>0.0.2</b>
+		<br>
+		<p>Refactored the code and ported all logical functions to modules.</p>		
+	</li>	
+	<li>
+		<b>0.0.1</b>
+		<br>
+		<p>Created Dox in all its wonder...and despair.</p>
+	</li>
+</ul>
+
+									</div>
+									<div class="accordion-separator"></div>
+						</li>
+							</ul>
+						</div>
+					</div>
+					<br><br>
+					<div id="getParserCSS" class="innertubecontent"><h2 class="functionname">getParserCSS()</h2><span class="scope">local</span>
+					
+					<h3 class="blocklineheader">Description</h3>
+					<p class="blockdesc">Concatenates the Parser strings from the 'dox.Types' table. This is used in 'dox.css.update()'.</p>
+					
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>
