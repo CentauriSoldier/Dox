@@ -69,7 +69,11 @@ Within the block are tags. These tags start and end just like html tags do, with
 You may enter one to many items for the 'moduleid' tag. For example, if your module name is myClass then you'd enter it exactly as the class name since the 'moduleid' tag is case sensitive.; however, you can control how it's displayed at the top of the page. To include a display name, simply use a pipe (|) and type the display next like this myClass|MyClass.
 
 If you have sub modules such as myClass.otherStuff and you'd like the module block for myClass to display on the myClass.otherStuff page, use a comma to indicate another module and simlpy add it the 'moduleid' tag like so: myClass|MyClass,myClass.otherStuff and if you'd like a differnt display name for that module too, just add it in: myClass|MyClass,myClass.otherStuff|MyClass.otherStuff. It's that easy.
-Special Characters
+
+###Tag Content
+Tag text can be plain text and/or html.
+
+####Special Characters
 
 The '@' symbol cannot be used in your text without escaping it since it is a special character that tells Dox where to start a line; however, you can escape it in your text using a backslash (\) and the '@' will be put there by Dox when processing is complete: E.g., @. Additionaly, any text inside free-format items (like authors, website, description, etc. as opposed to items like param, function, etc. that are more restricted) is treated like html including any html tags you may want to use. Of course, this means that you'll need to escape the '<' and '>' symbols in your text if you want them to be presented as-is.
 
@@ -78,9 +82,6 @@ Below is a complete list of special characters that need escaped to be displayed
     @
     >
     <
-
-###Tag Content
-Tag text can be plain text and/or html.
 
 ###Give Me Space!
 Each tag **must** have a space after it before your text starts. Failing to provide a space will give unpredictable results.
