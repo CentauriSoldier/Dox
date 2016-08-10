@@ -1,5 +1,5 @@
 # Dox
-A Lua Documentation Generator Script
+####A Lua Documentation Generator Script
 
 ##How To Comment Your Code
 
@@ -29,13 +29,13 @@ Below is a list of currently usable tags for this block as well as their formatt
 **Return** and **Parameter** behave alittle differntly than the other tags in that they accept up to three input sections delimited by a space.
 
 #####The Parameter Tag
-First is the descriptive name*(required)*, then the type input*(required)* and a description of the input value(optional)*.
+First is the descriptive name*(required)*, then the type input*(required)* and a description of the input value*(optional)*.
 
 ######Example usage of a parameter tag.
     @param pInputFile string The path to the file dox reads.
 
 #####The Return Tag
-First is the descriptive name*(required)*, then the type returned*(required)* and a description of the returned value(optional)*.
+First is the descriptive name*(required)*, then the type returned*(required)* and a description of the returned value*(optional)*.
 
 ######Example usage of a return tag.
     @ret sPath string The local path from which dox is run.
@@ -66,9 +66,19 @@ Within the block are tags. These tags start and end just like html tags do, with
 
 ####The moduleid Tag
 
-You may enter one to many items for the 'moduleid' tag. For example, if your module name is myClass then you'd enter it exactly as the class name since the 'moduleid' tag is case sensitive.; however, you can control how it's displayed at the top of the page. To include a display name, simply use a pipe (|) and type the display next like this myClass|MyClass.
+You may enter one to many items for the 'moduleid' tag. For example, if your module name is myClass then you'd enter it exactly as the class name since the 'moduleid' tag is case sensitive.; however, you can control how it's displayed at the top of the page. To include a display name, simply use a pipe (|) and type the display next like this:
 
-If you have sub modules such as myClass.otherStuff and you'd like the module block for myClass to display on the myClass.otherStuff page, use a comma to indicate another module and simlpy add it the 'moduleid' tag like so: myClass|MyClass,myClass.otherStuff and if you'd like a differnt display name for that module too, just add it in: myClass|MyClass,myClass.otherStuff|MyClass.otherStuff. It's that easy.
+    myClass|MyClass.
+
+If you have sub modules such as myClass.otherStuff and you'd like the module block for myClass to display on the myClass.otherStuff page, use a comma to indicate another module and simlpy add it the 'moduleid' tag like so:
+
+    myClass|MyClass,myClass.otherStuff
+    
+And if you'd like a different display name for that module too, just add it in:
+
+    myClass|MyClass,myClass.otherStuff|MyClass.otherStuff.
+    
+It's that easy.
 
 ###Tag Content
 Tag text can be plain text and/or html.
@@ -96,7 +106,7 @@ Each tag **must** have a space after it before your text starts. Failing to prov
         @desc A version of the 'require()' function that uses the local path. Used to require the other local modules the 'dox.lua' file needs.
     !]]
 
-###Comment Your Module(s) if You Want **NOT REQUIRED**
+###Comment Your Module(s) if You Want *(NOT REQUIRED)*
     --[[*
     @authors Centauri Soldier
     @copyright Copyright © 2016 Centauri Soldier
