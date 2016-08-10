@@ -44,10 +44,10 @@ end
 @module dox.util
 @func dox.util.fileFind
 @desc Searches for file(s) based on the input.
-@param sDir string The directory in whoch to search. The type of path formatting is irrelevant. I.e., Both "C:\\MyDirectory" and "/MyDirectory" are valid formatting methods for this input.
-@param sFile string the file or file pattern to find.
+@param sDir string The directory in which to search. The type of path formatting is irrelevant. I.e., Both "C:\\MyDirectory" and "/MyDirectory" are valid formatting methods for this input.
+@param sFile string The file or file pattern to find.
 @param bRecursive boolean,nil If true, the function will search for the file/pattern recursively.
-@ret tFiles table A numerically-indexed table whose values are the path of the found item(s). If no items are found, an empty table is returned.
+@ret tFiles table A numerically-indexed table whose values are the paths of the found item(s). If no items are found, an empty table is returned.
 !]]
 function dox.util.fileFind(sDir, sFile, bRecursive)
 local tRet = {};

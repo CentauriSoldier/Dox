@@ -6,7 +6,9 @@
 	<h3>The Simple Lua Documentation Generator</h3>	
 	<p>Dox is a light-weight script designed to parse crafted lua comments regarding modules and functions and output them to readable, sorted and linked HTML. Dox enables you to quickly and simply create documentation for your lua code without the need to install programs or to run anything other than the Dox script. In fact, it's so simple, you can have documentation in as few as 2 lines of code.</p>
 @email
-@features	
+@features
+	<h3>No Dependencies</h3>
+	<p>Dox needs nothing but itself and your lua files in order to run correctly. No installing, no configuring, no mess.</p>
 	<h3>Dox is Robust</h3>
 	<p>Dox is fine with you mixing up your code. Functions from different modules may be in one single file or you may even have a single module spread around different files. Dox is very forgiving in how you organize your modules. You could even have all your dox comments for multiple modules in a single file <i>(although such a practice is not likely to be desired or cenvenient, just meant as demonstration)</i>. Simply put, Dox loves your code no matter where it's at and how it's organized <i>(or unorganized, for that matter)</i>. Dox will sort it all out for you when it's processed. There's no need for you go out of your way to organize functions or modules a certain way. Organize them how you please and Dox will do the rest.</p>
 	<h3>Multiplatform</h3>
@@ -80,17 +82,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		Below is a list of currently usable tags for this block as well as their formatting and usage details.
 		</p>
 		<ul>
-			<li>Description Example Function Module Parameters Return Scope Usage</li>
-			<li></li>
-			<li></li>
-			<li></li>
-			<li></li>
-			<li></li>
-			<li></li>
-			<li></li>
-			<li></li>
-			<li></li>
-			<li></li>
+			<li>Description</li>
+			<li>Example</li>
+			<li>Function</li>
+			<li>Module</li>
+			<li>Parameter</li>
+			<li>Return</li>
+			<li>Scope</li>
+			<li>Usage</li>			
 		</ul>		
 	<h2>Module Info Block</h2>
 		<p>

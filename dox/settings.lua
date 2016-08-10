@@ -37,6 +37,10 @@ dox.Markers = {
 	},
 };
 
+-- the module info id/name delimiters
+dox.ModuleDelimiter = ",";
+dox.ModuleInfoNameDelimiter = "|";
+
 dox.ModuleItems = {
 	authors = {
 		Display = "",
@@ -129,10 +133,6 @@ dox.SpecialChars = {
 		Temp = " __!!DOXGT!!__ ",
 	},
 };
-
--- the module info id/name delimiters
-dox.ModuleDelimiter = ",";
-dox.ModuleInfoNameDelimiter = "|";
 
 --[[TODO ADD THIS TO THE USAGE POTION OF THE MODULE INFO SECTION UNDER 'Customization'.
 How To Add A Type.
@@ -239,6 +239,8 @@ dox.Types = {
 		},
 	},
 };
+
+dox.Version = "0.0.7";
 
 --this has to be done to prevent the script from incorrectly looking at the marker code above
 for sIndex, tItem in pairs(dox.Markers) do
