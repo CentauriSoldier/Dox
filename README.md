@@ -1,6 +1,13 @@
 # Dox 0.0.7
 ####A Lua Documentation Generator Script
 
+##
+1. Download the **dox** folder from this repository and place it in your project.
+2. Require the dox module.
+
+
+    require('dox.dox');
+
 ##How To Comment Your Code
 
 ###Take a breath...
