@@ -29,7 +29,7 @@ The module information is wrapped in a multiline lua comment whose start tag is 
 
 Note: Unlike (at least one) function info block, the module info block is not required. Dox will function just fine with or without the module info block; you may omit the entire thing if you wish. Additionaly, if you do choose to use the module info block, only one of the tags (listed below) are required: the 'module' tag is required if using the module info block although you may use one, all or none of the remaining tags (or anything in between).
 
-Unlike the function info block, the module info block has no tags that are sensitive to spaces and new lines. This feature makes it very easy to use html with your module info block. As you can see, you're reading text right now that has been formatted within the comment block of the dox.lua file.
+Like the function info block, the module info block has no tags that are sensitive to spaces and new lines. This feature makes it very easy to use html with your module info block. As you can see, you're reading text right now that has been formatted within the comment block of the dox.lua file.
 
 Within the block are tags. These tags start and end just like html tags do, with <tagname> as the start tag and </tagname> as the end tag where tagname is the name of the tag. Below is a complete list of supported tags.
 
@@ -48,7 +48,7 @@ Within the block are tags. These tags start and end just like html tags do, with
     versionhistory
     website
 
-The moduleid Tag
+####The moduleid Tag
 
 You may enter one to many items for the 'moduleid' tag. For example, if your module name is myClass then you'd enter it exactly as the class name since the 'moduleid' tag is case sensitive.; however, you can control how it's displayed at the top of the page. To include a display name, simply use a pipe (|) and type the display next like this myClass|MyClass.
 
