@@ -52,7 +52,7 @@ First is the descriptive name*(required)*, then the type returned*(required)* an
 @ret sPath string The local path from which dox is run.
 ```
 ###Module Info Block
-The module information is wrapped in a multiline lua comment whose start tag is --[[* and end tag is *]]. The content of this block is displayed at the top of the module page within and accordion menu (the one you're using right now).
+The module information is wrapped in a multiline lua comment whose start tag is --[[* and end tag is *]]. The content of this block is displayed at the top of the module page within and accordion menu on the left of the page.
 
 Note: Unlike (at least one) function info block, the module info block is not required. Dox will function just fine with or without the module info block; you may omit the entire thing if you wish. Additionaly, if you do choose to use the module info block, only one of the tags (listed below) are required: the 'module' tag is required if using the module info block although you may use one, all or none of the remaining tags (or anything in between).
 
