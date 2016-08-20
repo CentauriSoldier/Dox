@@ -1,4 +1,4 @@
-# Dox 0.0.7
+# Dox 0.0.9
 ####A Lua Documentation Generator Script
 
 ##Setup
