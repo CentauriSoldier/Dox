@@ -96,7 +96,7 @@ Tag text can be plain text and/or html.
 
 ####Special Characters
 
-The '@' symbol cannot be used in your text without escaping it since it is a special character that tells Dox where to start a line; however, you can escape it in your text using a backslash (\) and the '@' will be put there by Dox when processing is complete: E.g., @. Additionaly, any text inside free-format items (like authors, website, description, etc. as opposed to items like param, function, etc. that are more restricted) is treated like html including any html tags you may want to use. Of course, this means that you'll need to escape the '<' and '>' symbols in your text if you want them to be presented as-is.
+The '@' symbol cannot be used in your text without escaping it since it is a special character that tells Dox where to start a line; however, you can escape it in your text using a backslash (\\) and the '@' will be put there by Dox when processing is complete: E.g., @. Additionaly, any text inside free-format items (like authors, website, description, etc. as opposed to items like param, function, etc. that are more restricted) is treated like html including any html tags you may want to use. Of course, this means that you'll need to escape the '<' and '>' symbols in your text if you want them to be presented as-is.
 
 Below is a complete list of special characters that need escaped to be displayed as themselves.
 
