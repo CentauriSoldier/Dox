@@ -133,9 +133,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 			<li>&gt;</li>
 			<li>&lt;</li>
 		</ul>
-@version 0.0.7
+@version 0.0.8
 @versionhistory
 <ul>
+	<li>
+		<b>0.0.8</b>
+		<br>
+		<p>Fixed a bug in the local 'import()' function.</p>
+	</li>
 	<li>
 		<b>0.0.7</b>
 		<br>		
@@ -207,7 +212,6 @@ sPath = sPath:gsub("@", ""):gsub("dox.lua", "");
 return sPath:sub(1, sPath:len() - 1)
 end
 
-
 --allows the loading of files relatively without the need for absolute paths
 --[[!
 @module dox
@@ -220,7 +224,8 @@ local function import(sFile)
 sPath = getLocalPath();
 
 --format the path to be suitable for the 'require()' function
-sPath:gsub("/", ".");
+sPath = sPath:gsub("\\", "."):gsub("/", ".");
+sFile = sFile:gsub("\\", "."):gsub("/", ".");
 
 --call it in
 require(sPath..'.'..sFile);
@@ -340,7 +345,17 @@ end
 !]]
 function dox.processFile(pInputFile, pOutDir, sTheme)
 local hInputFile = io.open(pInputFile, "r");
-
+	
+	--ensure the 'pOutDir' has a '/' on the end (for linux)
+	if package.config:sub(1,1) =="/" then
+	
+		if pOutDir:sub(pOutDir:len()) ~= "/" then
+		pOutDir = pOutDir.."/";
+		end
+		
+	end
+	
+	
 	if hInputFile then
 	
 		--ignore the module reset if called by 'processDir()'
@@ -433,7 +448,7 @@ local tFiles = dox.util.fileFind(sDir, "*.lua", bRecursive);
 	if tFiles then
 	--reset the modules table
 	dox.Modules = {};
-		
+			
 		for nIndex, pFile in pairs(tFiles) do
 		dox.processFile(pFile, pOutDir, sTheme);
 		end

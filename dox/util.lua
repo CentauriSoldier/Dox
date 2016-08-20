@@ -2,11 +2,20 @@ dox.util = {};
 
 --directory spacer (reset at the end of the file for windows systems)
 local _ = "/";
-local sOSType = "LINUX";
+local sOSType = "linux";
 local tFileMethods = {
-	["LINUX"] = {		
+	["linux"] = {
+		fileFind = function(sDir, sFile, bRecursive)
+		local sRecurs = " -maxdepth 1 ";
+		
+			if bRecursive then
+			sRecurs = "";
+			end
+		 
+		return 'find "'..sDir..'"'..sRecurs..'-name "'..sFile..'"'
+		end,
 	},
-	["WINDOWS"] = {
+	["windows"] = {
 		fileFind = function(sDir, sFile, bRecursive)
 		local sRecurs = "";
 		
@@ -15,7 +24,7 @@ local tFileMethods = {
 			end
 		
 		return 'dir "'..sDir.."\\"..sFile..'" /b'..sRecurs;
-		end,		
+		end,
 	},
 };
 
@@ -24,16 +33,16 @@ local tFileMethods = {
 @module dox.util
 @func dox.util.getOSType
 @desc Determines the operating system type the end-user if running.
-@ret sOSType string returns 'WINDOWS' if it is a Windows systems and 'LINUX' if it a unix-based system.
+@ret sOSType string returns 'windows' if it is a Windows systems and 'linux' if it a unix-based system.
 !]]
 function dox.util.getOSType()
 local sSlash = package.config:sub(1,1);
 
 	if sSlash == "\\" then
-	return "WINDOWS"
+	return "windows"
 	
 	elseif sSlash == "/" then
-	return "LINUX"
+	return "linux"
 		
 	end
 	
@@ -56,14 +65,14 @@ local nIndex = 0;
 	if type(sDir) == "string" and type(sFile) == "string" then
 		
 		--ensure the slashes are correct (for systems that use a linux separator '/' on Windows and vice versa)
-		if sOSType == "WINDOWS" then
+		if sOSType == "windows" then
 		sDir = sDir:gsub("/", "\\");
 		
-		elseif sOSType == "LINUX" then
+		elseif sOSType == "linux" then
 		sDir = sDir:gsub("\\", "/");
-		
+			
 		end
-
+	
 	--create the command
 	local sCommand = tFileMethods[sOSType].fileFind(sDir, sFile, bRecursive) 
 
@@ -79,12 +88,17 @@ local nIndex = 0;
 			end
 			
 			--add the path names to the files (if needed)
-			if not bRecursive then
+			if sOSType == "windows" then
 				
-				for nIndex, sFile in pairs(tRet) do
-				tRet[nIndex] = sDir.._..sFile;
+				if not bRecursive then
+				
+					for nIndex, sFile in pairs(tRet) do
+					tRet[nIndex] = sDir.._..sFile;
+					tRet[nIndex] = tRet[nIndex]:gsub("/", "\\");
+					end
+				
 				end
-			
+				
 			end
 			
 			--if the table has no files, return nil
