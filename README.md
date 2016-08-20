@@ -18,9 +18,9 @@ Now, I know this is a new way to document your code, but I've made it as painles
 ###Function Info Block
 This is the primary element of Dox that makes it work. In fact, without at least one function info block, Dox will not process the target module since there would be no information to process.
 
-The function info block is wrapped in a multi-line lua comment whose start tag is --[[! and end tag is !]].
-Function Info Block Block Tags
+The function info block is wrapped in a multi-line lua comment whose start tag is **--[[!** and end tag is **!]].**
 
+####Function Info Block Block Tags
 Elements inside the function info block are designated by an "@" symbol directly followed by the desired tag and tag information.
 
 Below is a list of currently usable tags for this block as well as their formatting and usage details. The tags are not case sensitive.
