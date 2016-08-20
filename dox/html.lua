@@ -459,7 +459,7 @@ function dox.html.buildModule(sModule)
 local tModule = dox.Modules[sModule];
 	
 	--set the page title
-	dox.PageVars.Title = "Dox: "..sModule;
+	--dox.PageVars.Title = "Dox: "..sModule;
 	--set the page description
 	dox.PageVars.Description = "Module page auto-generated for the "..sModule.." module.";
 	--set the author

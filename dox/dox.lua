@@ -9,12 +9,11 @@
 @features
 	<h3>Multi-platform</h3>
 	<p>Dox works with all major versions of Windows and Linux.</p>
+	<p>Dox can be used on unix based systems or Windows without having to convert directory or file paths. Dox will auto-detect and convert paths as needed.</p>
 	<h3>No Dependencies</h3>
 	<p>Dox needs nothing but itself and your lua files in order to run correctly. No installing, no configuring, no mess.</p>
 	<h3>Dox is Robust</h3>
-	<p>Dox is fine with you mixing up your code. Functions from different modules may be in one single file or you may even have a single module spread around different files. Dox is very forgiving in how you organize your modules. You could even have all your dox comments for multiple modules in a single file <i>(although such a practice is not likely to be desired or cenvenient, just meant as demonstration)</i>. Simply put, Dox loves your code no matter where it's at and how it's organized <i>(or unorganized, for that matter)</i>. Dox will sort it all out for you when it's processed. There's no need for you go out of your way to organize functions or modules a certain way. Organize them how you please and Dox will do the rest.</p>
-	<h3>Multiplatform</h3>
-	<p>Dox can be used on unix based systems or Windows without having to convert directory or file paths. Dox will auto-detect and convert paths as needed.</p>
+	<p>Dox is fine with you mixing up your code. Functions from different modules may be in one single file or you may even have a single module spread around different files. Dox is very forgiving in how you organize your modules. You could even have all your dox comments for multiple modules in a single file <i>(although such a practice is not likely to be desired or cenvenient, just meant as demonstration)</i>. Simply put, Dox loves your code no matter where it's at and how it's organized <i>(or unorganized, for that matter)</i>. Dox will sort it all out for you when it's processed. There's no need for you go out of your way to organize functions or modules a certain way. Organize them how you please and Dox will do the rest.</p>		
 @license <p>The MIT License (MIT)<br>
 <br>
 Copyright (c) 2016 Centauri Soldier<br>
