@@ -154,6 +154,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ```
 ###Generate Your Documentation
 Dox is very easy to use. Once you've commented your code appropriately, all you need are your scripts and an empty directory where Dox can output the html files.
+
+####Note:
+Dox will ***NOT*** create directories. Be sure the output directory exists or Dox will (silently) fail to output any files.
+
 ```lua
 dox.processDir(sPathToMyLuaFiles, sPathToTheOutputDirectory);
 ```
