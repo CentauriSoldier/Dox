@@ -23,7 +23,7 @@ The function info block is wrapped in a multi-line lua comment whose start tag i
 ####Function Info Block Block Tags
 Elements inside the function info block are designated by an "@" symbol directly followed by the desired tag and tag information.
 
-Below is a list of currently usable tags for this block as well as their formatting and usage details. The tags are not case sensitive.
+Below is a list of currently usable tags for this block as well as their formatting and usage details. The tags are **not** case sensitive.
 
     Description
     Example
