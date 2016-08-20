@@ -7,6 +7,8 @@
 	<p>Dox is a light-weight script designed to parse crafted lua comments regarding modules and functions and output them to readable, sorted and linked HTML. Dox enables you to quickly and simply create documentation for your lua code without the need to install programs or to run anything other than the Dox script. In fact, it's so simple, you can have documentation in as few as 2 lines of code.</p>
 @email
 @features
+	<h3>Multi-platform</h3>
+	<p>Dox with all major versions of Windows and Linux.</p>
 	<h3>No Dependencies</h3>
 	<p>Dox needs nothing but itself and your lua files in order to run correctly. No installing, no configuring, no mess.</p>
 	<h3>Dox is Robust</h3>
@@ -43,7 +45,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 </ul>
 @moduleid dox|Dox,dox.base64|Dox.Base64,dox.css|Dox.CSS,dox.html|Dox.HTML,dox.theme|Dox.Theme,dox.parse|Dox.Parse,dox.util|Dox.Util
 @todo
-<ul>	
+<ul>
+	<li>Add Mac Support</li>
 	<li>Test wrapping block items in '&lt;pre&gt;' html tags</li>
 	<li>Auto-remove parantheses in function name before processing</li>
 	<li>Return the paramters/return as a table instead of a string (convert blockToTable to work for the html)</li>
@@ -136,6 +139,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @version 0.0.8
 @versionhistory
 <ul>
+	<li>
+		<b>0.0.9</b>
+		<br>
+		<p>Added support for linux.</p>
+	</li>
 	<li>
 		<b>0.0.8</b>
 		<br>
