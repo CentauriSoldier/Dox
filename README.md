@@ -73,7 +73,7 @@ Within the block are tags. These tags start and end just like html tags do, with
 
 ####The moduleid Tag
 
-You may enter one to many items for the 'moduleid' tag. For example, if your module name is myClass then you'd enter it exactly as the class name since the 'moduleid' tag is case sensitive.; however, you can control how it's displayed at the top of the page. To include a display name, simply use a pipe (|) and type the display next like this:
+You may enter one to many items for the 'moduleid' tag. For example, if your module name is myClass then you'd enter it exactly as the class name since the 'moduleid' tag is case sensitive.; however, you can control how it's displayed at the top of the page. To include a display name, simply use a pipe (|) and type the display name next like this:
 
     myClass|MyClass.
 
