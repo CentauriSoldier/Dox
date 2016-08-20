@@ -42,7 +42,7 @@ First is the descriptive name*(required)*, then the type input*(required)* and a
 
 ######Example usage of a parameter tag.
 ```lua
-    @param pInputFile string The path to the file dox reads.
+@param pInputFile string The path to the file dox reads.
 ```
 #####The Return Tag
 First is the descriptive name*(required)*, then the type returned*(required)* and a description of the returned value*(optional)*.
@@ -79,21 +79,15 @@ Within the block are tags. These tags start and end just like html tags do, with
 
 You may enter one to many items for the 'moduleid' tag. For example, if your module name is myClass then you'd enter it exactly as the class name since the 'moduleid' tag is case sensitive.; however, you can control how it's displayed at the top of the page. To include a display name, simply use a pipe (|) and type the display name next like this:
 ```lua
---[[*
-    @moduleid myClass|MyClass
---*]]
+@moduleid myClass|MyClass
 ```
 If you have sub modules such as myClass.otherStuff and you'd like the module block for myClass to display on the myClass.otherStuff page, use a comma to indicate another module and simlpy add it the 'moduleid' tag like so:
 ```lua
-    --[[*
-    @moduleid myClass|MyClass,myClass.otherStuff
-    --*]]
+@moduleid myClass|MyClass,myClass.otherStuff
 ```
 And if you'd like a different display name for that module too, just add it in:
 ```lua
-    --[[*
-    @moduleid myClass|MyClass,myClass.otherStuff|MyClass.otherStuff
-    --*]]
+@moduleid myClass|MyClass,myClass.otherStuff|MyClass.otherStuff
 ```    
 It's that easy.
 
@@ -117,48 +111,48 @@ Each tag **must** have a space after it before your text starts. Failing to prov
 
 ###Comment a Function or Two
 ```lua
-    --[[!
-        @module dox
-        @func import
-        @scope local
-        @desc A version of the 'require()' function that uses the local path. Used to require the other local modules the 'dox.lua' file needs.
-    !]]
+--[[!
+@module dox
+@func import
+@scope local
+@desc A version of the 'require()' function that uses the local path. Used to require the other local modules the 'dox.lua' file needs.
+!]]
 ```
 ###Comment Your Module(s) if You Want *(NOT REQUIRED)*
 ```lua
-    --[[*
-    @authors Centauri Soldier
-    @copyright Copyright © 2016 Centauri Soldier
-    @description
-    	<h2>Dox</h2>
-    	<h3>The Simple Lua Documentation Generator</h3>	
-    	<p>Dox is a light-weight script designed to parse crafted lua comments regarding modules and functions and output them to readable, sorted and linked HTML. Dox enables you to quickly and simply create documentation for your lua code without the need to install programs or to run anything other than the Dox script. In fact, it's so simple, you can have documentation in as few as 2 lines of code.</p>
-    @license <p>The MIT License (MIT)<br>
-    <br>
-    Copyright (c) 2016 Centauri Soldier<br>
-    <br>
-    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:<br>
-    <br>
-    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.<br>
-    <br>
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-    </p>
-    @moduleid dox|Dox,dox.base64|Dox.Base64,dox.css|Dox.CSS,dox.html|Dox.HTML,dox.theme|Dox.Theme,dox.parse|Dox.Parse,dox.util|Dox.Util
-    @version 0.0.7
-    @versionhistory
-    <ul>
-    	<li>
-    		<b>0.0.1</b>
-    		<br>
-    		<p>Created Dox in all its wonder...and despair.</p>
-    	</li>
-    </ul>
-    @website https://github.com/CentauriSoldier/Dox
-    *]]
+--[[*
+@authors Centauri Soldier
+@copyright Copyright © 2016 Centauri Soldier
+@description
+	<h2>Dox</h2>
+	<h3>The Simple Lua Documentation Generator</h3>	
+	<p>Dox is a light-weight script designed to parse crafted lua comments regarding modules and functions and output them to readable, sorted and linked HTML. Dox enables you to quickly and simply create documentation for your lua code without the need to install programs or to run anything other than the Dox script. In fact, it's so simple, you can have documentation in as few as 2 lines of code.</p>
+@license <p>The MIT License (MIT)<br>
+<br>
+Copyright (c) 2016 Centauri Soldier<br>
+<br>
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:<br>
+<br>
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.<br>
+<br>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</p>
+@moduleid dox|Dox,dox.base64|Dox.Base64,dox.css|Dox.CSS,dox.html|Dox.HTML,dox.theme|Dox.Theme,dox.parse|Dox.Parse,dox.util|Dox.Util
+@version 0.0.7
+@versionhistory
+<ul>
+	<li>
+		<b>0.0.1</b>
+		<br>
+		<p>Created Dox in all its wonder...and despair.</p>
+	</li>
+</ul>
+@website https://github.com/CentauriSoldier/Dox
+*]]
 ```
 ###Generate Your Documentation
 Dox is very easy to use. Once you've commented your code appropriately, all you need are your scripts and an empty directory where Dox can output the html files.
 ```lua
-    dox.processDir(sPathToMyLuaFiles, sPathToTheOutputDirectory);
+dox.processDir(sPathToMyLuaFiles, sPathToTheOutputDirectory);
 ```
 That's it! Tada, you've got documentation!
