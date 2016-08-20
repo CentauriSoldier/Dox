@@ -6,7 +6,9 @@
 ####Require the dox module.
 
 
-    require('dox.dox');
+```lua
+require('dox.dox');
+```
 
 ##How To Comment Your Code
 
@@ -39,14 +41,16 @@ Below is a list of currently usable tags for this block as well as their formatt
 First is the descriptive name*(required)*, then the type input*(required)* and a description of the input value*(optional)*.
 
 ######Example usage of a parameter tag.
+```lua
     @param pInputFile string The path to the file dox reads.
-
+```
 #####The Return Tag
 First is the descriptive name*(required)*, then the type returned*(required)* and a description of the returned value*(optional)*.
 
 ######Example usage of a return tag.
-    @ret sPath string The local path from which dox is run.
-
+```lua
+@ret sPath string The local path from which dox is run.
+```
 ###Module Info Block
 The module information is wrapped in a multiline lua comment whose start tag is --[[* and end tag is *]]. The content of this block is displayed at the top of the module page within and accordion menu (the one you're using right now).
 
@@ -74,17 +78,23 @@ Within the block are tags. These tags start and end just like html tags do, with
 ####The moduleid Tag
 
 You may enter one to many items for the 'moduleid' tag. For example, if your module name is myClass then you'd enter it exactly as the class name since the 'moduleid' tag is case sensitive.; however, you can control how it's displayed at the top of the page. To include a display name, simply use a pipe (|) and type the display name next like this:
-
-    myClass|MyClass.
-
+```lua
+--[[*
+    @moduleid myClass|MyClass
+--*]]
+```
 If you have sub modules such as myClass.otherStuff and you'd like the module block for myClass to display on the myClass.otherStuff page, use a comma to indicate another module and simlpy add it the 'moduleid' tag like so:
-
-    myClass|MyClass,myClass.otherStuff
-    
+```lua
+    --[[*
+    @moduleid myClass|MyClass,myClass.otherStuff
+    --*]]
+```
 And if you'd like a different display name for that module too, just add it in:
-
-    myClass|MyClass,myClass.otherStuff|MyClass.otherStuff.
-    
+```lua
+    --[[*
+    @moduleid myClass|MyClass,myClass.otherStuff|MyClass.otherStuff
+    --*]]
+```    
 It's that easy.
 
 ###Tag Content
@@ -106,14 +116,16 @@ Each tag **must** have a space after it before your text starts. Failing to prov
 ##Example Usage
 
 ###Comment a Function or Two
+```lua
     --[[!
         @module dox
         @func import
         @scope local
         @desc A version of the 'require()' function that uses the local path. Used to require the other local modules the 'dox.lua' file needs.
     !]]
-
+```
 ###Comment Your Module(s) if You Want *(NOT REQUIRED)*
+```lua
     --[[*
     @authors Centauri Soldier
     @copyright Copyright © 2016 Centauri Soldier
@@ -143,10 +155,10 @@ Each tag **must** have a space after it before your text starts. Failing to prov
     </ul>
     @website https://github.com/CentauriSoldier/Dox
     *]]
-
+```
 ###Generate Your Documentation
 Dox is very easy to use. Once you've commented your code appropriately, all you need are your scripts and an empty directory where Dox can output the html files.
-
+```lua
     dox.processDir(sPathToMyLuaFiles, sPathToTheOutputDirectory);
-
+```
 That's it! Tada, you've got documentation!
