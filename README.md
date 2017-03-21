@@ -38,14 +38,14 @@ Below is a list of currently usable tags for this block as well as their formatt
 **Return** and **Parameter** behave a little differently than the other tags in that they accept up to three input sections delimited by a space.
 
 ##### The Parameter Tag
-First is the descriptive name *(required)* , then the type input *(required)* and a description of the input value *(optional)*.
+First is the descriptive name *(required)*, then the type input *(required)* and a description of the input value *(optional)*.
 
 ###### Example usage of a parameter tag.
 ```lua
 @param pInputFile string The path to the file dox reads.
 ```
 ##### The Return Tag
-First is the descriptive name*(required)*, then the type returned *(required)* and a description of the returned value *(optional)*.
+First is the descriptive name *(required)*, then the type returned *(required)* and a description of the returned value *(optional)*.
 
 ###### Example usage of a return tag.
 ```lua
