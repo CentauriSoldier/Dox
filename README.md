@@ -1,26 +1,26 @@
 # Dox 0.0.9
-####A Lua Documentation Generator Script
+#### A Lua Documentation Generator Script
 
-##Setup
-####Download the **dox** folder from this repository and place it in your project.
-####Require the dox module.
+## Setup
+#### Download the **dox** folder from this repository and place it in your project.
+#### Require the dox module.
 
 
 ```lua
 require('dox.dox');
 ```
 
-##How To Comment Your Code
+## How To Comment Your Code
 
-###Take a breath...
+### Take a breath...
 Now, I know this is a new way to document your code, but I've made it as painless as possible. Once you read this section, you'll be ready to start documenting and you'll see how simple Dox is to use.
 
-###Function Info Block
+### Function Info Block
 This is the primary element of Dox that makes it work. In fact, without at least one function info block, Dox will not process the target module since there would be no information to process.
 
 The function info block is wrapped in a multi-line lua comment whose start tag is **--[[!** and end tag is **!]].**
 
-####Function Info Block Block Tags
+#### Function Info Block Block Tags
 Elements inside the function info block are designated by an "@" symbol directly followed by the desired tag and tag information.
 
 Below is a list of currently usable tags for this block as well as their formatting and usage details. The tags are **not** case sensitive.
@@ -34,24 +34,24 @@ Below is a list of currently usable tags for this block as well as their formatt
     Scope
     Usage
 
-####Special Tags
+#### Special Tags
 **Return** and **Parameter** behave a little differently than the other tags in that they accept up to three input sections delimited by a space.
 
-#####The Parameter Tag
+##### The Parameter Tag
 First is the descriptive name*(required)*, then the type input*(required)* and a description of the input value*(optional)*.
 
-######Example usage of a parameter tag.
+###### Example usage of a parameter tag.
 ```lua
 @param pInputFile string The path to the file dox reads.
 ```
-#####The Return Tag
+##### The Return Tag
 First is the descriptive name*(required)*, then the type returned*(required)* and a description of the returned value*(optional)*.
 
-######Example usage of a return tag.
+###### Example usage of a return tag.
 ```lua
 @ret sPath string The local path from which dox is run.
 ```
-###Module Info Block
+### Module Info Block
 The module information is wrapped in a multiline lua comment whose start tag is --[[* and end tag is *]]. The content of this block is displayed at the top of the module page within and accordion menu on the left of the page.
 
 Note: Unlike (at least one) function info block, the module info block is not required. Dox will function just fine with or without the module info block; you may omit the entire thing if you wish. Additionaly, if you do choose to use the module info block, only one of the tags (listed below) are required: the 'module' tag is required if using the module info block although you may use one, all or none of the remaining tags (or anything in between).
