@@ -94,7 +94,7 @@ It's that easy.
 ### Tag Content
 Tag text can be plain text and/or html.
 
-####Special Characters
+#### Special Characters
 
 The '@' symbol cannot be used in your text without escaping it since it is a special character that tells Dox where to start a line; however, you can escape it in your text using a backslash (\\) and the '@' will be put there by Dox when processing is complete.
 
@@ -161,4 +161,5 @@ Dox will ***NOT*** create directories. Be sure the output directory exists or Do
 ```lua
 dox.processDir(sPathToMyLuaFiles, sPathToTheOutputDirectory);
 ```
-That's it! Tada, you've got documentation!
+#### That's it!
+Tada, you've got documentation!
