@@ -75,7 +75,7 @@ Within the block are tags. These tags start and end just like html tags do, with
     versionhistory
     website
 
-####The moduleid Tag
+#### The moduleid Tag
 
 You may enter one to many items for the 'moduleid' tag. For example, if your module name is myClass then you'd enter it exactly as the class name since the 'moduleid' tag is case sensitive.; however, you can control how it's displayed at the top of the page. To include a display name, simply use a pipe (|) and type the display name next like this:
 ```lua
@@ -91,7 +91,7 @@ And if you'd like a different display name for that module too, just add it in:
 ```    
 It's that easy.
 
-###Tag Content
+### Tag Content
 Tag text can be plain text and/or html.
 
 ####Special Characters
@@ -106,12 +106,12 @@ Below is a complete list of special characters that need escaped to be displayed
     >
     <
 
-###Give Me Space!
+### Give Me Space!
 Each tag **must** have a space after it before your text starts. Failing to provide a space will give unpredictable results.
 
-##Example Usage
+## Example Usage
 
-###Comment a Function or Two
+### Comment a Function or Two
 ```lua
 --[[!
 @module dox
@@ -120,7 +120,7 @@ Each tag **must** have a space after it before your text starts. Failing to prov
 @desc A version of the 'require()' function that uses the local path. Used to require the other local modules the 'dox.lua' file needs.
 !]]
 ```
-###Comment Your Module(s) if You Want *(NOT REQUIRED)*
+### Comment Your Module(s) if You Want *(NOT REQUIRED)*
 ```lua
 --[[*
 @authors Centauri Soldier
@@ -152,10 +152,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @website https://github.com/CentauriSoldier/Dox
 *]]
 ```
-###Generate Your Documentation
+### Generate Your Documentation
 Dox is very easy to use. Once you've commented your code appropriately, all you need are your scripts and an empty directory where Dox can output the html files.
 
-####Note:
+#### Note:
 Dox will ***NOT*** create directories. Be sure the output directory exists or Dox will (silently) fail to output any files.
 
 ```lua
