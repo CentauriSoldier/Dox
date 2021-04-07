@@ -4,6 +4,7 @@
 ## Planned Features
 - [ ] Add dox core function snippets to the Atom snippets file (if not already present) when writing to the Atom snippets file.
 - [ ] Add dox function and module comment snippets to the Atom snippets file (if not already present) when writing to the Atom snippets file.
+- [ ] Use Bootstrap for CSS.
 
 ## FAQs
 * *Can I use my own css?*
