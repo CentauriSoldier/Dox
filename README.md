@@ -5,6 +5,14 @@
 - [ ] Add dox core function snippets to the Atom snippets file (if not already present) when writing to the Atom snippets file.
 - [ ] Add dox function and module comment snippets to the Atom snippets file (if not already present) when writing to the Atom snippets file.
 
+## FAQs
+* *Can I use my own css?*
+	* Currently, no but if there are enough requests for this feature, I'll add it in the furture.
+* *Is Dox cross-platform?*
+	* So far, Dox is tested and working on linux and Windows.
+* *How do I use Dox?*
+	* View the readme file for that info.
+
 ## Setup
 #### Download the **dox** folder from this repository and place it in your project.
 #### Require the dox module.
