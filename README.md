@@ -1,6 +1,10 @@
 # Dox 0.1.0
 #### A Lua Documentation Generator Script
 
+## Planned Features
+- [ ] Add dox core function snippets to the Atom snippets file (if not already present) when writing to the Atom snippets file.
+- [ ] Add dox function and module comment snippets to the Atom snippets file (if not already present) when writing to the Atom snippets file.
+
 ## Setup
 #### Download the **dox** folder from this repository and place it in your project.
 #### Require the dox module.
