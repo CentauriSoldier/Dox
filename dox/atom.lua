@@ -175,15 +175,4 @@ function dox.atom.writeSnippets(pAtomSnippetsFile, sSnippetSection)
 
 	end
 
-		--[[
-
-	'Protean.Destroy':
-        'description': '''Marks a Protean object for garabge collection (setting it to nil).'''
-        'prefix': 'Protean.Destroy'
-        'body': '''Protean.Destroy();'''
-        'leftLabelHTML': '<span style="color:#f30">function(constant)</span>'
-        'rightLabelHTML': '<span style="color:#ff0">nil</span>'
-
-	]]
-
 end
