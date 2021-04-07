@@ -164,7 +164,7 @@ dox.processDir(sPathToMyLuaFiles, sPathToTheOutputDirectory);
 #### That's it!
 Tada, you've got documentation!
 
-### Atom Snippets
+## Atom Snippets
 If you're using the atom text editor, you can tell dox to non-destructively generate snippets for it (snippets allow user-created auto-complete in the atom text editor).
 All you need to do (after you generate your documentation with the dox.ProcessDir() (or dox.ProcessFile()) funcion) is call the dox.atom.writeSnippets() function.
 
