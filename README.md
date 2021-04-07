@@ -61,20 +61,20 @@ Like the function info block, the module info block has no tags that are sensiti
 
 Within the block are tags. These tags start and end just like html tags do, with <tagname> as the start tag and </tagname> as the end tag where tagname is the name of the tag. Below is a complete list of supported tags. The tags are not case sensitive.
 
-*authors
-*copyright
-*dependencies
-*description
-*features
-*email
-*license
-*moduleid *required*
-*plannedfeatures
-*todo
-*usage
-*version
-*versionhistory
-*website
+* authors
+* copyright
+* dependencies
+* description
+* features
+* email
+* license
+* moduleid *required*
+* plannedfeatures
+* todo
+* usage
+* version
+* versionhistory
+* website
 
 #### The moduleid Tag
 
