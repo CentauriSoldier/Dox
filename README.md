@@ -25,14 +25,14 @@ Elements inside the function info block are designated by an "@" symbol directly
 
 Below is a list of currently usable tags for this block as well as their formatting and usage details. The tags are **not** case sensitive.
 
-    description (or desc)
-    example
-    function 	(or func) - required tag
-    module 	(or mod) - recommended tag
-    Parameter 	(or param)
-    Return	(or ret)
-    Scope
-    Usage   
+	* description *(or desc)*
+	* example
+	* function 	*(or func) required tag*
+	* module 	*(or mod) recommended tag*
+	* Parameter 	*(or param)*
+	* Return	*(or ret)*
+	* Scope
+	* Usage   
     
 
 #### Special Tags
@@ -61,20 +61,20 @@ Like the function info block, the module info block has no tags that are sensiti
 
 Within the block are tags. These tags start and end just like html tags do, with <tagname> as the start tag and </tagname> as the end tag where tagname is the name of the tag. Below is a complete list of supported tags. The tags are not case sensitive.
 
-    authors
-    copyright
-    dependencies
-    description
-    features
-    email
-    license
-    moduleid(required)
-    plannedfeatures
-    todo
-    usage
-    version
-    versionhistory
-    website
+    *authors
+    *copyright
+    *dependencies
+    *description
+    *features
+    *email
+    *license
+    *moduleid *required*
+    *plannedfeatures
+    *todo
+    *usage
+    *version
+    *versionhistory
+    *website
 
 #### The moduleid Tag
 
@@ -166,7 +166,7 @@ dox.processDir(sPathToMyLuaFiles, sPathToTheOutputDirectory);
 Tada, you've got documentation!
 
 ## Atom Snippets
-If you're using the [Atom](https://atom.io/) text editor, you can tell dox to non-destructively generate snippets for it (snippets allow user-created auto-complete in the atom text editor).
+If you're using the [Atom](https://atom.io/) text editor, you can tell dox to non-destructively generate snippets for it (snippets allow user-created auto-complete in the Atom text editor).
 All you need to do (after you generate your documentation with the dox.ProcessDir() (or dox.ProcessFile()) funcion) is call the dox.atom.writeSnippets() function.
 
 Dox will even keep separate sections for your various code projects to prevent overwriting other text in the snippets file. It does this by using section names. In addition to keeping separate sections secure from overwrite, Dox also preserves the non-dox snippet code in the file by non-destructively writing it's snippets at the end of the file thus allowing you to retain the ability to manually write snippets that have nothing to do with dox.
