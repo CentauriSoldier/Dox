@@ -68,7 +68,7 @@ Within the block are tags. These tags start and end just like html tags do, with
 * features
 * email
 * license
-* moduleid *required*
+* moduleid *required tag*
 * plannedfeatures
 * todo
 * usage
