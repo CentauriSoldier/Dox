@@ -7,11 +7,13 @@
 
 ## FAQs
 * *Can I use my own css?*
-	* Currently, no but if there are enough requests for this feature, I'll add it in the furture.
+	* Currently, no. But, if there are enough requests for this feature, I'll add it in the furture.
 * *Is Dox cross-platform?*
-	* So far, Dox is tested and working on linux and Windows.
+	* So far, Dox is tested and working on Linux and Windows.
 * *How do I use Dox?*
 	* View the readme file for that info.
+* *Do you plan to create snippets for other editors/IDEs?*
+	* Not at this time; however, enough interest in a specific IDE/editor may change my mind.
 
 ## Setup
 #### Download the **dox** folder from this repository and place it in your project.
