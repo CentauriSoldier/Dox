@@ -25,14 +25,15 @@ Elements inside the function info block are designated by an "@" symbol directly
 
 Below is a list of currently usable tags for this block as well as their formatting and usage details. The tags are **not** case sensitive.
 
-    Description
-    Example
-    Function(required)
-    Module(recommended)
-    Parameter
-    Return
+    description (or desc)
+    example
+    function 	(or func) - required tag
+    module 	(or mod) - recommended tag
+    Parameter 	(or param)
+    Return	(or ret)
     Scope
-    Usage
+    Usage   
+    
 
 #### Special Tags
 **Return** and **Parameter** behave a little differently than the other tags in that they accept up to three input sections delimited by a space.
