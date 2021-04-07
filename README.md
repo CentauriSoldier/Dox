@@ -13,7 +13,7 @@
 	* So far, Dox is tested and working on Linux and Windows.
 * *How do I use Dox?*
 	* View the readme file for that info.
-* *Do you plan to create snippets for other editors/IDEs?*
+* *Do you plan to create autocomplete scripts for other editors/IDEs?*
 	* Not at this time; however, enough interest in a specific IDE/editor may change my mind.
 
 ## Setup
