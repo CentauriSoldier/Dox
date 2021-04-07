@@ -2,27 +2,28 @@ dox.util = {};
 
 --directory spacer (reset at the end of the file for windows systems)
 local _ = "/";
-local sOSType = "linux";
-local tFileMethods = {
+	local sOSType = "linux";
+
+	local tFileMethods = {
 	["linux"] = {
 		fileFind = function(sDir, sFile, bRecursive)
 		local sRecurs = " -maxdepth 1 ";
-		
+
 			if bRecursive then
 			sRecurs = "";
 			end
-		 
+
 		return 'find "'..sDir..'"'..sRecurs..'-name "'..sFile..'"'
 		end,
 	},
 	["windows"] = {
 		fileFind = function(sDir, sFile, bRecursive)
 		local sRecurs = "";
-		
+
 			if bRecursive then
 			sRecurs = " /s";
 			end
-		
+
 		return 'dir "'..sDir.."\\"..sFile..'" /b'..sRecurs;
 		end,
 	},
@@ -36,16 +37,16 @@ local tFileMethods = {
 @ret sOSType string returns 'windows' if it is a Windows systems and 'linux' if it a unix-based system.
 !]]
 function dox.util.getOSType()
-local sSlash = package.config:sub(1,1);
+	local sSlash = package.config:sub(1,1);
 
 	if sSlash == "\\" then
-	return "windows"
-	
+		return "windows"
+
 	elseif sSlash == "/" then
-	return "linux"
-		
+		return "linux"
+
 	end
-	
+
 end
 
 
@@ -59,56 +60,56 @@ end
 @ret tFiles table A numerically-indexed table whose values are the paths of the found item(s). If no items are found, an empty table is returned.
 !]]
 function dox.util.fileFind(sDir, sFile, bRecursive)
-local tRet = {};
-local nIndex = 0;
-	
+	local tRet = {};
+	local nIndex = 0;
+
 	if type(sDir) == "string" and type(sFile) == "string" then
-		
+
 		--ensure the slashes are correct (for systems that use a linux separator '/' on Windows and vice versa)
 		if sOSType == "windows" then
-		sDir = sDir:gsub("/", "\\");
-		
+			sDir = sDir:gsub("/", "\\");
+
 		elseif sOSType == "linux" then
-		sDir = sDir:gsub("\\", "/");
-			
+			sDir = sDir:gsub("\\", "/");
+
 		end
-	
+
 	--create the command
-	local sCommand = tFileMethods[sOSType].fileFind(sDir, sFile, bRecursive) 
+	local sCommand = tFileMethods[sOSType].fileFind(sDir, sFile, bRecursive)
 
 	--read the dir
 	local hFiles = io.popen(sCommand);
-			
+
 		if hFiles then
-			
+
 			--add each file to the list
 			for sFile in hFiles:lines() do
-			nIndex = nIndex + 1;
-			tRet[nIndex] = sFile;
+				nIndex = nIndex + 1;
+				tRet[nIndex] = sFile;
 			end
-			
+
 			--add the path names to the files (if needed)
 			if sOSType == "windows" then
-				
+
 				if not bRecursive then
-				
+
 					for nIndex, sFile in pairs(tRet) do
-					tRet[nIndex] = sDir.._..sFile;
-					tRet[nIndex] = tRet[nIndex]:gsub("/", "\\");
+						tRet[nIndex] = sDir.._..sFile;
+						tRet[nIndex] = tRet[nIndex]:gsub("/", "\\");
 					end
-				
+
 				end
-				
+
 			end
-			
+
 			--if the table has no files, return nil
 			if not tRet[1] then
-			return nil
+				return nil
 			end
-			
-		hFiles:close();
+
+			hFiles:close();
 		end
-	
+
 	end
 
 return tRet
@@ -124,17 +125,17 @@ end
 @ret sString string Returns the concatenated string. If 'nCount' is nil or not a valid number then a blank string is returned.
 !]]
 function dox.util.interateChar(sChar, nCount)
-local sRet = "";
-	
+	local sRet = "";
+
 	if type(sChar) == "string" and type(nCount) == "number" then
-		
+
 		for x = 1, nCount do
-		sRet = sRet..sChar;
+			sRet = sRet..sChar;
 		end
-		
+
 	end
-	
-return sRet
+
+	return sRet
 end
 
 
@@ -146,13 +147,13 @@ end
 @ret bEven boolean Returns true if the number is even and false if it is not.
 !]]
 function dox.util.isEven(nNumber)
-local nAbsNumber = math.abs(nNumber) / 2;
+	local nAbsNumber = math.abs(nNumber) / 2;
 
 	if nAbsNumber - math.floor(nAbsNumber) == 0 then
-	return true
+		return true
 	end
 
-return false
+	return false
 end
 
 
@@ -165,21 +166,21 @@ end
 @ret sTabs string The concatenated string or a blank string is 'nTabs' is not a valid number.
 !]]
 function dox.util.tab(nTabs, bNewLineFirst)
-local sRet = "";
+	local sRet = "";
 
 	if bNewLineFirst then
-	sRet = sRet.."\n";
+		sRet = sRet.."\n";
 	end
-		
+
 	if type(nTabs) == "number" then
-		
+
 		for x = 1, nTabs do
-		sRet = sRet.."\t";
+			sRet = sRet.."\t";
 		end
-		
+
 	end
-	
-return sRet
+
+	return sRet
 end
 
 

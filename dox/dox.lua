@@ -3,7 +3,7 @@
 @copyright Copyright © 2016 Centauri Soldier
 @description
 	<h2>Dox</h2>
-	<h3>The Simple Lua Documentation Generator</h3>	
+	<h3>The Simple Lua Documentation Generator</h3>
 	<p>Dox is a light-weight script designed to parse crafted lua comments regarding modules and functions and output them to readable, sorted and linked HTML. Dox enables you to quickly and simply create documentation for your lua code without the need to install programs or to run anything other than the Dox script. In fact, it's so simple, you can have documentation in as few as 2 lines of code.</p>
 @email
 @features
@@ -13,7 +13,7 @@
 	<h3>No Dependencies</h3>
 	<p>Dox needs nothing but itself and your lua files in order to run correctly. No installing, no configuring, no mess.</p>
 	<h3>Dox is Robust</h3>
-	<p>Dox is fine with you mixing up your code. Functions from different modules may be in one single file or you may even have a single module spread around different files. Dox is very forgiving in how you organize your modules. You could even have all your dox comments for multiple modules in a single file <i>(although such a practice is not likely to be desired or cenvenient, just meant as demonstration)</i>. Simply put, Dox loves your code no matter where it's at and how it's organized <i>(or unorganized, for that matter)</i>. Dox will sort it all out for you when it's processed. There's no need for you go out of your way to organize functions or modules a certain way. Organize them how you please and Dox will do the rest.</p>		
+	<p>Dox is fine with you mixing up your code. Functions from different modules may be in one single file or you may even have a single module spread around different files. Dox is very forgiving in how you organize your modules. You could even have all your dox comments for multiple modules in a single file <i>(although such a practice is not likely to be desired or convenient, just meant as demonstration)</i>. Simply put, Dox loves your code no matter where it's at and how it's organized <i>(or unorganized, for that matter)</i>. Dox will sort it all out for you when it's processed. There's no need for you go out of your way to organize functions or modules a certain way. Organize them how you please and Dox will do the rest.</p>
 @license <p>The MIT License (MIT)<br>
 <br>
 Copyright (c) 2016 Centauri Soldier<br>
@@ -35,12 +35,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	<li>Dox menu item with home, usage and other useful pages</li>
 	<li>Add project info function (for all compiled modules);</li>
 	<li>ADD the ability to get HTML string only without needing to write a file</li>
-	<li>TODO - AddSupport for custom, external css ===>>> PUT INTO HTML HEAD <link rel="stylesheet" href="..dox.PageVars.CSSPathAndVersion.."></li>	
-	<li>Add a 'Custom' line type</li>	
+	<li>TODO - AddSupport for custom, external css ===>>> PUT INTO HTML HEAD <link rel="stylesheet" href="..dox.PageVars.CSSPathAndVersion.."></li>
+	<li>Add a 'Custom' line type</li>
 	<li>Add support for new lines after certain tags in the function block</li>
 	<li>Add Support for TODO, Current Features and Planned Feature</li>
-	<li>Add auto-css assignment if css tag is not present in file (using lua debug library to get directory of this file)</li>	
+	<li>Add auto-css assignment if css tag is not present in file (using lua debug library to get directory of this file)</li>
+	<li>Using Bootstrap for CSS aspects.</li>
 	<li>More theme support.</li>
+	<li>Add the ability (using an @nosnippet tag) to ignore the processing of a given block as a snippets (applies only if processing snippets).</li>
+	<li>Local hyperlink support in blocks (for linking to other blocks).</li>
 </ul>
 @moduleid dox|Dox,dox.base64|Dox.Base64,dox.css|Dox.CSS,dox.html|Dox.HTML,dox.theme|Dox.Theme,dox.parse|Dox.Parse,dox.util|Dox.Util
 @todo
@@ -64,9 +67,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	<li>Add CSS/HTML validation tags to the footer, update the footer with real data back to the github</li>
 	<li>Fix the width issue in the css #contentwrapper (it's currently using a hack)</li>
 	<li>Write a short guide showing how to add tags to the different block types (HIGH)</li>
-	<li>Create a LOVE-based GUI for making these blocks (LOW)</li>	
+	<li>Create a LOVE-based GUI for making these blocks (LOW)</li>
 	<li>Find out why 'funct' triggers an error (as it should) but 'function' does not when looking for an extra character on the 'func' tag LOW PRIORITY</li>
-	
+
 </ul>
 @usage
 	<h2>Take a breath...</h2>
@@ -75,7 +78,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		<p>
 		This is primary element of Dox that makes it work. In fact, without at least one function info block, Dox will not process the target module since there would be no information to process.
 		<br><br>
-		The function info block is wrapped in a multi-line lua comment whose start tag is <i><b>--<span>[</span>[!</b></i> and end tag is <i><b>!]<span>]</span></b></i>.						
+		The function info block is wrapped in a multi-line lua comment whose start tag is <i><b>--<span>[</span>[!</b></i> and end tag is <i><b>!]<span>]</span></b></i>.
 		</p>
 	<h3>Function Info Block Block Tags</h3>
 		<p>
@@ -84,15 +87,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		Below is a list of currently usable tags for this block as well as their formatting and usage details.
 		</p>
 		<ul>
-			<li>Description</li>
-			<li>Example</li>
-			<li>Function</li>
-			<li>Module</li>
-			<li>Parameter</li>
-			<li>Return</li>
-			<li>Scope</li>
-			<li>Usage</li>			
-		</ul>		
+			<li>description <em>or</em> desc <em>(a description of the function)</em></li>
+			<li>example <em>or</em> examples <em>(an example of this function being used)</em></li>
+			<li>function <em>or</em> func <em>(the full name of the function)</em></li>
+			<li>module <em>or</em> mod <em>(the module to which this function belongs)</em></li>
+			<li>parameter <em>or</em> param <em>(details for each function parameter)</em></li>
+			<li>return <em>or</em> ret <em>(details on the return value)</em></li>
+			<li>Scope <em>()</em></li>
+			<li>Usage <em>()</em></li>
+		</ul>
 	<h2>Module Info Block</h2>
 		<p>
 		The module information is wrapped in a multiline lua comment whose start tag is <i><b>--<span>[</span>[</b><b>*</b></i> and end tag is <i><b>*</b></i><b>]<span>]</span></b>. The content of this block is displayed at the top of the module page within and accordion menu (the one you're using right now).
@@ -105,7 +108,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		</p>
 		<ul>
 			<li>authors</li>
-			<li>copyright</li>			
+			<li>copyright</li>
 			<li>dependencies</li>
 			<li>description</li>
 			<li>features</li>
@@ -139,6 +142,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @versionhistory
 <ul>
 	<li>
+		<b>0.1.0</b>
+		<br>
+		<p>Added the ability to output Atom snippets from code (for cson snippet files, json is not yet supported).</p>
+	</li>
+	<li>
 		<b>0.0.9</b>
 		<br>
 		<p>Added support for linux.</p>
@@ -150,14 +158,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	</li>
 	<li>
 		<b>0.0.7</b>
-		<br>		
+		<br>
 		<p>Added the ability to allow a module block to be displayed for multiple modules as desired</p>
 		<p>Module names can now be displayed differently as desired.</p>
 	</li>
 	<li>
 		<b>0.0.6</b>
 		<br>
-		<p>Fixed a bug that was omitting the last entry of blocks.</p>		
+		<p>Fixed a bug that was omitting the last entry of blocks.</p>
 		<p>Added the ability for dox to normally and recursively scan directories and process all files at once.</p>
 	</li>
 	<li>
@@ -171,7 +179,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		<b>0.0.4</b>
 		<br>
 		<p>Added the binary module and included embeded images for the output.</p>
-		<p>Added the <i>Welcome.html</i> page.</p>		
+		<p>Added the <i>Welcome.html</i> page.</p>
 	</li>
 	<li>
 		<b>0.0.3</b>
@@ -183,8 +191,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	<li>
 		<b>0.0.2</b>
 		<br>
-		<p>Refactored the code and ported all logical functions to modules.</p>		
-	</li>	
+		<p>Refactored the code and ported all logical functions to modules.</p>
+	</li>
 	<li>
 		<b>0.0.1</b>
 		<br>
@@ -197,7 +205,7 @@ dox = {};
 
 --warn the user if debug is missing
 if not debug then
-error("Dox requires the debug library to operate. Please use a version of lua that includes debug.")
+	error("Dox requires the debug library to operate. Please use a version of lua that includes the debug library.")
 end
 
 --prevents 'processFile()' from resetting 'dox.Modules' and writing files while being called by 'processDir()'
@@ -211,12 +219,12 @@ local bDirProcessing = false;
 @ret sPath string The local path from which dox is run.
 !]]
 local function getLocalPath()
---determine the call location
-local sPath = debug.getinfo(1, "S").source;
---remove the calling filename
-sPath = sPath:gsub("@", ""):gsub("dox.lua", "");
---remove the "/" at the end
-return sPath:sub(1, sPath:len() - 1)
+	--determine the call location
+	local sPath = debug.getinfo(1, "S").source;
+	--remove the calling filename
+	sPath = sPath:gsub("@", ""):gsub("dox.lua", "");
+	--remove the "/" at the end
+	return sPath:sub(1, sPath:len() - 1);
 end
 
 --allows the loading of files relatively without the need for absolute paths
@@ -228,14 +236,14 @@ end
 @file dox.lua
 !]]
 local function import(sFile)
-sPath = getLocalPath();
+	sPath = getLocalPath();
 
---format the path to be suitable for the 'require()' function
-sPath = sPath:gsub("\\", "."):gsub("/", ".");
-sFile = sFile:gsub("\\", "."):gsub("/", ".");
+	--format the path to be suitable for the 'require()' function
+	sPath = sPath:gsub("\\", "."):gsub("/", ".");
+	sFile = sFile:gsub("\\", "."):gsub("/", ".");
 
---call it in
-require(sPath..'.'..sFile);
+	--call it in
+	require(sPath..'.'..sFile);
 end
 
 --import the utility functions
@@ -256,7 +264,8 @@ import("css");
 import("parse");
 --import the html file
 import("html");
-
+--import the atom file
+import("atom");
 
 --MAKE THIS RETURN THE STATUS OF THE WRITE PROCESS TOO!!!
 --[[!
@@ -267,79 +276,77 @@ import("html");
 @param sDirectory string The desired output directory.
 !]]
 local function writeOutput(pDir)
-	
+
 	if type(pDir) == "string" then
-		
+
 		--TODO - DELETE THE LAST DASH IN THE INPUT STRING (IF THE DASH EXISTS)
 		if pDir:gsub("%s", "") ~= "" then
-			
+
 			--sort and purge the modules
 			dox.parse.sortModules();
-			
+
 			if dox.parse.getModuleCount() > 0 then
 
 				--create all critical folders
 				for nIndex, sFolder in pairs(dox.CriticalFolders) do
-				os.execute('mkdir "'..pDir..'/'..sFolder..'"');			
+					os.execute('mkdir "'..pDir..'/'..sFolder..'"');
 				end
-				
-			--update the css (in case of theme changes)
-			dox.css.update();
-			
+
+				--update the css (in case of theme changes)
+				dox.css.update();
+
 			--the css file
 			local hCSSFile = io.open(pDir.."/style.css", "w");
-		
+
 				if hCSSFile then
-				hCSSFile:write(dox.PageVars.CSS);
-				hCSSFile:close();		
+					hCSSFile:write(dox.PageVars.CSS);
+					hCSSFile:close();
 				end
-			
+
 			--the welcome file
 			local hWelcomeFile = io.open(pDir.."/dox/welcome.html", "w");
-		
+
 				if hWelcomeFile then
-				hWelcomeFile:write(dox.html.buildWelcome());
-				hWelcomeFile:close();		
-				end			
-			
+					hWelcomeFile:write(dox.html.buildWelcome());
+					hWelcomeFile:close();
+				end
+
 			--the index file
 			local hIndexFile = io.open(pDir.."/index.html", "w");
-		
+
 				if hIndexFile then
-				hIndexFile:write(dox.html.buildIndex());
-				hIndexFile:close();		
+					hIndexFile:write(dox.html.buildIndex());
+					hIndexFile:close();
 				end
-			
+
 			--the module(s)
 			local tModules = dox.Modules;
 			--this has the process order for the modules
 			local tMeta = getmetatable(tModules);
-					
+
 			--process the modules
 				for nIndex, sModule in pairs(tMeta.ProcessOrder) do
-				local tModule = tModules[sModule];	
-				
-				--write the module file
-				local hModuleFile = io.open(pDir.."/modules/"..sModule..".html", "w");
-			
-					if hModuleFile then				
-					hModuleFile:write(dox.html.buildModule(sModule));
-					hModuleFile:close();		
-					end
-				
-				end
-				
-			end
-			
-		end
-			
-	end
-	
-end
-	
+					local tModule = tModules[sModule];
 
-	
-	
+					--write the module file
+					local hModuleFile = io.open(pDir.."/modules/"..sModule..".html", "w");
+
+					if hModuleFile then
+						hModuleFile:write(dox.html.buildModule(sModule));
+						hModuleFile:close();
+					end
+
+				end
+
+			end
+
+		end
+
+	end
+
+end
+
+
 --ADD THE ABILITY TO CHECK IF THE FILE EXISTS
 --[[!
 @module dox
@@ -348,88 +355,96 @@ end
 @param pInputFile string The path to the file dox reads.
 @param pOutputFile string The path to the directory in which Dox writes the output file.
 @param sTheme string,nil The name of the color scheme to use in the out HTML. If nil, Dox will use the default theme.
-@example dox.processFile("C:\\Files\\myModule.lua", "C:\\Files\\Dox Output");
+@param pAtomSnippetsFile string The full path to the atom snippets file. If it does not exist, it will be created. If nil, snippets will not be written.
+@param sSnippetSection string The section name for the snippets. Having sections allows for mutiple calls to write to the same file without overwrites.  If nil, snippets will not be written.
+@example dox.processFile("C:\\Files\\myModule.lua", "C:\\Files\\Dox Output", nil, nil);
 !]]
-function dox.processFile(pInputFile, pOutDir, sTheme)
-local hInputFile = io.open(pInputFile, "r");
-	
+function dox.processFile(pInputFile, pOutDir, sTheme, pAtomSnippetsFile, sSnippetSection)
+	local hInputFile = io.open(pInputFile, "r");
+
 	--ensure the 'pOutDir' has a '/' on the end (for linux)
 	if package.config:sub(1,1) =="/" then
-	
+
 		if pOutDir:sub(pOutDir:len()) ~= "/" then
-		pOutDir = pOutDir.."/";
+			pOutDir = pOutDir.."/";
 		end
-		
+
 	end
-	
-	
+
+
 	if hInputFile then
-	
+
 		--ignore the module reset if called by 'processDir()'
 		if not bDirProcessing then
-		--reset the modules table
-		dox.Modules = {};
+			--reset the modules table
+			dox.Modules = {};
 		end
-	
-	--set the default theme
-	dox.theme.setActive("Plain");
-	
-	--ADD PROCESSING FOR CUSTOM THEME
-	if type(sTheme) == "table" then
-	
-	--import only the table items that exists in other themes and fill in the gaps with elements from the default themes table !~!~!!!!!!!!!!!!!!!!!!!!!!!!!
-	
-	elseif type(sTheme) == "string" then
-		
-		--if the themes exists, set it as active
-		if dox.Theme.Themes[sTheme] then		
-		dox.theme.setActive(sTheme);
+
+		--set the default theme
+		dox.theme.setActive("Plain");
+
+		--ADD PROCESSING FOR CUSTOM THEME
+		if type(sTheme) == "table" then
+
+		--import only the table items that exists in other themes and fill in the gaps with elements from the default themes table !~!~!!!!!!!!!!!!!!!!!!!!!!!!!
+
+		elseif type(sTheme) == "string" then
+
+			--if the themes exists, set it as active
+			if dox.Theme.Themes[sTheme] then
+				dox.theme.setActive(sTheme);
+			end
+
 		end
-	
-	end
-		
-	--read the file	
-	local sLuaString = hInputFile:read("*all");
-		
-	--get a list of all dox comment blocks
-	local tBlocks = dox.parse.getBlocks(sLuaString);
-		
+
+		--read the file
+		local sLuaString = hInputFile:read("*all");
+
+		--get a list of all dox comment blocks
+		local tBlocks = dox.parse.getBlocks(sLuaString);
+
 		--process all dox comment blocks
 		for nIndex, sBlock in pairs(tBlocks) do
-		--LOG("Processing Block #"..nIndex..":\n"..sBlock.."\n");
-		local tBlock = dox.parse.processBlock(sBlock);
-		
+			--LOG("Processing Block #"..nIndex..":\n"..sBlock.."\n");
+			local tBlock = dox.parse.processBlock(sBlock);
+
 			--make sure there's a valid block
 			if tBlock then
-			dox.parse.importBlockToModules(tBlock);
+				dox.parse.importBlockToModules(tBlock);
 			end
-			
-		end			
-	
-	--read the source file (again) since the gabage collector destoys it's contents before it gets here
-	hInputFile:close();
-	hInputFile = io.open(pInputFile, "r");
-	sLuaString = hInputFile:read("*all");
-		
-	--[[get the module info and store it in the module's 'Info' table
-	but only if the module already exists. This means that there are
-	no modules without this info table (even if it's entries are blank)
-	and no info tables for modules that have no	substance (e.g., no
-	info tables for modules that have no function entries).]]	
-	dox.parse.importModuleInfo(sLuaString);
-	
-	--close the source file (again)
-	hInputFile:close();
-	
+
+		end
+
+		--read the source file (again) since the gabage collector destoys it's contents before it gets here
+		hInputFile:close();
+		hInputFile = io.open(pInputFile, "r");
+		sLuaString = hInputFile:read("*all");
+
+		--[[get the module info and store it in the module's 'Info' table
+		but only if the module already exists. This means that there are
+		no modules without this info table (even if it's entries are blank)
+		and no info tables for modules that have no	substance (e.g., no
+		info tables for modules that have no function entries).]]
+		dox.parse.importModuleInfo(sLuaString);
+
+		--close the source file (again)
+		hInputFile:close();
+
 		--write the file but only if not called by 'processDir()'
 		if not bDirProcessing then
-		--write the files
-		writeOutput(pOutDir);
+			--write the files
+			writeOutput(pOutDir);
+
+			--process callback function (if it exists)
+			if (type(dox.onProcess) == "function") then
+				dox.onProcess();
+			end
+
 		end
-	
+
 	end
-	
-return false
+
+	return false
 end
 
 
@@ -444,28 +459,38 @@ end
 @param pOutDir string The full path to the directory that will store the output.
 @param sTheme string,nil The name of the color scheme to use in the out HTML. If nil, Dox will use the default theme.
 @param bRecursive bool,nil If true, Dox will search all subdirectories of the given path as well in search of lua files.
+@param pAtomSnippetsFile string The full path to the atom snippets file. If it does not exist, it will be created. If nil, snippets will not be written.
+@param sSnippetSection string The section name for the snippets. Having sections allows for mutiple calls to write to the same file without overwrites.  If nil, snippets will not be written.
 !]]
-function dox.processDir(sDir, pOutDir, sTheme, bRecursive)
---tell dox to process the entire directory before writing
-bDirProcessing = true;
+function dox.processDir(sDir, pOutDir, sTheme, bRecursive, pAtomSnippetsFile, sSnippetSection)
+	--tell dox to process the entire directory before writing
+	bDirProcessing = true;
 
---get all the files in the directory
-local tFiles = dox.util.fileFind(sDir, "*.lua", bRecursive);
-	
+	--get all the files in the directory
+	local tFiles = dox.util.fileFind(sDir, "*.lua", bRecursive);
+
 	if tFiles then
-	--reset the modules table
-	dox.Modules = {};
-			
-		for nIndex, pFile in pairs(tFiles) do
-		dox.processFile(pFile, pOutDir, sTheme);
-		end
-	
-	--write the file
-	writeOutput(pOutDir);
-	end	
-	
---allow 'processFile()' access to the 'writeOutput()' function again
-bDirProcessing = false;
+		--reset the modules table
+		dox.Modules = {};
 
-return false
+		for nIndex, pFile in pairs(tFiles) do
+			dox.processFile(pFile, pOutDir, sTheme, pAtomSnippetsFolder);
+		end
+
+		--write the file
+		writeOutput(pOutDir);
+
+		--process callback function (if it exists)
+		if (type(dox.onProcess) == "function") then
+			dox.onProcess();
+		end
+
+	end
+
+	--allow 'processFile()' access to the 'writeOutput()' function again
+	bDirProcessing = false;
+
+	return false
 end
+
+return dox;

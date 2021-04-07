@@ -3,13 +3,13 @@
 --DO NOT ALTER THESE OR THE OUTPUT WILL NOT WORK CORRECTLY
 dox.CriticalFolders = {
 	"dox",
-	"modules",	
+	"modules",
 };
 --_THIS MAY NEED  TO BE DELETED SINCE WE"RE NOW ALLOWING HTML
 dox.EscapeChars = {
 	[1] = { --& must come first in the sequence to prevent unwelcome, interative replacement
 		Old = "&",
-		New = "&amp;",			
+		New = "&amp;",
 	},
 	[2] = {
 		Old = "\\>",
@@ -24,16 +24,20 @@ dox.EscapeChars = {
 --the 'IGNORE' text is removed at the end of this file.
 dox.Markers = {
 	Block = {
-		Start = "--IGNORE[[!",
-		End = "IGNORE!]]",
+		Start 	= "--IGNORE[[!",
+		End 	= "IGNORE!]]",
 	},
-	Module = {
-		Start = "--[[IGNORE*",
-		End = "*IGNORE]]",
-	},	
-	Line = {
-		Start = "<",
-		End = ">",
+	Line 	= {
+		Start 	= "<",
+		End 	= ">",
+	},
+	Module 	= {
+		Start 	= "--[[IGNORE*",
+		End 	= "*IGNORE]]",
+	},
+	Snippet = {
+		Start 	= "##### START DOX SNIPPETS -->>> ID: ",
+		End 	= "#####   <<<-- END DOX SNIPPETS ID: ",
 	},
 };
 
@@ -44,27 +48,27 @@ dox.ModuleInfoNameDelimiter = "|";
 dox.ModuleItems = {
 	authors = {
 		Display = "",
-		IsListItem = false,			
+		IsListItem = false,
 	},
 	copyright = {
 		Display = "Copyright",
-		IsListItem = true,			
+		IsListItem = true,
 	},
 	displayname = { --not input by user using this tag. The text for this is found in the moduleid tag.
 		Display = "",
-		IsListItem = false,			
+		IsListItem = false,
 	},
 	dependencies = {
 		Display = "Dependencies",
-		IsListItem = true,			
+		IsListItem = true,
 	},
 	description = {
 		Display = "Description",
-		IsListItem = true,			
-	},		
+		IsListItem = true,
+	},
 	features = {
 		Display = "Features",
-		IsListItem = true,			
+		IsListItem = true,
 	},
 	email = {
 		Display = "Email",
@@ -73,7 +77,7 @@ dox.ModuleItems = {
 	license = {
 		Display = "License",
 		IsListItem = true,
-	},		
+	},
 	moduleid = { --IGNORED
 		Display = "IGNORED",
 		IsListItem = false, --IGNORED
@@ -101,7 +105,7 @@ dox.ModuleItems = {
 	website = {
 		Display = "Website",
 		IsListItem = false,
-	},		
+	},
 };
 
 --this is where all the html-ready blocks of code wait to be processed
@@ -118,17 +122,17 @@ dox.PageVars = {
 
 dox.SpecialChars = {
 	[1] = { --this is always the line character for blocks of any type(function, module, etc.).
-		Intended = "@",	
+		Intended = "@",
 		Escaped = "\\@",
 		Temp = " __!!DOXAT!!__ ",
 	},
 	[2] = {
-		Intended = "&lt;",	
+		Intended = "&lt;",
 		Escaped = "\\<",
 		Temp = " __!!DOXLT!!__ ",
 	},
 	[3] = {
-		Intended = "&gt;",	
+		Intended = "&gt;",
 		Escaped = "\\>",
 		Temp = " __!!DOXGT!!__ ",
 	},
@@ -143,7 +147,7 @@ Note: if no default value is set and there is no value given by the end-user (fo
 ]]
 
 dox.Types = {
-	Description = {			
+	Description = {
 		Variations = {
 			"description",
 			"desc",
@@ -157,7 +161,7 @@ dox.Types = {
 	},
 	File = {
 		Variations = {
-			"file",			
+			"file",
 		},
 	},
 	Function = {
@@ -167,8 +171,8 @@ dox.Types = {
 			"function",
 			"func",
 		},
-	},	
-	Module = {			
+	},
+	Module = {
 		DefaultValue = "Unknown",
 		MustHaveChars = true,
 		Variations = {
@@ -177,7 +181,7 @@ dox.Types = {
 		},
 	},
 	Parameters = {
-		AllowMultiple = true,			
+		AllowMultiple = true,
 		Parser = {
 			[1] = { --variable name example
 				StartTag = '<span class="parameterinput">',
@@ -197,10 +201,10 @@ dox.Types = {
 		Variations = {
 			"parameter",
 			"param",
-		},			
+		},
 	},
 	Return = {
-		AllowMultiple = true,			
+		AllowMultiple = true,
 		Parser = {
 			[1] = { --variable name example
 				StartTag = '<span id="returnvariable">',
@@ -240,18 +244,18 @@ dox.Types = {
 	},
 };
 
-dox.Version = "0.0.7";
+dox.Version = "0.1.0";
 
 --this has to be done to prevent the script from incorrectly looking at the marker code above
 for sIndex, tItem in pairs(dox.Markers) do
-	
+
 	for sSubIndex, vItem in pairs(tItem) do
-		
+
 		--global markers
 		if tItem.Start and tItem.End then
-		dox.Markers[sIndex][sSubIndex] = dox.Markers[sIndex][sSubIndex]:gsub("IGNORE", "");		
+		dox.Markers[sIndex][sSubIndex] = dox.Markers[sIndex][sSubIndex]:gsub("IGNORE", "");
 		end
-		
+
 	end
-	
+
 end

@@ -10,58 +10,57 @@ dox.parse = {};
 @ret tBlock table A table containg each valid item from the block string (such as description, function, authors. etc.).
 !]]
 local function blockToTable(sBlock)
-	
+
 	if sBlock ~= "" then
-	local tRet = {};
-	local bContinue = true;
-	local nSearchIndex = 0;
-	local sDelimiter = dox.SpecialChars[1].Intended;
-		
+		local tRet = {};
+		local bContinue = true;
+		local nSearchIndex = 0;
+		local sDelimiter = dox.SpecialChars[1].Intended;
+
 		--escape special characters with something else until the table is constructed.
-		for nIndex, tChar in pairs(dox.SpecialChars) do		
-		sBlock = sBlock:gsub(tChar.Escaped, tChar.Temp);
+		for nIndex, tChar in pairs(dox.SpecialChars) do
+			sBlock = sBlock:gsub(tChar.Escaped, tChar.Temp);
 		end
-		
+
 		while bContinue do
-		local nStart, nEnd = sBlock:find(sDelimiter, nSearchIndex);
+			local nStart, nEnd = sBlock:find(sDelimiter, nSearchIndex);
 
 			if nStart then
-			tRet[#tRet + 1] = sBlock:sub(nSearchIndex, nStart - 1);
-			nSearchIndex = nEnd + 1;
+				tRet[#tRet + 1] = sBlock:sub(nSearchIndex, nStart - 1);
+				nSearchIndex = nEnd + 1;
 
 			else
-			tRet[#tRet + 1] = sBlock:sub(nSearchIndex);
-			bContinue = false;
+				tRet[#tRet + 1] = sBlock:sub(nSearchIndex);
+				bContinue = false;
 
 			end
 
 		end
-		
-		
+
+
 		if tRet[1] then
-			
+
 			--clear out the blank entries (if any exist). [1] is blank by default so it must be removed.
 			for nLine, sLine in pairs(tRet) do
-				
+
 				if sLine:gsub(" ", ""):gsub("\n", "") == "" then
-				table.remove(tRet, nLine);
+					table.remove(tRet, nLine);
 				end
-			
+
 			end
-			
+
 			--put the special chars back but as they were intended to be displayed
 			for nLine, sLine in pairs(tRet) do
 
-				for nIndex, tChar in pairs(dox.SpecialChars) do	
-				
-				tRet[nLine] = tRet[nLine]:gsub(tChar.Temp, tChar.Intended);				
+				for nIndex, tChar in pairs(dox.SpecialChars) do
+					tRet[nLine] = tRet[nLine]:gsub(tChar.Temp, tChar.Intended);
 				end
-			
-			end
-			
-		end		
 
-	return tRet
+			end
+
+		end
+
+		return tRet
 	end
 
 end
@@ -76,28 +75,28 @@ end
 !]]
 local function createModuleEntry(sModule)
 
-	if not dox.Modules[sModule] then	
-		
-	dox.Modules[sModule] = {
-		Blocks = {},
-		Info = {},
-		ProcessOrder = {}, --organized alphabetically			
-	};
-	
+	if not dox.Modules[sModule] then
+
+		dox.Modules[sModule] = {
+			Blocks = {},
+			Info = {},
+			ProcessOrder = {}, --organized alphabetically
+		};
+
 		--populate the module's info table
 		for sInfoAtt, _ in pairs(dox.ModuleItems) do
-			
+
 			--[[add each attribute placeholder to the table except
 				'moduleid' as it's only used for detecting which
 				module to put the info into during processing.]]
 			if sInfoAtt ~= "moduleid" then
-			dox.Modules[sModule].Info[sInfoAtt] = "";		
+				dox.Modules[sModule].Info[sInfoAtt] = "";
 			end
-			
+
 		end
-		
+
 	end
-	
+
 end
 
 
@@ -111,22 +110,22 @@ end
 @file parse.lua
 !]]
 local function getDefaultValue(sType)
-local vRet = "";
-		
+	local vRet = "";
+
 	if dox.Types[sType] then
-		
+
 		if dox.Types[sType].AllowMultiple then
-		vRet = {};
+			vRet = {};
 		end
-		
+
 	end
 
 	--check for an explicit, default value within the types table
 	if dox.Types[sType].DefaultValue then
-	vRet = dox.Types[sType].DefaultValue;
+		vRet = dox.Types[sType].DefaultValue;
 	end
-	
-return vRet
+
+	return vRet
 end
 
 
@@ -140,35 +139,35 @@ end
 @return sVariation string The varation of the input. For example, if the line type is 'function', it may return 'func' or 'function' depending on what the user typed. This is not returned if the line type is unknown.
 !]]
 local function getLineType(sLine)
-local sRet = "__UNKNOWN__";
+	local sRet = "__UNKNOWN__";
 
 	if type(sLine) == "string" then
-	
+
 		if sLine:len() > 0 then
-	
+
 			for sType, tTypeProperties in pairs(dox.Types) do
-							
+
 				for nIndex, sVariation in pairs(tTypeProperties.Variations) do
 				local nLength = sVariation:len();
-				
+
 					--ensure the type is one of those listed
 					if sLine:sub(0, nLength):lower() == sVariation:lower() then
-					
+
 						if sLine:sub(0, nLength + 1):find("[%s]") then
-						return sType, sVariation
+							return sType, sVariation
 						end
-					
+
 					end
-					
+
 				end
-				
+
 			end
-			
+
 		end
-			
+
 	end
 
-return sRet
+	return sRet
 end
 
 
@@ -180,62 +179,62 @@ end
 @param sModuleIDsText string the string from the 'moduleid' tag.
 @ret tModules table A numerically-indexed table whose values are tables with 'id' and 'displayname' as indices.
 !]]
-local function parseModuleIDs(sModuleIDsText) 
---place the input into bith fields to start just in case there is only one word
-local tRet = {
-	[1] = {
-		displayname = sModuleIDsText,
-		id = sModuleIDsText,
-	},
-};
-	
---start by splitting the IDs by commna delimiter
-local tIDs = {};
-local bContinue = true;
-local nSearchIndex = 0;
-local sDelimiter = dox.ModuleDelimiter;
+local function parseModuleIDs(sModuleIDsText)
+	--place the input into bith fields to start just in case there is only one word
+	local tRet = {
+		[1] = {
+			displayname = sModuleIDsText,
+			id = sModuleIDsText,
+		},
+	};
+
+	--start by splitting the IDs by commna delimiter
+	local tIDs = {};
+	local bContinue = true;
+	local nSearchIndex = 0;
+	local sDelimiter = dox.ModuleDelimiter;
 
 	while bContinue do
-	local nStart, nEnd = sModuleIDsText:find(sDelimiter, nSearchIndex);
+		local nStart, nEnd = sModuleIDsText:find(sDelimiter, nSearchIndex);
 
 		if nStart then
-		tIDs[#tIDs + 1] = sModuleIDsText:sub(nSearchIndex, nStart - 1);
-		nSearchIndex = nEnd + 1;
+			tIDs[#tIDs + 1] = sModuleIDsText:sub(nSearchIndex, nStart - 1);
+			nSearchIndex = nEnd + 1;
 
 		else
-		tIDs[#tIDs + 1] = sModuleIDsText:sub(nSearchIndex);
-		bContinue = false;
+			tIDs[#tIDs + 1] = sModuleIDsText:sub(nSearchIndex);
+			bContinue = false;
 
 		end
 
 	end
 
-	
+
 	--now look for display names for each module
 	for nIndex, sModuleText in pairs(tIDs) do
-	nSearchIndex = 0;
-	sDelimiter = dox.ModuleInfoNameDelimiter;
-	nStart, nEnd = sModuleText:find(sDelimiter, nSearchIndex);
+		nSearchIndex = 0;
+		sDelimiter = dox.ModuleInfoNameDelimiter;
+		nStart, nEnd = sModuleText:find(sDelimiter, nSearchIndex);
 
 		if nStart then
-		nSearchIndex = nEnd + 1;
-		
-		tRet[nIndex] =  {
-			displayname = sModuleText:sub(nStart + 1),
-			id = sModuleText:sub(1, nStart - 1),
-		};
+			nSearchIndex = nEnd + 1;
+
+			tRet[nIndex] =  {
+				displayname = sModuleText:sub(nStart + 1),
+				id = sModuleText:sub(1, nStart - 1),
+			};
 
 		else
-		tRet[nIndex] =  {
-			displayname = sModuleText,
-			id = sModuleText,
-		};
-		
+			tRet[nIndex] =  {
+				displayname = sModuleText,
+				id = sModuleText,
+			};
+
 		end
 
-	end	
+	end
 
-return tRet
+	return tRet
 end
 
 
@@ -247,51 +246,51 @@ end
 @ret tBlocks table A table containing any blocks found. If no blocks were found, an empty table is returned.
 !]]
 function dox.parse.getBlocks(sLua)
-local tBlocks = {};
-local nSearchStart = 0;
-local tBlockMarkers = dox.Markers.Block;
+	local tBlocks = {};
+	local nSearchStart = 0;
+	local tBlockMarkers = dox.Markers.Block;
 
 	if type(sLua) == "string" then
-		
-		if sLua:len() > 0 then
-		local _nBlockStart, nBlockStart_;
-		local nSafety = 0;
-		
-			repeat
-			nSafety = nSafety + 1;
-			
-			--look for the start of the block
-			_nBlockStart, nBlockStart_ = sLua:find(tBlockMarkers.Start, nSearchStart, true);
-			
-				if _nBlockStart then
-				local _nBlockEnd, nBlockEnd_;
-				--look for the end of the block
-				_nBlockEnd, nBlockEnd_ = sLua:find(tBlockMarkers.End, nSearchStart, true);
-					
-					if _nBlockEnd then
-					local nSubStart = _nBlockStart + tBlockMarkers.Start:len();
-					local nSubEnd = nBlockEnd_ - tBlockMarkers.End:len();					
-					local sBlock = sLua:sub(nSubStart, nSubEnd)
-								
-					--add the block to the 'tBlocks' table
-					tBlocks[#tBlocks + 1] = sBlock;
-					
-					--update the search index
-					nSearchStart = nBlockEnd_ + 1;
 
-					--reset the safety value
-					nSafety = 0;
+		if sLua:len() > 0 then
+			local _nBlockStart, nBlockStart_;
+			local nSafety = 0;
+
+			repeat
+				nSafety = nSafety + 1;
+
+				--look for the start of the block
+				_nBlockStart, nBlockStart_ = sLua:find(tBlockMarkers.Start, nSearchStart, true);
+
+				if _nBlockStart then
+					local _nBlockEnd, nBlockEnd_;
+					--look for the end of the block
+					_nBlockEnd, nBlockEnd_ = sLua:find(tBlockMarkers.End, nSearchStart, true);
+
+					if _nBlockEnd then
+						local nSubStart = _nBlockStart + tBlockMarkers.Start:len();
+						local nSubEnd = nBlockEnd_ - tBlockMarkers.End:len();
+						local sBlock = sLua:sub(nSubStart, nSubEnd);
+
+						--add the block to the 'tBlocks' table
+						tBlocks[#tBlocks + 1] = sBlock;
+
+						--update the search index
+						nSearchStart = nBlockEnd_ + 1;
+
+						--reset the safety value
+						nSafety = 0;
 					end
-					
+
 				end
-			
+
 			until _nBlockStart == nil or nSafety == 5
-			
+
 		end
-	
+
 	end
 
-return tBlocks
+	return tBlocks
 end
 
 
@@ -302,18 +301,18 @@ end
 @ret nModules number returns the number of modules that exist. Will return 0 if there are no modules.
 !]]
 function dox.parse.getModuleCount()
-local nModules = 0;
-	
+	local nModules = 0;
+
 	for sIndex, tModule in pairs(dox.Modules) do
-		
+
 		--confirm that this module contains info to be processed
 		if #tModule.Blocks > 0 then
-		nModules = nModules + 1
+			nModules = nModules + 1
 		end
-		
+
 	end
-	
-return nModules
+
+	return nModules
 end
 
 
@@ -325,15 +324,15 @@ end
 function dox.parse.importBlockToModules(tBlock)
 
 	if type(tBlock) == "table" then
-	local sModule = tBlock.Module;	
+		local sModule = tBlock.Module;
 
 		--create the module index if it doesn't already exist
 		createModuleEntry(sModule);
-	
+
 		--import the module
 		local nIndex = #dox.Modules[sModule].Blocks + 1;
 		dox.Modules[sModule].Blocks[nIndex] = tBlock;
-		
+
 	end
 
 end
@@ -347,97 +346,97 @@ end
 !]]
 --
 function dox.parse.importModuleInfo(sLuaString)
-local sMarkerStart = dox.Markers.Module.Start;
-local sMarkerEnd = dox.Markers.Module.End;
-	
+	local sMarkerStart = dox.Markers.Module.Start;
+	local sMarkerEnd = dox.Markers.Module.End;
+
 	--look for the start of the module block
 	local _nModuleStart, nModuleStart_ = sLuaString:find(sMarkerStart, 0, true);
 
 	if _nModuleStart then
-	--look for the end of the module block
-	local _nModuleEnd, nModuleEnd_ = sLuaString:find(sMarkerEnd, nModuleStart_ + 1, true);
-		
+		--look for the end of the module block
+		local _nModuleEnd, nModuleEnd_ = sLuaString:find(sMarkerEnd, nModuleStart_ + 1, true);
+
 		if _nModuleEnd then
-		local sModuleBlock = sLuaString:sub(nModuleStart_ + 1, _nModuleEnd - 1);
-				
+			local sModuleBlock = sLuaString:sub(nModuleStart_ + 1, _nModuleEnd - 1);
+
 			--if the string has text to process
 			if sModuleBlock:gsub(" ", "") ~= "" then
-			local tLines = {};
-			local tModuleNames;
-			local tTempLines = blockToTable(sModuleBlock);
-			local tModulesIDs;
-			local tModuleItems = {};
-			
+				local tLines = {};
+				local tModuleNames;
+				local tTempLines = blockToTable(sModuleBlock);
+				local tModulesIDs;
+				local tModuleItems = {};
+
 				for nIndex, sLine in pairs(tTempLines) do
-				local nTypeEnd = sLine:find("[%s]");
-					
+					local nTypeEnd = sLine:find("[%s]");
+
 					if not nTypeEnd then
 					--nTypeEnd = sLine:find("\n");
 					end
-					
+
 					if nTypeEnd then
-					local sType = sLine:sub(1, nTypeEnd - 1):lower():gsub(" ", "");
-					
+						local sType = sLine:sub(1, nTypeEnd - 1):lower():gsub(" ", "");
+
 						if dox.ModuleItems[sType] then
-						local sFormattedLine = sLine:sub(nTypeEnd + 1);
-						
+							local sFormattedLine = sLine:sub(nTypeEnd + 1);
+
 							if sType ~= "moduleid" then
-							tLines[sType] = sFormattedLine;
-							
+								tLines[sType] = sFormattedLine;
+
 							else --if this is the module name(s)
-							local sModuleRaw = sFormattedLine:gsub(" ", ""):gsub("\n","");
-								
+								local sModuleRaw = sFormattedLine:gsub(" ", ""):gsub("\n","");
+
 								if sModuleRaw ~= "" then
-								tModuleNames = parseModuleIDs(sModuleRaw);
+									tModuleNames = parseModuleIDs(sModuleRaw);
 								end
-								
+
 							end
-							
+
 						end
-						
+
 					end
-				
+
 				end
-				
+
 				--TODO DONT FORGET TO ESCAPE HTML CHARS /???? Do I need to do this?
 
-				if tModuleNames then				
-					
-					for nIndex, tModule in pairs(tModuleNames) do 
-					local sModule = tModule.id;
-					local sDisplayName = tModule.displayname;
-						
+				if tModuleNames then
+
+					for nIndex, tModule in pairs(tModuleNames) do
+						local sModule = tModule.id;
+						local sDisplayName = tModule.displayname;
+
 						--create the module if it doesn't exist
 						if not dox.Modules[sModule] then
-						createModuleEntry(sModule);
+							createModuleEntry(sModule);
 						end
-						
+
 						--process each item
 						for sMarker, tMarker in pairs(dox.ModuleItems) do
-							
+
 							if sMarker ~= "moduleid" and sMarker ~= "displayname" then
-								
-								if tLines[sMarker] then								
-								dox.Modules[sModule].Info[sMarker] = tLines[sMarker];								
-								end					
-							
+
+								if tLines[sMarker] then
+									dox.Modules[sModule].Info[sMarker] = tLines[sMarker];
+								end
+
 							elseif sMarker == "displayname" then
-							dox.Modules[sModule].Info.displayname = sDisplayName;
-							
+								dox.Modules[sModule].Info.displayname = sDisplayName;
+
 							end
-							
+
 						end
 
 					end
-					
+
 				end
-				
+
 			end
-			
+
 		end
-		
+
 	end
-	
+
 end
 
 
@@ -449,150 +448,150 @@ end
 @ret tBlock table,nil The final Block table which can be used to create HTML or nil if any 'Required' line items are missing or blank.
 !]]
 function dox.parse.processBlock(sBlock)
-local tRet;
+	local tRet;
 
 	if type(sBlock) == "string" then
-		
-		if sBlock:len() > 0 then
-		tRet = {
-			Description = getDefaultValue("Description"),
-			Example = getDefaultValue("Example"),
-			File = getDefaultValue("Example"),
-			Function = getDefaultValue("Function"),
-			Module = getDefaultValue("Module"),
-			Parameters = getDefaultValue("Parameters"),
-			Return = getDefaultValue("Return"),
-			Scope = getDefaultValue("Scope"),
-			Usage = getDefaultValue("Usage"),
-		};
 
-		
+		if sBlock:len() > 0 then
+			tRet = {
+				Description = getDefaultValue("Description"),
+				Example 	= getDefaultValue("Example"),
+				File 		= getDefaultValue("Example"), --TODO should this be 'File'? Check this
+				Function 	= getDefaultValue("Function"),
+				Module 		= getDefaultValue("Module"),
+				Parameters 	= getDefaultValue("Parameters"),
+				Return 		= getDefaultValue("Return"),
+				Scope 		= getDefaultValue("Scope"),
+				Usage 		= getDefaultValue("Usage"),
+			};
+
+
 			--escape special characters with something else until the table is constructed.
 			--[[for nIndex, tChar in pairs(dox.SpecialChars) do
 			sBlock = sBlock:gsub(tChar.Escaped, tChar.Temp);
 			end]]
-				
+
 		--construct the table
 		local tLines = blockToTable(sBlock);
-			
+
 			--process each line
 			for nIndex, sLine in pairs(tLines) do
-				
+
 				--[[put the special chars back
 				for nIndex, tChar in pairs(dox.SpecialChars) do
 				sLine = sLine:gsub(tChar.Temp, tChar.Intended);
 				end]]
-			
+
 			--get the line type and remove the type indicator from the line itself so it's clean and ready for print-processing
 			local sType, sVariation = getLineType(sLine);
-			
+
 				if dox.Types[sType] then
-				--remove the tag form the line
-				sLine = sLine:sub(sVariation:len() + 2); --account for the '@' symbol and the space
-				
-				--trim the whitespace
-				sLine = dox.util.trim(sLine);				
-				
+					--remove the tag form the line
+					sLine = sLine:sub(sVariation:len() + 2); --account for the '@' symbol and the space
+
+					--trim the whitespace
+					sLine = dox.util.trim(sLine);
+
 					--check for values belonging to types that may have multiple items and store in the appropriate table
 					if dox.Types[sType].AllowMultiple then
-					local nIndex = #tRet[sType] + 1;
-					tRet[sType][nIndex] = sLine;
-					
+						local nIndex = #tRet[sType] + 1;
+						tRet[sType][nIndex] = sLine;
+
 					--or store the value as-is in the appropriate table index
 					else
-						
+
 						--check for type alias violations
 						local tAllowedValues = dox.Types[sType].AllowedValues;
 						local sDefaultValue = dox.Types[sType].DefaultValue;
-						
+
 						if tAllowedValues and sDefaultValue then
-						local bIsAllowed = false;
-						
+							local bIsAllowed = false;
+
 							for nValueIndex, sValue in pairs(tAllowedValues) do
-								
+
 								--check to see if the input strings matches any of the allowed ones
 								if sValue:gsub(" ", ""):lower() == sLine:gsub(" ", ""):lower() then
-								bIsAllowed = true;
-								break;
-								end											
-							
+									bIsAllowed = true;
+									break;
+								end
+
 							end
-							
+
 							--if it's not allowed, set it to the default value
 							if not bIsAllowed then
-							sLine = sDefaultValue;
+								sLine = sDefaultValue;
 							end
-							
+
 						end
-						
-					tRet[sType] = sLine;
+
+						tRet[sType] = sLine;
 					end
-				
+
 				end
-					
+
 			end
-				
+
 			--ensure the block is valid before returning it
 			for sType, tType in pairs(dox.Types) do
-			local sDataType = type(tRet[sType]);
-			local bIsEmpty = false;
-				
+				local sDataType = type(tRet[sType]);
+				local bIsEmpty = false;
+
 				--discover if the the item is empty
 				if sDataType == "string" then
-					
+
 					if tRet[sType]:gsub(" ", "") == "" then
-					bIsEmpty = true;
+						bIsEmpty = true;
 					end
-					
+
 				elseif sDataType == "table" then
-					
+
 					if #tRet[sType] < 1 then
-					bIsEmpty = true;
+						bIsEmpty = true;
 					end
-					
+
 				end
-				
-				
+
+
 				--try to get the default values for empty items
 				if (tType.MustHaveChars or tType.RequiredType) and tType.DefaultValue and bIsEmpty then
-				local sDefaultType = type(tType.DefaultValue);
-				local bAllowDefault = false;
-				
+					local sDefaultType = type(tType.DefaultValue);
+					local bAllowDefault = false;
+
 					--make sure the default value isn't empty
 					if sDefaultType == "string" then
-					
+
 						if tType.DefaultValue:gsub(" ", "") ~= "" then
-						bAllowDefault = true;
-						end						
-						
+							bAllowDefault = true;
+						end
+
 					elseif sDefaultType == "table" then
-						
+
 						if #tType.DefaultValue > 0 then
-						bAllowDefault = true;
-						end						
-					
+							bAllowDefault = true;
+						end
+
 					end
-					
+
 					--insert the default value if allowed
 					if bAllowDefault then
-					tRet[sType] = tType.DefaultValue;
-					bIsEmpty = false;
+						tRet[sType] = tType.DefaultValue;
+						bIsEmpty = false;
 					end
-					
+
 				end
-				
+
 				--now, after all that, if the item is still invalid, return nil
 				if tType.RequiredType and bIsEmpty then
-				return nil
+					return nil
 				end
-				
+
 			end
-			
+
 		end
-	
+
 	end
-	
-return tRet
+
+	return tRet
 end
 
 
@@ -604,74 +603,74 @@ end
 function dox.parse.sortModules()
 	--process the modules
 	if dox.Modules then
-	--sort them alphabetically
-	local tModuleSorter = {};
-	--...but do so without case sensitivety
-	local tModuleIndexer = {};
-	
+		--sort them alphabetically
+		local tModuleSorter = {};
+		--...but do so without case sensitivety
+		local tModuleIndexer = {};
+
 		--store the 'dox.Modules' names in a numerically-indexed table for sorting
 		for sModule, tModule in pairs(dox.Modules) do
-			
+
 			if #tModule.Blocks > 0 then
-			--setup the module sorting tables
-			local sModuleLC = string.lower(sModule);
-			tModuleSorter[#tModuleSorter + 1] = sModuleLC;
-			tModuleIndexer[sModuleLC] = sModule;
-			
-			local tFunctionSorter = {};
-			local tFunctionIndexer = {};
-			
+				--setup the module sorting tables
+				local sModuleLC = string.lower(sModule);
+				tModuleSorter[#tModuleSorter + 1] = sModuleLC;
+				tModuleIndexer[sModuleLC] = sModule;
+
+				local tFunctionSorter = {};
+				local tFunctionIndexer = {};
+
 				--sort the functions inside the modules as well
 				for nIndex, tBlock in pairs(tModule.Blocks) do
-				local sFunctionLC = string.lower(tBlock.Function);
-				tFunctionSorter[nIndex] = sFunctionLC;
-				tFunctionIndexer[sFunctionLC] = tBlock.Function
+					local sFunctionLC = string.lower(tBlock.Function);
+					tFunctionSorter[nIndex] = sFunctionLC;
+					tFunctionIndexer[sFunctionLC] = tBlock.Function
 				end
-				
+
 				--sort the functions
 				table.sort(tFunctionSorter);
-				
+
 				--reset the 'ProcessOrder' table
 				dox.Modules[sModule].ProcessOrder = {};
-				
+
 				--store the results in the 'ProcessOrder' table of each module
 				for _, sFunctionLC in pairs(tFunctionSorter) do
-				local sFunction = tFunctionIndexer[sFunctionLC];
-				
-					for nBlockID, tBlock in pairs(tModule.Blocks) do
-						
-						if sFunction == tBlock.Function then					
-						local nNextIndex = #dox.Modules[sModule].ProcessOrder + 1;
-						dox.Modules[sModule].ProcessOrder[nNextIndex] = nBlockID;
-						break;
-						end
-						
-					end
-					
-				end
-			
-			end
-			
-		end
-		
-	--sort it
-	table.sort(tModuleSorter);
+					local sFunction = tFunctionIndexer[sFunctionLC];
 
-	--re/create the process order table
-	local tMeta = {
-		ProcessOrder = {},
-	};
-	
+					for nBlockID, tBlock in pairs(tModule.Blocks) do
+
+						if sFunction == tBlock.Function then
+							local nNextIndex = #dox.Modules[sModule].ProcessOrder + 1;
+							dox.Modules[sModule].ProcessOrder[nNextIndex] = nBlockID;
+							break;
+						end
+
+					end
+
+				end
+
+			end
+
+		end
+
+		--sort it
+		table.sort(tModuleSorter);
+
+		--re/create the process order table
+		local tMeta = {
+			ProcessOrder = {},
+		};
+
 		--store the items in the metatable
 		for nIndex, sModuleLC in pairs(tModuleSorter) do
-		tMeta.ProcessOrder[nIndex] = tModuleIndexer[sModuleLC];
+			tMeta.ProcessOrder[nIndex] = tModuleIndexer[sModuleLC];
 		end
 
-	--record the info in the meta table for later use
-	setmetatable(dox.Modules, tMeta);
+		--record the info in the meta table for later use
+		setmetatable(dox.Modules, tMeta);
 
-	--cleanup
-	tTempModules = nil;
+		--cleanup
+		tTempModules = nil;
 	end
-	
+
 end
