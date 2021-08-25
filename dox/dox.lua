@@ -204,7 +204,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 dox = {};
 
 --warn the user if debug is missing
-if not debug then
+if type(debug) ~= "table" then
 	error("Dox requires the debug library to operate. Please use a version of lua that includes the debug library.")
 end
 
