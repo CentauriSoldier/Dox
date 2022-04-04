@@ -2,29 +2,29 @@ dox.util = {};
 
 --directory spacer (reset at the end of the file for windows systems)
 local _ = "/";
-	local sOSType = "linux";
+local sOSType = "linux";
 
-	local tFileMethods = {
+local tFileMethods = {
 	["linux"] = {
 		fileFind = function(sDir, sFile, bRecursive)
-		local sRecurs = " -maxdepth 1 ";
+			local sRecurs = " -maxdepth 1 ";
 
 			if bRecursive then
-			sRecurs = "";
+				sRecurs = "";
 			end
 
-		return 'find "'..sDir..'"'..sRecurs..'-name "'..sFile..'"'
+			return 'find "'..sDir..'"'..sRecurs..'-name "'..sFile..'"'
 		end,
 	},
 	["windows"] = {
 		fileFind = function(sDir, sFile, bRecursive)
-		local sRecurs = "";
+			local sRecurs = "";
 
 			if bRecursive then
-			sRecurs = " /s";
+				sRecurs = " /s";
 			end
 
-		return 'dir "'..sDir.."\\"..sFile..'" /b'..sRecurs;
+			return 'dir "'..sDir.."\\"..sFile..'" /b'..sRecurs;
 		end,
 	},
 };
@@ -54,7 +54,7 @@ end
 @module dox.util
 @func dox.util.fileFind
 @desc Searches for file(s) based on the input.
-@param sDir string The directory in which to search. The type of path formatting is irrelevant. I.e., Both "C:\\MyDirectory" and "/MyDirectory" are valid formatting methods for this input.
+@param sDir string The directory which to search. The type of path formatting is irrelevant. I.e., Both "C:\\MyDirectory" and "/MyDirectory" are valid formatting methods for this input.
 @param sFile string The file or file pattern to find.
 @param bRecursive boolean,nil If true, the function will search for the file/pattern recursively.
 @ret tFiles table A numerically-indexed table whose values are the paths of the found item(s). If no items are found, an empty table is returned.
@@ -83,7 +83,7 @@ function dox.util.fileFind(sDir, sFile, bRecursive)
 		if hFiles then
 
 			--add each file to the list
-			for sFile in hFiles:lines() do
+			for sFile in hFiles:lines() do				
 				nIndex = nIndex + 1;
 				tRet[nIndex] = sFile;
 			end
@@ -104,7 +104,7 @@ function dox.util.fileFind(sDir, sFile, bRecursive)
 
 			--if the table has no files, return nil
 			if not tRet[1] then
-				return nil
+				return nil --TODO this does not allow hFIle to close!
 			end
 
 			hFiles:close();

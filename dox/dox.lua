@@ -454,7 +454,7 @@ end
 --[[!
 @mod dox
 @func dox.processDir
-@desc Does the same as dox.processFile() but for an entire directory.
+@desc Does the same as dox.processFile() but for an entire directory. Note: if a file called .doxignore is found, the directory (and sub directories) will be ignored.
 @param sDir string The full path to the directory.
 @param pOutDir string The full path to the directory that will store the output.
 @param sTheme string,nil The name of the color scheme to use in the out HTML. If nil, Dox will use the default theme.
@@ -465,6 +465,15 @@ end
 function dox.processDir(sDir, pOutDir, sTheme, bRecursive, pAtomSnippetsFile, sSnippetSection)
 	--tell dox to process the entire directory before writing
 	bDirProcessing = true;
+
+	Dialog.Message("", sFile);
+	
+	--look for .doxignore file and skip this directory if it's found
+	if (sFile == ".doxignore") then
+		tRet = {};
+		break;
+	end
+
 
 	--get all the files in the directory
 	local tFiles = dox.util.fileFind(sDir, "*.lua", bRecursive);
