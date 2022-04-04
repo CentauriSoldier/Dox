@@ -67,28 +67,27 @@ Below is a list of currently usable tags *(as well as acceptable abbreviations)*
 - **return**		*(**ret**)* *See description below* *(**optional**)*
 - **scope**			Whether global or local.
 - **usage**   		How the function is intended to be used, it's features, limitations, etc.
+- #### Special Tags
+The **return** and **parameter** tags behave a little differently than the other tags in that they accept up to three input sections delimited by a space.
+	- The **Parameter** tag.
 
+	First is the descriptive name *(**required**)*, then the type input *(**required**)* and a description of the input value *(**optional**)*.
 
-	- #### Special Tags
-	The **return** and **parameter** tags behave a little differently than the other tags in that they accept up to three input sections delimited by a space.
+		- ##### Example usage of a parameter tag.
 
-- ##### The Parameter Tag
-First is the descriptive name *(**required**)*, then the type input *(**required**)* and a description of the input value *(**optional**)*.
+		```lua
+		@param pInputFile string The path to the file dox reads.
+		```
 
-###### Example usage of a parameter tag.
+	- The **Return** tag.
 
-```lua
-@param pInputFile string The path to the file dox reads.
-```
-
-	- ##### The Return Tag
 	First is the descriptive name *(**required**)*, then the type returned *(**required**)* and a description of the returned value *(**optional**)*.
 
 		- ###### Example usage of a return tag.
 
-```lua
-@ret sPath string The local path from which dox is run.
-```
+		```lua
+		@ret sPath string The local path from which dox is run.
+		```
 
 ***
 # THIS SECTION IN-PROGRESS
