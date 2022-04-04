@@ -1,14 +1,36 @@
-# Dox 0.1.0
-#### A Lua Documentation Generator Script
+![DOX](assets/dox_title.png)
 
-## Planned Features
+## 🆆🅷🅰🆃 🅸🆂 🅳🅾🆇❓ 🔬
+Dox is a lua documentation generator script.
+
+## 🆁🅴🆂🅾🆄🆁🅲🅴🆂
+- Logo: https://cooltext.com/
+- Special ASCII Fonts: https://fsymbols.com/generators/carty/
+
+## 🆅🅴🆁🆂🅸🅾🅽 ⚗
+
+#### Alpha v0.6
+<details>
+<summary>See Changes</summary>
+
+### 🇨​​​​​🇭​​​​​🇦​​​​​🇳​​​​​🇬​​​​​🇪​​​​​🇱​​​​​🇴​​​​​🇬​​​​​
+
+**v0.6**
+- Feature: TODO update this changelog
+</details>
+
+## 🅿🅻🅰🅽🅽🅴🅳 🅵🅴🅰🆃🆄🆁🅴🆂
 - [ ] Add dox core function snippets to the Atom snippets file (if not already present) when writing to the Atom snippets file.
 - [ ] Add dox function and module comment snippets to the Atom snippets file (if not already present) when writing to the Atom snippets file.
 - [ ] Use Bootstrap for CSS.
 
-## FAQs
+## 🅻🅸🅲🅴🅽🆂🅴 ©
+
+All code is placed in the public domain under [The Unlicense](https://opensource.org/licenses/unlicense "The Unlicense") *(except where otherwise noted)*.
+
+## 🅵🅰🆀🆂
 * *Can I use my own css?*
-	* Currently, no. But, if there are enough requests for this feature, I'll add it in the furture.
+	* Currently, no. But, if there are enough requests for this feature, I'll add it in the future.
 * *Is Dox cross-platform?*
 	* So far, Dox is tested and working on Linux and Windows.
 * *How do I use Dox?*
@@ -16,63 +38,61 @@
 * *Do you plan to create autocomplete scripts for other editors/IDEs?*
 	* Not at this time; however, enough interest in a specific IDE/editor may change my mind.
 
-## Setup
-#### Download the **dox** folder from this repository and place it in your project.
-#### Require the dox module.
-
-
+## 🆂🅴🆃🆄🅿
+1. Download the **dox** folder from this repository and place it in your project.
+2. Require the dox module.
 ```lua
 require('dox.dox');
 ```
 
-## How To Comment Your Code
+## 🅷🅾🆆 🆃🅾 🅲🅾🅼🅼🅴🅽🆃 🆈🅾🆄🆁 🅲🅾🅳🅴
 
-### Take a breath...
-Now, I know this is a new way to document your code, but I've made it as painless as possible. Once you read this section, you'll be ready to start documenting and you'll see how simple Dox is to use.
-
-### Function Info Block
+## 🇫​​​​​🇺​​​​​🇳​​​​​🇨​​​​​🇹​​​​​🇮​​​​​🇴​​​​​🇳​​​​​ 🇧​​​​​🇱​​​​​🇴​​​​​🇨​​​​​🇰​​​​​
 This is the primary element of Dox that makes it work. In fact, without at least one function info block, Dox will not process the target module since there would be no information to process.
 
-The function info block is wrapped in a multi-line lua comment whose start tag is **--[[!** and end tag is **!]].**
+The function info block is wrapped in a multi-line lua comment whose start tag is ***--[[!*** and end tag is ***!]]***.
 
-#### Function Info Block Block Tags
-Elements inside the function info block are designated by an "@" symbol directly followed by the desired tag and tag information.
+#### Block Tags
+Elements inside the function info block are designated by an ***@*** symbol directly followed by the desired tag and tag information.
 
-Below is a list of currently usable tags for this block as well as their formatting and usage details. The tags are **not** case sensitive.
+Below is a list of currently usable tags *(as well as acceptable abbreviations)* for this block as well as their formatting and usage details. Following the description of each tag is an indicator of whether it is required or optional.
 
-* description *(or desc)*
-* example
-* function 	*(or func) required tag*
-* module 	*(or mod) recommended tag*
-* Parameter 	*(or param)*
-* Return	*(or ret)*
-* Scope
-* Usage   
-    
+*Note: tags are **not** case sensitive.*
 
-#### Special Tags
-**Return** and **Parameter** behave a little differently than the other tags in that they accept up to three input sections delimited by a space.
+- **description** 	*(**des**, **desc**)* This informs the reader what your function does. *(**optional**)*
+- **example** 		*(**ex**, **examples**)* A code example to help the reader understand how it works. *(**optional**)*
+- **function** 		*(**fun**, **func**)* The name of the function *(**required**)*
+- **module** 		*(**mod**)* To which module this function belongs. *(**optional**)*
+- **parameter** 	*(**param**)* *See description below* *(**optional**)*
+- **return**		*(**ret**)* *See description below* *(**optional**)*
+- **scope**			Whether global or local.
+- **usage**   		How the function is intended to be used, it's features, limitations, etc.
 
-##### The Parameter Tag
-First is the descriptive name *(required)*, then the type input *(required)* and a description of the input value *(optional)*.
 
-###### Example usage of a parameter tag.
-```lua
-@param pInputFile string The path to the file dox reads.
-```
-##### The Return Tag
-First is the descriptive name *(required)*, then the type returned *(required)* and a description of the returned value *(optional)*.
+- #### Special Tags
+The **return** and **parameter** tags behave a little differently than the other tags in that they accept up to three input sections delimited by a space.
 
-###### Example usage of a return tag.
-```lua
-@ret sPath string The local path from which dox is run.
-```
-### Module Info Block
-The module information is wrapped in a multiline lua comment whose start tag is --[[* and end tag is *]]. The content of this block is displayed at the top of the module page within and accordion menu on the left of the page.
+	- ##### The Parameter Tag
+	First is the descriptive name *(**required**)*, then the type input *(**required**)* and a description of the input value *(**optional**)*.
+		- ###### Example usage of a parameter tag.
+		```lua
+		@param pInputFile string The path to the file dox reads.
+		```
+	- ##### The Return Tag
+	First is the descriptive name *(**required**)*, then the type returned *(**required**)* and a description of the returned value *(**optional**)*.
 
-Note: Unlike (at least one) function info block, the module info block is not required. Dox will function just fine with or without the module info block; you may omit the entire thing if you wish. Additionaly, if you do choose to use the module info block, only one of the tags (listed below) is required: the 'module' tag is required if using the module info block although you may use one, all or none of the remaining tags (or anything in between).
+		- ###### Example usage of a return tag.
+		```lua
+		@ret sPath string The local path from which dox is run.
+		```
+***
+# THIS SECTION IN-PROGRESS
+## 🇲​​​​​🇴​​​​​🇩​​​​​🇺​​​​​🇱​​​​​🇪​​​​​ 🇧​​​​​🇱​​​​​🇴​​​​​🇨​​​​​🇰​​​​​
+The module information is wrapped in a multiline lua comment whose start tag is ***--[[**** and end tag is ****]]***. The content of this block is displayed at the top of the module page within an accordion menu on the left of the page.
+- Note on module block requirements:
+> *Unlike (at least one) function block, the module block is **not required**. Dox will function just fine with or without the module block; you may omit the entire thing if you wish. Additionally, if you do choose to use the module block, only one of the tags (listed below) is required: the 'module' tag is required if using the module block although you may use none, one, some or all of the other tags*
 
-Like the function info block, the module info block has no tags that are sensitive to spaces and new lines. This feature makes it very easy to use html with your module info block. As you can see, you're reading text right now that has been formatted within the comment block of the dox.lua file.
+Like the function block, the module block has no tags that are sensitive to spaces and new lines. This feature makes it very easy to use html within your module block. As you can see, you're reading text right now that has been formatted within the comment block of the dox.lua file.
 
 Within the block are tags. These tags start and end just like html tags do, with <tagname> as the start tag and </tagname> as the end tag where tagname is the name of the tag. Below is a complete list of supported tags. The tags are not case sensitive.
 
@@ -140,10 +160,10 @@ Each tag **must** have a space after it before your text starts. Failing to prov
 ```lua
 --[[*
 @authors Centauri Soldier
-@copyright Copyright © 2016 Centauri Soldier
+@copyright Copyright © 2022 Centauri Soldier
 @description
 	<h2>Dox</h2>
-	<h3>The Simple Lua Documentation Generator</h3>	
+	<h3>The Simple Lua Documentation Generator</h3>
 	<p>Dox is a light-weight script designed to parse crafted lua comments regarding modules and functions and output them to readable, sorted and linked HTML. Dox enables you to quickly and simply create documentation for your lua code without the need to install programs or to run anything other than the Dox script. In fact, it's so simple, you can have documentation in as few as 2 lines of code.</p>
 @license <p>The MIT License (MIT)<br>
 <br>
@@ -189,3 +209,6 @@ Dox will even keep separate sections for your various code projects to prevent o
 ```lua
 dox.atom.writeSnippets(sPathToMyAtomSnippetsFile, sSnippetSectionName)
 ```
+
+## Credits
+Nifty background image by [Vecteezy](https://www.vecteezy.com/free-vector/space)
