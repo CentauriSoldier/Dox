@@ -82,7 +82,7 @@ Below is a list of currently usable tags *(as well as acceptable abbreviations)*
 	- The **Return** tag.
 		- First is the descriptive name *(**required**)*, then the type returned *(**required**)* and a description of the returned value *(**optional**)*.
 
-		- ###### Example usage of a return tag.
+	- ##### Example usage of a return tag.
 
 		```lua
 		@ret sPath string The local path from which dox is run.
