@@ -46,6 +46,7 @@ require('dox.dox');
 ```
 
 ## 🅷🅾🆆 🆃🅾 🅲🅾🅼🅼🅴🅽🆃 🆈🅾🆄🆁 🅲🅾🅳🅴
+Commenting each modules and function is very straight-forward and simple. Below is a comprehensive overview of the process.
 
 ## 🇫​​​​​🇺​​​​​🇳​​​​​🇨​​​​​🇹​​​​​🇮​​​​​🇴​​​​​🇳​​​​​ 🇧​​​​​🇱​​​​​🇴​​​​​🇨​​​​​🇰​​​​​
 This is the primary element of Dox that makes it work. In fact, without at least one function info block, Dox will not process the target module since there would be no information to process.
