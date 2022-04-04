@@ -60,7 +60,7 @@ Below is a list of currently usable tags *(as well as acceptable abbreviations)*
 *Note: tags are **not** case sensitive.*
 
 - **description** 	*(**des**, **desc**)* This informs the reader what your function does. *(**optional**)*
-- **example** 		*(**ex**, **examples**)* A code example to help the reader understand how it works. *(**optional**)*
+- **example** 		*(**ex**, **examples**)* Code to help the reader understand how it works. *(**optional**)*
 - **function** 		*(**fun**, **func**)* The name of the function *(**required**)*
 - **module** 		*(**mod**)* To which module this function belongs. *(**optional**)*
 - **parameter** 	*(**param**)* *See description below* *(**optional**)*
@@ -72,19 +72,19 @@ Below is a list of currently usable tags *(as well as acceptable abbreviations)*
 - #### Special Tags
 The **return** and **parameter** tags behave a little differently than the other tags in that they accept up to three input sections delimited by a space.
 
-	- ##### The Parameter Tag
-	First is the descriptive name *(**required**)*, then the type input *(**required**)* and a description of the input value *(**optional**)*.
-		- ###### Example usage of a parameter tag.
-		```lua
-		@param pInputFile string The path to the file dox reads.
-		```
-	- ##### The Return Tag
-	First is the descriptive name *(**required**)*, then the type returned *(**required**)* and a description of the returned value *(**optional**)*.
+- ##### The Parameter Tag
+First is the descriptive name *(**required**)*, then the type input *(**required**)* and a description of the input value *(**optional**)*.
+	- ###### Example usage of a parameter tag.
+	```lua
+	@param pInputFile string The path to the file dox reads.
+	```
+- ##### The Return Tag
+First is the descriptive name *(**required**)*, then the type returned *(**required**)* and a description of the returned value *(**optional**)*.
 
-		- ###### Example usage of a return tag.
-		```lua
-		@ret sPath string The local path from which dox is run.
-		```
+	- ###### Example usage of a return tag.
+	```lua
+	@ret sPath string The local path from which dox is run.
+	```
 ***
 # THIS SECTION IN-PROGRESS
 ## 🇲​​​​​🇴​​​​​🇩​​​​​🇺​​​​​🇱​​​​​🇪​​​​​ 🇧​​​​​🇱​​​​​🇴​​​​​🇨​​​​​🇰​​​​​
