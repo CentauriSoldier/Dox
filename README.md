@@ -74,19 +74,22 @@ The **return** and **parameter** tags behave a little differently than the other
 
 - ##### The Parameter Tag
 First is the descriptive name *(**required**)*, then the type input *(**required**)* and a description of the input value *(**optional**)*.
-	- ###### Example usage of a parameter tag.
 
+	- ###### Example usage of a parameter tag.
+	
 	```lua
 	@param pInputFile string The path to the file dox reads.
 	```
+
 - ##### The Return Tag
 First is the descriptive name *(**required**)*, then the type returned *(**required**)* and a description of the returned value *(**optional**)*.
 
 	- ###### Example usage of a return tag.
-	
+
 	```lua
 	@ret sPath string The local path from which dox is run.
 	```
+
 ***
 # THIS SECTION IN-PROGRESS
 ## 🇲​​​​​🇴​​​​​🇩​​​​​🇺​​​​​🇱​​​​​🇪​​​​​ 🇧​​​​​🇱​​​​​🇴​​​​​🇨​​​​​🇰​​​​​
