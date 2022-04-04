@@ -71,10 +71,11 @@ Below is a list of currently usable tags *(as well as acceptable abbreviations)*
 
 	- #### Special Tags
 	The **return** and **parameter** tags behave a little differently than the other tags in that they accept up to three input sections delimited by a space.
-		- The Parameter Tag
-		First is the descriptive name *(**required**)*, then the type input *(**required**)* and a description of the input value *(**optional**)*.
 
-			- ###### Example usage of a parameter tag.
+- ##### The Parameter Tag
+First is the descriptive name *(**required**)*, then the type input *(**required**)* and a description of the input value *(**optional**)*.
+
+###### Example usage of a parameter tag.
 
 ```lua
 @param pInputFile string The path to the file dox reads.
