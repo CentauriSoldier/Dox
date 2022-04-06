@@ -1,30 +1,28 @@
 dox.util = {};
 
---directory spacer (reset at the end of the file for windows systems)
-local _ = "/";
-	local sOSType = "linux";
+--ignore files cause dox to ignore files/folders where the files are found
+local sDoxIgnoreFile 	= ".doxignore"; --ignores all files in current directory
+local sDoxIgnoreSubFile = ".doxignoresub"; --ignores all files in sub directories
+local sDoxIgnoreAllFile = ".doxignoreall"; --ignores all files current and subdirectories
 
-	local tFileMethods = {
-	["linux"] = {
+local nMinFileLength = 5; --some character plus a dot then the file extension (e.g., t.lua)
+
+--get directory spacer
+local _ = package.config:sub(1,1);
+--get the os type
+local sOSType = _ == "\\" and "windows" or (_ == "/" and "unix" or "unknown");
+
+local tFileFindMethods = {
+	["unix"] = {
 		fileFind = function(sDir, sFile, bRecursive)
-		local sRecurs = " -maxdepth 1 ";
-
-			if bRecursive then
-			sRecurs = "";
-			end
-
-		return 'find "'..sDir..'"'..sRecurs..'-name "'..sFile..'"'
+			local sRecurs = bRecursive and "" or " -maxdepth 1 ";
+			return 'find "'..sDir..'"'..sRecurs..'-name "'..sFile..'"'
 		end,
 	},
 	["windows"] = {
 		fileFind = function(sDir, sFile, bRecursive)
-		local sRecurs = "";
-
-			if bRecursive then
-			sRecurs = " /s";
-			end
-
-		return 'dir "'..sDir.."\\"..sFile..'" /b'..sRecurs;
+			local sRecurs = bRecursive and " /s" or "";
+			return 'dir "'..sDir.."\\"..sFile..'" /b'..sRecurs;
 		end,
 	},
 };
@@ -34,19 +32,83 @@ local _ = "/";
 @module dox.util
 @func dox.util.getOSType
 @desc Determines the operating system type the end-user if running.
-@ret sOSType string returns 'windows' if it is a Windows systems and 'linux' if it a unix-based system.
+@ret sOSType string returns 'windows' if it is a Windows systems and 'unix' if it a unix-based system.
 !]]
 function dox.util.getOSType()
-	local sSlash = package.config:sub(1,1);
+	return sOSType;
+end
 
-	if sSlash == "\\" then
-		return "windows"
+local p = Dialog.Message;
 
-	elseif sSlash == "/" then
-		return "linux"
-
+function dox.util.getProcessList(sDir, bRecurse, tFiles)
+	local tRet = type(tFiles) == "table" and tFiles or {};
+	--TODO finish the unix commands
+	--setup the commands
+	local sGetFilesCommand 	= (_ == "\\") and	('dir "'..sDir..'\\*.*" /b /a-d'):gsub("\\\\", "\\") 	or ('find '..sDir.."/"..'-maxdepth 1 ! –type d'):gsub("//", "/");
+	local sGetDirsCommand 	= (_ == "\\") and	('dir "'..sDir..'\\*.*" /b /d'):gsub("\\\\", "\\") 		or ("ls -a -d /*"):gsub("//", "/");
+	
+	local hFiles 	= io.popen(sGetFilesCommand);
+	--p("", type(hFiles))
+	--process files and folders
+	if (hFiles) then
+		local bIgnore 		= false;
+		local bIgnoreSub	= false;
+		local bIgnoreAll 	= false;
+		local tFiles = {};
+		
+		--look for ignore files
+		for sFile in hFiles:lines() do
+			
+			if (sFile == sDoxIgnoreAllFile) then
+				bIgnoreAll = true;
+				break; --no need to continue at this point
+			elseif (sFile == sDoxIgnoreSubFile) then
+				bIgnoreSub = true;
+			elseif (sFile == sDoxIgnoreFile) then
+				bIgnore = true;
+			else
+				tFiles[#tFiles + 1] = sFile;
+			end
+			
+		end
+	
+		--only process items if the .doxignoreall file was NOT found
+		if not (bIgnoreAll) then
+	
+			--process files
+			if not (bIgnore) then
+				
+				for nIndex, sFile in pairs(tFiles) do
+					
+					--check that the file type is valid
+					if (sFile:len() >= nMinFileLength and sFile:reverse():sub(1, 4):lower() == "aul.") then
+						--add the file to the list
+						tRet[#tRet + 1] = sDir.._..sFile;
+					end			
+					
+				end
+				
+			end
+			
+			--process subdirectories
+			if 1 == 4 then--(bIgnoreSub) then
+				local hDirs	= io.popen(sGetDirsCommand);
+				
+				if (hDirs) then
+				
+					for sDirectory in hDirs:lines() do
+						dox.util.getProcessList(sDir, bRecurse, tRet);
+					end
+				
+				end
+				
+			end
+			
+		end
+	
 	end
-
+		
+	return tRet;
 end
 
 
@@ -54,7 +116,7 @@ end
 @module dox.util
 @func dox.util.fileFind
 @desc Searches for file(s) based on the input.
-@param sDir string The directory in which to search. The type of path formatting is irrelevant. I.e., Both "C:\\MyDirectory" and "/MyDirectory" are valid formatting methods for this input.
+@param sDir string The directory which to search. The type of path formatting is irrelevant. I.e., Both "C:\\MyDirectory" and "/MyDirectory" are valid formatting methods for this input.
 @param sFile string The file or file pattern to find.
 @param bRecursive boolean,nil If true, the function will search for the file/pattern recursively.
 @ret tFiles table A numerically-indexed table whose values are the paths of the found item(s). If no items are found, an empty table is returned.
@@ -65,17 +127,17 @@ function dox.util.fileFind(sDir, sFile, bRecursive)
 
 	if type(sDir) == "string" and type(sFile) == "string" then
 
-		--ensure the slashes are correct (for systems that use a linux separator '/' on Windows and vice versa)
+		--ensure the slashes are correct (for systems that use a unix separator '/' on Windows and vice versa)
 		if sOSType == "windows" then
 			sDir = sDir:gsub("/", "\\");
 
-		elseif sOSType == "linux" then
+		elseif sOSType == "unix" then
 			sDir = sDir:gsub("\\", "/");
 
 		end
 
 	--create the command
-	local sCommand = tFileMethods[sOSType].fileFind(sDir, sFile, bRecursive)
+	local sCommand = tFileFindMethods[sOSType].fileFind(sDir, sFile, bRecursive)
 
 	--read the dir
 	local hFiles = io.popen(sCommand);
@@ -83,7 +145,7 @@ function dox.util.fileFind(sDir, sFile, bRecursive)
 		if hFiles then
 
 			--add each file to the list
-			for sFile in hFiles:lines() do
+			for sFile in hFiles:lines() do				
 				nIndex = nIndex + 1;
 				tRet[nIndex] = sFile;
 			end
@@ -104,7 +166,7 @@ function dox.util.fileFind(sDir, sFile, bRecursive)
 
 			--if the table has no files, return nil
 			if not tRet[1] then
-				return nil
+				return nil --TODO this does not allow hFIle to close!
 			end
 
 			hFiles:close();
@@ -115,7 +177,7 @@ function dox.util.fileFind(sDir, sFile, bRecursive)
 return tRet
 end
 
-
+--TODO isn't this a native lua function? check and, if so, replace
 --[[!
 @module dox.util
 @func dox.util.interateChar
@@ -194,12 +256,4 @@ end
 function dox.util.trim(s)
   -- from PiL2 20.4
   return (s:gsub("^%s*(.-)%s*$", "%1"))
-end
-
---get the OS type for the file functions
-sOSType = dox.util.getOSType();
-
---reset the directory spacer (if needed)
-if sOSType == "WINDOWS" then
-_ = "\\";
 end

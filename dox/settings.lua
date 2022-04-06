@@ -149,14 +149,16 @@ Note: if no default value is set and there is no value given by the end-user (fo
 dox.Types = {
 	Description = {
 		Variations = {
-			"description",
+			"des",
 			"desc",
+			"description",						
 		},
 	},
 	Example = {
 		Variations = {
-			"examples",
+			"ex",
 			"example",
+			"examples",
 		},
 	},
 	File = {
@@ -168,8 +170,9 @@ dox.Types = {
 		--MustHaveChars = true, Assumed to be true by 'RequiredType == true'
 		RequiredType = true,
 		Variations = {
-			"function",
+			"fun",
 			"func",
+			"function",
 		},
 	},
 	Module = {

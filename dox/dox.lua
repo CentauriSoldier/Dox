@@ -8,7 +8,7 @@
 @email
 @features
 	<h3>Multi-platform</h3>
-	<p>Dox works with all major versions of Windows and Linux.</p>
+	<p>Dox works with all major versions of Windows as well as Unix systems(linux, Mac etc.).</p>
 	<p>Dox can be used on unix based systems or Windows without having to convert directory or file paths. Dox will auto-detect and convert paths as needed.</p>
 	<h3>No Dependencies</h3>
 	<p>Dox needs nothing but itself and your lua files in order to run correctly. No installing, no configuring, no mess.</p>
@@ -149,7 +149,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	<li>
 		<b>0.0.9</b>
 		<br>
-		<p>Added support for linux.</p>
+		<p>Added support for unix systems.</p>
 	</li>
 	<li>
 		<b>0.0.8</b>
@@ -454,7 +454,7 @@ end
 --[[!
 @mod dox
 @func dox.processDir
-@desc Does the same as dox.processFile() but for an entire directory.
+@desc Does the same as dox.processFile() but for an entire directory. Note: if a file called .doxignore is found, the directory (and sub directories) will be ignored.
 @param sDir string The full path to the directory.
 @param pOutDir string The full path to the directory that will store the output.
 @param sTheme string,nil The name of the color scheme to use in the out HTML. If nil, Dox will use the default theme.
@@ -465,10 +465,14 @@ end
 function dox.processDir(sDir, pOutDir, sTheme, bRecursive, pAtomSnippetsFile, sSnippetSection)
 	--tell dox to process the entire directory before writing
 	bDirProcessing = true;
-
+	
+	--check for an OnProcess function
+	local bRunDoxOnProcess = type(dox.onProcess) == "function";
+	
 	--get all the files in the directory
 	local tFiles = dox.util.fileFind(sDir, "*.lua", bRecursive);
-
+	--local tFiles = dox.util.getProcessList(sDir, bRecursive)
+	
 	if tFiles then
 		--reset the modules table
 		dox.Modules = {};
@@ -481,7 +485,7 @@ function dox.processDir(sDir, pOutDir, sTheme, bRecursive, pAtomSnippetsFile, sS
 		writeOutput(pOutDir);
 
 		--process callback function (if it exists)
-		if (type(dox.onProcess) == "function") then
+		if (bRunDoxOnProcess) then
 			dox.onProcess();
 		end
 
