@@ -470,7 +470,6 @@ function dox.processDir(sDir, pOutDir, sTheme, bRecursive, pAtomSnippetsFile, sS
 	local bRunDoxOnProcess = type(dox.onProcess) == "function";
 
 	--get all the files in the directory
-	--local tFiles = dox.util.fileFind(sDir, "*.lua", bRecursive);
 	local tFiles = dox.util.getProcessList(sDir, bRecursive);
 	
 	if tFiles then
