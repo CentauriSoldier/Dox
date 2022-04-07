@@ -48,13 +48,13 @@ function dox.util.getProcessList(sDir, bRecurse, tFiles)
 	local sGetDirsCommand 	= (_ == "\\") and	('dir "'..sDir..'\\*.*" /b /d'):gsub("\\\\", "\\") 		or ("ls -a -d /*"):gsub("//", "/");
 	
 	local hFiles 	= io.popen(sGetFilesCommand);
-	--p("", type(hFiles))
+	
 	--process files and folders
 	if (hFiles) then
 		local bIgnore 		= false;
 		local bIgnoreSub	= false;
 		local bIgnoreAll 	= false;
-		local tFiles = {};
+		local tFiles 		= {};
 		
 		--look for ignore files
 		for sFile in hFiles:lines() do
@@ -62,11 +62,17 @@ function dox.util.getProcessList(sDir, bRecurse, tFiles)
 			if (sFile == sDoxIgnoreAllFile) then
 				bIgnoreAll = true;
 				break; --no need to continue at this point
-			elseif (sFile == sDoxIgnoreSubFile) then
+			end
+			
+			if (sFile == sDoxIgnoreSubFile) then			
 				bIgnoreSub = true;
-			elseif (sFile == sDoxIgnoreFile) then
+			end
+			
+			if (sFile == sDoxIgnoreFile) then			
 				bIgnore = true;
-			else
+			end
+			
+			if not (bIgnoreAll or bIgnore) then
 				tFiles[#tFiles + 1] = sFile;
 			end
 			
@@ -75,29 +81,25 @@ function dox.util.getProcessList(sDir, bRecurse, tFiles)
 		--only process items if the .doxignoreall file was NOT found
 		if not (bIgnoreAll) then
 	
-			--process files
-			if not (bIgnore) then
+			--add (any) files that exist to the return table
+			for nIndex, sFile in pairs(tFiles) do
 				
-				for nIndex, sFile in pairs(tFiles) do
-					
-					--check that the file type is valid
-					if (sFile:len() >= nMinFileLength and sFile:reverse():sub(1, 4):lower() == "aul.") then
-						--add the file to the list
-						tRet[#tRet + 1] = sDir.._..sFile;
-					end			
-					
-				end
+				--check that the file type is valid
+				if (sFile:len() >= nMinFileLength and sFile:reverse():sub(1, 4):lower() == "aul.") then
+					--add the file to the list
+					tRet[#tRet + 1] = sDir.._..sFile;
+				end			
 				
 			end
 			
 			--process subdirectories
-			if 1 == 4 then--(bIgnoreSub) then
+			if not (bIgnoreSub) then
 				local hDirs	= io.popen(sGetDirsCommand);
 				
 				if (hDirs) then
 				
 					for sDirectory in hDirs:lines() do
-						dox.util.getProcessList(sDir, bRecurse, tRet);
+						dox.util.getProcessList(sDir.._..sDirectory, bRecurse, tRet);
 					end
 				
 				end

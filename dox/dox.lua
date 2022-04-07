@@ -466,12 +466,13 @@ function dox.processDir(sDir, pOutDir, sTheme, bRecursive, pAtomSnippetsFile, sS
 	--tell dox to process the entire directory before writing
 	bDirProcessing = true;
 
+
 	--check for an OnProcess function
 	local bRunDoxOnProcess = type(dox.onProcess) == "function";
 
 	--get all the files in the directory
 	local tFiles = dox.util.getProcessList(sDir, bRecursive);
-	
+
 	if tFiles then
 		--reset the modules table
 		dox.Modules = {};
