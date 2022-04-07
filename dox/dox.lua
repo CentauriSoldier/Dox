@@ -211,13 +211,13 @@ end
 --prevents 'processFile()' from resetting 'dox.Modules' and writing files while being called by 'processDir()'
 local bDirProcessing = false;
 
---[[!
+--[[
 @module dox
 @func getLocalPath
 @scope local
 @desc Determines the relative path from which the script is called.
 @ret sPath string The local path from which dox is run.
-!]]
+
 local function getLocalPath()
 	--determine the call location
 	local sPath = debug.getinfo(1, "S").source;
@@ -226,17 +226,17 @@ local function getLocalPath()
 	--remove the "/" at the end
 	return sPath:sub(1, sPath:len() - 1);
 end
-
+]]
 --allows the loading of files relatively without the need for absolute paths
---[[!
+--[[
 @module dox
 @func import
 @scope local
 @desc A version of the 'require()' function that uses the local path. Used to require the other local modules the 'dox.lua' file needs.
 @file dox.lua
-!]]
+
 local function import(sFile)
-	sPath = getLocalPath();
+	local sPath = getLocalPath();
 
 	--format the path to be suitable for the 'require()' function
 	sPath = sPath:gsub("\\", "."):gsub("/", ".");
@@ -245,27 +245,35 @@ local function import(sFile)
 	--call it in
 	require(sPath..'.'..sFile);
 end
+]]
+--determine the call location
+--local sPath = debug.getinfo(1, "S").source;
+--remove the calling filename
+--sPath = sPath:gsub("@", ""):gsub("init.lua", "");
+--remove the "/" at the end
+--sPath = sPath:sub(1, sPath:len() - 1);
+--update the package.path
+--package.path = package.path..";"..sPath.."\\?.lua";
 
 --import the utility functions
-import("util");
-
+require("dox.util");
 --rename some of the util functions for convenience
 local trim = dox.util.trim;
-
 --import the settings file
-import("settings");
+require("dox.settings");
 --import the theme file
-import("theme");
+require("dox.theme");
 --import the base64 file
-import("base64");
+require("dox.base64");
 --import the css file
-import("css");
+require("dox.css");
 --import the parse file
-import("parse");
+require("dox.parse");
 --import the html file
-import("html");
+require("dox.html");
 --import the atom file
-import("atom");
+require("dox.atom");
+
 
 --MAKE THIS RETURN THE STATUS OF THE WRITE PROCESS TOO!!!
 --[[!
@@ -371,7 +379,6 @@ function dox.processFile(pInputFile, pOutDir, sTheme, pAtomSnippetsFile, sSnippe
 
 	end
 
-
 	if hInputFile then
 
 		--ignore the module reset if called by 'processDir()'
@@ -465,13 +472,14 @@ end
 function dox.processDir(sDir, pOutDir, sTheme, bRecursive, pAtomSnippetsFile, sSnippetSection)
 	--tell dox to process the entire directory before writing
 	bDirProcessing = true;
-
+	
 	--check for an OnProcess function
 	local bRunDoxOnProcess = type(dox.onProcess) == "function";
-
+	
 	--get all the files in the directory
+	--local tFiles = dox.util.fileFind(sDir, "*.lua", bRecursive);
 	local tFiles = dox.util.getProcessList(sDir, bRecursive);
-
+	
 	if tFiles then
 		--reset the modules table
 		dox.Modules = {};
@@ -493,7 +501,7 @@ function dox.processDir(sDir, pOutDir, sTheme, bRecursive, pAtomSnippetsFile, sS
 	--allow 'processFile()' access to the 'writeOutput()' function again
 	bDirProcessing = false;
 
-	return false
+	return false;--TODO why is this returning false?
 end
 
 return dox;
