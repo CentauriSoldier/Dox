@@ -255,6 +255,18 @@ end
 --update the package.path
 --package.path = package.path..";"..sPath.."\\?.lua";
 
+--warn the user if debug is missing
+assert(type(debug) == "table", "Dox requires the debug library during initialization. Please enable the debug library before initializing Dox.");
+
+--determine the call location
+local sPath = debug.getinfo(1, "S").source;
+--remove the calling filename
+sPath = sPath:gsub("@", ""):gsub("[Dd][Oo][Xx].[Ll][Uu][Aa]", "");
+--remove the "/" at the end
+sPath = sPath:sub(1, sPath:len() - 1);
+--update the package.path (use the main directory to prevent namespace issues)
+package.path = package.path..";"..sPath.."\\..\\?.lua";
+
 --import the utility functions
 require("dox.util");
 --rename some of the util functions for convenience
@@ -332,6 +344,7 @@ local function writeOutput(pDir)
 			--this has the process order for the modules
 			local tMeta = getmetatable(tModules);
 
+			TextFile.WriteFromString(_ExeFolder.."\\modules.lua", serialize.table(tModules), false);
 			--process the modules
 				for nIndex, sModule in pairs(tMeta.ProcessOrder) do
 					local tModule = tModules[sModule];
@@ -472,14 +485,14 @@ end
 function dox.processDir(sDir, pOutDir, sTheme, bRecursive, pAtomSnippetsFile, sSnippetSection)
 	--tell dox to process the entire directory before writing
 	bDirProcessing = true;
-	
+
 	--check for an OnProcess function
 	local bRunDoxOnProcess = type(dox.onProcess) == "function";
-	
+
 	--get all the files in the directory
 	--local tFiles = dox.util.fileFind(sDir, "*.lua", bRecursive);
 	local tFiles = dox.util.getProcessList(sDir, bRecursive);
-	
+
 	if tFiles then
 		--reset the modules table
 		dox.Modules = {};

@@ -12,7 +12,7 @@ local function getParserCSS()
 local sRet = "";
 
 	for sType, tType in pairs(dox.Types) do
-		
+
 		if dox.Types[sType].Parser and dox.Types[sType].ParserCSS then
 		sRet = sRet.."\n\n"..dox.Types[sType].ParserCSS;
 		end
@@ -59,7 +59,7 @@ function dox.css.update()
 		padding:0;
 		line-height: 1.5em;
 		background: ]]..theme.getColor("BackgroundSurround")..[[
-		
+
 	}
 
 
@@ -76,7 +76,7 @@ function dox.css.update()
 	}
 
 	.link { text-decoration: none; }
-		
+
 		]]..getParserCSS()..[[
 
 	b{
@@ -100,8 +100,8 @@ function dox.css.update()
 	p{
 		font-size: 100%;
 		color: ]]..theme.getColor("ParagraphText")..[[;
-	}			
-		
+	}
+
 	#topsection{
 		position: fixed;
 		top: ]]..sPagePadding..[[;
@@ -112,7 +112,7 @@ function dox.css.update()
 		border-radius: 20px 20px 0px 0px;
 		-moz-border-radius: 20px 20px 0px 0px;
 		-webkit-border-radius: 20px 20px 0px 0px;
-		border: 0px solid #000000;				
+		border: 0px solid #000000;
 	}
 
 	#topsection h1{
@@ -136,7 +136,7 @@ function dox.css.update()
 
 	#contentcolumn{
 		position: relative;
-		background: ]]..theme.getColor("BackgroundContent")..[[;				
+		background: ]]..theme.getColor("BackgroundContent")..[[;
 		width: 100%;
 		height: 100%;
 		overflow: hidden;
@@ -157,13 +157,13 @@ function dox.css.update()
 
 	#modulecontentcolumn{
 		position: relative;
-		background: ]]..theme.getColor("BackgroundContent")..[[;				
+		background: ]]..theme.getColor("BackgroundContent")..[[;
 		width: 100%;
 		height: 100%;
 		overflow: auto;
 		padding: 0px;
 		]]..sContentBorder..[[
-	}	
+	}
 
 	/* The frame that loads the module pages */
 	#module{
@@ -185,24 +185,24 @@ function dox.css.update()
 		color: ]]..theme.getColor("ParagraphText")..[[;
 		background: ]]..theme.getColor("BackgroundSurround")..[[;
 		text-align: center;
-		padding: 4px 0;				
-		bottom: 0px;				
+		padding: 4px 0;
+		bottom: 0px;
 	}
 
 	#footer a{
 		color: ]]..theme.getColor("SectionTitle")..[[;
 	}
-	
+
 	/* MOVE TO THE MODULE SECTION
-	.innertubecontent{		
-		
+	.innertubecontent{
+
 	}
 	*/
-	
+
 	.innertubemenu{
 		height: 100%;
-		margin: 10px; /*Margins for inner DIV inside the side bar (to provide padding)*/				
-		margin-top: 0;				
+		margin: 10px; /*Margins for inner DIV inside the side bar (to provide padding)*/
+		margin-top: 0;
 	}
 
 	#welcome{
@@ -236,18 +236,18 @@ function dox.css.update()
 
 	ul.headermenu {
 		margin:0;
-		list-style-type: none;	
+		list-style-type: none;
 	}
 
 	a.headermenu {
 		margin:0;
-		list-style-type: none;	
+		list-style-type: none;
 	}
 
 	/*NAV MENU SECTION*/
 
 	div.navmenu{
-		position: fixed;				
+		position: fixed;
 		top: ]]..sPagePadding..[[; /* top section height*/
 		left: ]]..sPagePadding..[[;
 		padding: 2px;
@@ -363,19 +363,19 @@ function dox.css.update()
 
 	#miauthors{
 		font-style: italic;
-		font-size; 30%;				
+		font-size; 30%;
 	}
-		
+
 	/* horizontal menu */
 
 	p.mip{
 
 	}
-	
+
 	/* MODULE SECTION = MODULE SECTION = MODULE SECTION = MODULE SECTION*/
-	
+
 	/* Allows for color alternating between functions for ease of reading.*/
-	.innertubecontentalt, .innertubecontent{		
+	.innertubecontentalt, .innertubecontent{
 		margin: 10px; /*Margins for inner DIV inside each column (to provide padding)*/
 		margin-top: 0;
 		padding: 10px 10px 10px 12px;
@@ -390,32 +390,32 @@ function dox.css.update()
 		border-bottom: 2px groove;
 		border-left: 2px solid ]]..theme.getColor("MenuNormal")..[[;
 	}
-	
+
 	.innertubecontentalt{
 		background-color: rgba(0, 0, 0, 0.1);
 		border-left: 2px solid ]]..theme.getColor("MenuHighlight")..[[;
 	}
-	
+
 	/* The paramters of the function */
 	p.parameter{
 		font-size: 108%;
 	}
-	
+
 	code{
-	
+
 	}
-	
+
 	/*The name of the function*/
 	h2.functionname{
 		display: inline;
 		font-size: 160%;
 	}
-	
+
 	/* Titles such as Description, Parameters, etc. */
 	h3.blocklineheader{
 		font-size: 125%;
 	}
-	
+
 	.scope{
 		font-style: italic;
 		margin: 0px 0px 0px 3px;
@@ -423,7 +423,7 @@ function dox.css.update()
 		color: ]]..theme.getColor("Special_1")..[[;
 		font-size: 115%;
 	}
-	
+
 	p.blockdesc{
 		color: ]]..theme.getColor("ParagraphText")..[[;
 		font-size: 120%;
@@ -437,7 +437,7 @@ function dox.css.update()
 		-webkit-border-radius: 10px 10px 0px 10px;
 		border: 4px solid ]]..theme.getColor("BackgroundOutline")..[[;*/
 	}
-	
+
 	/* Original accorian menu courtesy of http://accordionslider.com/ each tab costs 35px (with this layout) and the base object's size is 700 */
 
 
@@ -470,7 +470,7 @@ function dox.css.update()
 	}
 
 	.accordion-title span {
-		margin-bottom: 18px; 
+		margin-bottom: 18px;
 		margin-left: 20px;
 	}
 
@@ -480,7 +480,7 @@ function dox.css.update()
 		color: ]]..theme.getColor("MenuNormalText")..[[;
 	}
 
-	.accordion-title span  {	
+	.accordion-title span  {
 		transform: rotate(-90deg);
 		-o-transform: rotate(-90deg);
 		-moz-transform: rotate(-90deg);
@@ -505,7 +505,7 @@ function dox.css.update()
 		margin-bottom: 0px;
 	}
 
-	/* Do not change following properties, they aren't 
+	/* Do not change following properties, they aren't
 	generated automatically and are common for each slider. */
 	.accordion {
 		overflow: hidden;
