@@ -38,7 +38,6 @@ function dox.util.getOSType()
 	return sOSType;
 end
 
-local p = Dialog.Message;
 
 function dox.util.getProcessList(sDir, bRecurse, tFiles)
 	local tRet = type(tFiles) == "table" and tFiles or {};
@@ -46,70 +45,70 @@ function dox.util.getProcessList(sDir, bRecurse, tFiles)
 	--setup the commands
 	local sGetFilesCommand 	= (_ == "\\") and	('dir "'..sDir..'\\*.*" /b /a-d'):gsub("\\\\", "\\") 	or ('find '..sDir.."/"..'-maxdepth 1 ! –type d'):gsub("//", "/");
 	local sGetDirsCommand 	= (_ == "\\") and	('dir "'..sDir..'\\*.*" /b /d'):gsub("\\\\", "\\") 		or ("ls -a -d /*"):gsub("//", "/");
-	
+
 	local hFiles 	= io.popen(sGetFilesCommand);
-	
+
 	--process files and folders
 	if (hFiles) then
 		local bIgnore 		= false;
 		local bIgnoreSub	= false;
 		local bIgnoreAll 	= false;
 		local tFiles 		= {};
-		
+
 		--look for ignore files
 		for sFile in hFiles:lines() do
-			
+
 			if (sFile == sDoxIgnoreAllFile) then
 				bIgnoreAll = true;
 				break; --no need to continue at this point
 			end
-			
-			if (sFile == sDoxIgnoreSubFile) then			
+
+			if (sFile == sDoxIgnoreSubFile) then
 				bIgnoreSub = true;
 			end
-			
-			if (sFile == sDoxIgnoreFile) then			
+
+			if (sFile == sDoxIgnoreFile) then
 				bIgnore = true;
 			end
-			
+
 			if not (bIgnoreAll or bIgnore) then
 				tFiles[#tFiles + 1] = sFile;
 			end
-			
+
 		end
-	
+
 		--only process items if the .doxignoreall file was NOT found
 		if not (bIgnoreAll) then
-	
+
 			--add (any) files that exist to the return table
 			for nIndex, sFile in pairs(tFiles) do
-				
+
 				--check that the file type is valid
 				if (sFile:len() >= nMinFileLength and sFile:reverse():sub(1, 4):lower() == "aul.") then
 					--add the file to the list
 					tRet[#tRet + 1] = sDir.._..sFile;
-				end			
-				
+				end
+
 			end
-			
+
 			--process subdirectories
 			if not (bIgnoreSub) then
 				local hDirs	= io.popen(sGetDirsCommand);
-				
+
 				if (hDirs) then
-				
+
 					for sDirectory in hDirs:lines() do
 						dox.util.getProcessList(sDir.._..sDirectory, bRecurse, tRet);
 					end
-				
+
 				end
-				
+
 			end
-			
+
 		end
-	
+
 	end
-		
+
 	return tRet;
 end
 
@@ -147,7 +146,7 @@ function dox.util.fileFind(sDir, sFile, bRecursive)
 		if hFiles then
 
 			--add each file to the list
-			for sFile in hFiles:lines() do				
+			for sFile in hFiles:lines() do
 				nIndex = nIndex + 1;
 				tRet[nIndex] = sFile;
 			end
