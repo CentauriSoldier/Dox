@@ -1,3 +1,13 @@
+# DOX HAS BEEN REWRITTEN AND MOVED
+---
+### LuaEx's new class system has allowed me to rewrite Dox from scratch making it more versatile, powerful and, modular.
+### Dox has been rewritten and integrated into LuaEx.
+---
+### You can now find Dox at the [LuaEx repository](https://github.com/CentauriSoldier/LuaEx).
+### This page will remain here as a guidepost to the new Dox.
+#### Note: this version is hereby archived.
+
+---
 ![DOX](assets/dox_title.png)
 
 ## 🆆🅷🅰🆃 🅸🆂 🅳🅾🆇❓ 🔬
