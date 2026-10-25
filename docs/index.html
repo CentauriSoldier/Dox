@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dox 2.1 Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <style>
+            :root {
+        --base-font-size: 16px;
+        --page: #101824;
+        --surface: #182435;
+        --surface-raised: #203047;
+        --border: #30445f;
+        --text: #e4edf7;
+        --muted: #9cabc1;
+        --accent: #79baff;
+        --accent-soft: #223e5d;
+        --navbackground: #182435;
+        --navlink: #bcd9fa;
+        --navlinkhover: #ffffff;
+        --sectiontitle: #dcecff;
+        --sectiontitlebg: #203047;
+        --sectioncontent: #e4edf7;
+        --breadcrumb-background: #141f2e;
+        --button-background: #2b4562;
+        --button-border: #4b6c90;
+        --button-hover: #365c85;
+        --button-text: #edf6ff;
+        --header-end: #1c2435;
+        --header-start: #172b44;
+        --link-hover: #b9ddff;
+        --selected-border: #5487b6;
+        --selected-text: #ffffff;
+    }
+
+    /* Page shell and compact project identity. */
+    * { box-sizing: border-box; }
+    html { font-size: var(--base-font-size); }
+    body {
+        margin: 0;
+        background: var(--page);
+        color: var(--text);
+        font-family: "Segoe UI", system-ui, sans-serif;
+        line-height: 1.65;
+    }
+    a { color: var(--accent); }
+    a:hover { color: var(--link-hover); }
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    #titlebg {
+        padding: 24px 36px 22px;
+        background: linear-gradient(120deg, var(--header-start), var(--header-end));
+        border-bottom: 1px solid var(--border);
+    }
+    .dox-brand { color: var(--accent); font-weight: 800; letter-spacing: .14em; font-size: .85rem; }
+    .dox-brand span { margin-left: 12px; color: var(--muted); font-size: .7rem; font-weight: 600; }
+    #title { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 700; margin: 8px 0 0; letter-spacing: -.025em; }
+    .dox-subtitle { margin: 3px 0 0; color: var(--muted); font-size: .85rem; }
+
+    /* Breadcrumbs and selected items show the current location without relying on color alone. */
+    #DOX_breadcrumb-wrapper { padding: 13px 36px; background: var(--breadcrumb-background); border-bottom: 1px solid var(--border); }
+    #DOX_breadcrumb { margin: 0; display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; font-size: .9rem; }
+    .breadcrumb-item + .breadcrumb-item::before { content: "/"; color: var(--muted); padding-right: 8px; float: none; }
+    .breadcrumb-item.active { color: var(--text); font-weight: 700; }
+    .breadcrumb a { text-decoration: none; }
+    .dox-workspace { display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: calc(100vh - 185px); }
+    #DOX_navmenu_wrapper { background: var(--surface); padding: 26px 18px; border-right: 1px solid var(--border); }
+    #DOX_navheading { font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); padding: 0 12px; margin: 0 0 14px; overflow-wrap: anywhere; }
+    #DOX_navmenu { margin: 0; padding: 0; list-style: none; gap: 5px; }
+    #DOX_navmenu .nav-link { display: block; color: var(--navlink); padding: 11px 14px; border: 1px solid transparent; border-radius: 8px; text-decoration: none; overflow-wrap: anywhere; }
+    #DOX_navmenu .nav-link:hover { background: var(--surface-raised); color: var(--navlinkhover); border-color: var(--border); }
+    #DOX_navmenu .nav-link.active { background: var(--accent-soft); border-color: var(--selected-border); color: var(--selected-text); font-weight: 700; box-shadow: inset 3px 0 var(--accent); }
+    #DOX_navmenu .dox-up { color: var(--muted); font-size: .85rem; margin-bottom: 10px; }
+
+    /* Content cards separate documentation sections while keeping examples readable. */
+    #DOX_content_wrapper { padding: 28px 36px 60px; min-width: 0; }
+    .dox-topic-header { margin: 0 auto 24px; max-width: 1050px; }
+    #DOX_location { color: var(--muted); font-size: .8rem; margin: 0 0 4px; overflow-wrap: anywhere; }
+    #DOX_topic { font-size: 1.75rem; letter-spacing: -.025em; margin: 0; overflow-wrap: anywhere; }
+    #DOX_content { max-width: 1050px; margin: 0 auto; }
+    #DOX_content > .container-fluid { padding: 0; }
+    .custom-section { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 18px; background: var(--surface); overflow: hidden; box-shadow: 0 5px 18px #0002; }
+    .section-title { padding: 12px 20px; background: var(--sectiontitlebg); color: var(--sectiontitle); font-size: .85rem; font-weight: 700; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .section-content { color: var(--sectioncontent); padding: 20px; overflow-wrap: anywhere; }
+    .section-content > :last-child { margin-bottom: 0; }
+    .dox-empty { padding: 28px; border: 1px dashed var(--border); border-radius: 12px; color: var(--muted); }
+    .DOX_intro { color: var(--text); }
+    .DOX_intro .p-5 { padding: 28px !important; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+    .DOX_intro h1 { font-size: 1.6rem; }
+    .DOX_intro .lead { font-size: 1rem; color: var(--muted); }
+    pre { white-space: pre-wrap !important; overflow-wrap: anywhere; border-radius: 8px; font-size: .9rem; }
+    .copy-to-clipboard-button { background: var(--button-background); color: var(--button-text); border: 1px solid var(--button-border); border-radius: 6px; padding: 5px 12px; cursor: pointer; font-size: .8rem; }
+    .copy-to-clipboard-button:hover { background: var(--button-hover); }
+    .section-content table { color: var(--text); --bs-table-bg: transparent; --bs-table-color: var(--text); --bs-table-border-color: var(--border); --bs-table-striped-color: var(--text); }
+
+    /* Narrow screens retain both navigation and content without horizontal page overflow. */
+    @media (max-width: 760px) {
+        #titlebg, #DOX_breadcrumb-wrapper { padding-left: 20px; padding-right: 20px; }
+        .dox-workspace { grid-template-columns: 1fr; }
+        #DOX_navmenu_wrapper { border-right: 0; border-bottom: 1px solid var(--border); padding: 18px; }
+        #DOX_navmenu { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+        #DOX_content_wrapper { padding: 24px 18px 40px; }
+        .section-content { padding: 16px; }
+    }
+
+        :root {
+            --accent: #79baff;
+            --accent-soft: #223e5d;
+            --border: #30445f;
+            --breadcrumb-background: #141f2e;
+            --button-background: #2b4562;
+            --button-border: #4b6c90;
+            --button-hover: #365c85;
+            --button-text: #edf6ff;
+            --header-end: #1c2435;
+            --header-start: #172b44;
+            --link-hover: #b9ddff;
+            --muted: #9cabc1;
+            --navbackground: #182435;
+            --navlink: #bcd9fa;
+            --navlinkhover: #ffffff;
+            --page: #101824;
+            --sectioncontent: #e4edf7;
+            --sectiontitle: #dcecff;
+            --sectiontitlebg: #203047;
+            --selected-border: #5487b6;
+            --selected-text: #ffffff;
+            --surface: #182435;
+            --surface-raised: #203047;
+            --text: #e4edf7;
+        }
+        
+    </style>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+
+</head>
+<body>
+    <header id="titlebg"><div class="dox-banner"><img src="assets/dox_title.png" alt="Documentation banner" style="display:block;max-width:100%;max-height:220px;margin:0 auto 16px;object-fit:contain" onerror="this.nextElementSibling.hidden=false;this.remove()"><p hidden role="status">Banner image unavailable</p></div>
+        <div class="dox-brand">DOX <span>PROJECT REFERENCE</span></div>
+        <h1 id="title">Dox 2.1</h1>
+        <p class="dox-subtitle">Documentation generated by Dox</p>
+    </header>
+
+    <div id="DOX_breadcrumb-wrapper">
+        <nav aria-label="Your location"><ol id="DOX_breadcrumb" class="breadcrumb"></ol></nav>
+    </div>
+
+    <div class="dox-workspace">
+        <aside id="DOX_navmenu_wrapper" aria-label="Documentation topics">
+            <h2 id="DOX_navheading">Project reference</h2>
+            <ul id="DOX_navmenu" class="nav flex-column"></ul>
+        </aside>
+        <main id="DOX_content_wrapper">
+            <div class="dox-topic-header">
+                <p id="DOX_location"></p>
+                <h2 id="DOX_topic"></h2>
+            </div>
+            <div id="DOX_content"></div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/prism.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/plugins/toolbar/prism-toolbar.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/components/prism-lua.min.js"></script>
+
+    <!-- Instantiate Dox and update the page -->
+    <script>
+        const userData = {
+    "Dox": {
+        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   <strong>Dox<\/strong> auto-generates documentation for code by reading and parsing comment blocks.\n<br><br>\nNote: Dox is intended only to be used by being subclassed.\n<br>Subclasses of Dox (called parsers), provide the required parameters to properly parse comments blocks for specific languages.\n<br><a href=\"https://imgflip.com/i/910ysh\"><img style=\"width: 200px; height: 200px\" class=\"rounded float-left img-thumbnail\" src=\"https://i.imgflip.com/910ysh.jpg\" title=\"made at imgflip.com\"/><\/a>\n<br>--...Meta End<\/div><\/div><div class=\"custom-section\"><div id=\"e3db2d7c-2782-72e2-a21e-967362390656\" class=\"section-title\">Bug(s)<\/div><div class=\"section-content\">   In an FQXN with multiple spaces, only the first is handled correcly.<br><\/div><\/div><div class=\"custom-section\"><div id=\"72ccb881-34bd-d26c-b4f6-560329a250bb\" class=\"section-title\">TODO<\/div><div class=\"section-content\">   <!--TODO-->\n<ul>\n    <li>allow user to suround content block with (optional tags) tags...<\/li>\n    <li>color dead anchor links<\/li>\n    <li>add option to get and print TODO, BUG, etc.<\/li>\n    <li>parse single-line comments too<\/li>\n    <li>add tooltip with @des info (if available) in sidemenu items<\/li>\n    <li>allow custom BlockTag sort order (in what order items are displayed in the output)<\/li>\n    <li>allow escaping . in FQXN<\/li>\n    <li>fix bug in fqxns with multiple-spaces<\/li>\n<\/ul><br><\/div><\/div><div class=\"custom-section\"><div class=\"section-title\">Summary<\/div><div class=\"section-content\">   Below is the layout and hierarchy of Dox and all its elements.\n<!-- Parsers -->\n    <div class=\"accordion-item\">\n      <h2 class=\"accordion-header\" id=\"headingParsers\">\n        <button class=\"accordion-button\" type=\"button\" data-bs-toggle=\"collapse\"\n                data-bs-target=\"#collapseParsers\" aria-expanded=\"true\" aria-controls=\"collapseParsers\">\n          📦 Parsers\n        <\/button>\n      <\/h2>\n      <div id=\"collapseParsers\" class=\"accordion-collapse collapse show\"\n           aria-labelledby=\"headingParsers\" data-bs-parent=\"#doxAccordion\">\n        <div class=\"accordion-body\">\n          <p>Language-specific modules that scan your source for <code>--[[! … ]]<\/code> blocks and <code>@tags<\/code>, then emit <strong>DoxBlockTag<\/strong> objects.<\/p>\n          <ul>\n            <li><code>DoxSyntax.lua<\/code> – core tokenizer, finds raw tags and text<\/li>\n            <li><code>DoxLua.lua<\/code>, <code>DoxCPP.lua<\/code>, etc. – apply comment-style rules and normalize into <code>DoxBlockTag<\/code><\/li>\n          <\/ul>\n        <\/div>\n      <\/div>\n    <\/div>\n\n    <!-- Components -->\n    <div class=\"accordion-item\">\n      <h2 class=\"accordion-header\" id=\"headingComponents\">\n        <button class=\"accordion-button collapsed\" type=\"button\" data-bs-toggle=\"collapse\"\n                data-bs-target=\"#collapseComponents\" aria-expanded=\"false\" aria-controls=\"collapseComponents\">\n          🔧 Components\n        <\/button>\n      <\/h2>\n      <div id=\"collapseComponents\" class=\"accordion-collapse collapse\"\n           aria-labelledby=\"headingComponents\" data-bs-parent=\"#doxAccordion\">\n        <div class=\"accordion-body\">\n          <p>Core in-memory models and the abstract builder interface.<\/p>\n          <ul>\n            <li><strong>DoxBlockTag.lua<\/strong> – represents one <code>@tag<\/code> (name, type, description)<\/li>\n            <li><strong>DoxBlock.lua<\/strong> – groups tags &amp; text into a logical block<\/li>\n            <li><strong>DoxBuilder.lua<\/strong> – abstract base with <code>refresh()<\/code> and <code>build()<\/code> signatures<\/li>\n            <li><strong>DoxMime.lua<\/strong> – escaping &amp; formatting helpers<\/li>\n          <\/ul>\n        <\/div>\n      <\/div>\n    <\/div>\n\n    <!-- Builders -->\n    <div class=\"accordion-item\">\n      <h2 class=\"accordion-header\" id=\"headingBuilders\">\n        <button class=\"accordion-button collapsed\" type=\"button\" data-bs-toggle=\"collapse\"\n                data-bs-target=\"#collapseBuilders\" aria-expanded=\"false\" aria-controls=\"collapseBuilders\">\n          🏗️ Builders\n        <\/button>\n      <\/h2>\n      <div id=\"collapseBuilders\" class=\"accordion-collapse collapse\"\n           aria-labelledby=\"headingBuilders\" data-bs-parent=\"#doxAccordion\">\n        <div class=\"accordion-body\">\n          <div class=\"row\">\n            <div class=\"col-md-6\">\n              <h5>HTML Builder<\/h5>\n              <ul>\n                <li><code>DoxBuilderHTML.lua<\/code> – nests by FQXN, injects CSS/JS, outputs HTML page<\/li>\n                <li><code>Data/dox.css<\/code> &amp; <code>prism.js<\/code> for styling &amp; highlighting<\/li>\n              <\/ul>\n            <\/div>\n            <div class=\"col-md-6\">\n              <h5>PulsarLua Builder<\/h5>\n              <ul>\n                <li><code>DoxBuilderPulsarLua.lua<\/code> – filters <code>@display PulsarLua<\/code>, builds nested table, emits JSON (to adapt for CSON snippets)<\/li>\n              <\/ul>\n            <\/div>\n          <\/div>\n        <\/div>\n      <\/div>\n    <\/div>\n\n    <!-- Integration -->\n    <div class=\"accordion-item\">\n      <h2 class=\"accordion-header\" id=\"headingIntegration\">\n        <button class=\"accordion-button collapsed\" type=\"button\" data-bs-toggle=\"collapse\"\n                data-bs-target=\"#collapseIntegration\" aria-expanded=\"false\" aria-controls=\"collapseIntegration\">\n          🔄 How It Fits Together\n        <\/button>\n      <\/h2>\n      <div id=\"collapseIntegration\" class=\"accordion-collapse collapse\"\n           aria-labelledby=\"headingIntegration\" data-bs-parent=\"#doxAccordion\">\n        <div class=\"accordion-body\">\n          <ol>\n            <li><strong>Parse<\/strong> source → <code>DoxBlockTag<\/code> → <code>DoxBlock<\/code><\/li>\n            <li><strong>Refresh<\/strong> in builder → nest by FQXN → <code>tFinalizedData<\/code><\/li>\n            <li><strong>Build<\/strong> in builder → serialize to HTML/JSON/CSON<\/li>\n            <li><strong>Output<\/strong> injected into docs or editor snippets<\/li>\n          <\/ol>\n        <\/div>\n      <\/div>\n    <\/div>\n\n  <\/div>\n<\/div><\/div><\/div><div class=\"custom-section\"><div id=\"35e2e72a-42b3-c2dd-cde0-bb07b5b43e21\" class=\"section-title\">Field(s) - Private<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>blockOpen<\/em>   Set during contruction, this is the string that tells Dox when to <strong>start<\/strong> reading a <a href=\"#Dox.Components.DoxBlock\">DoxBlock<\/a>.   <strong><em>string<\/em><\/strong>   <em>blockClose<\/em>   Set during contruction, this is the string that tells Dox when to <strong>stop<\/strong> reading a <a href=\"#Dox.Components.DoxBlock\">DoxBlock<\/a>.   <strong><em>table<\/em><\/strong>   <em>blockTags<\/em>   A complete list of <a href=\"#Dox.Components.DoxBlockTag\">DoxBlockTags<\/a> available to the instance.\n<br>It's built during construction by first importing all built-in <a href=\"#Dox.Components.DoxBlockTag\">DoxBlockTags<\/a>, then by creating and inserting the example <strong>BlockTags<\/strong> and finally by inputting all input varargs (input <strong>BlockTags<\/strong>) if any are provided.--TODO FINISH<br><\/div><\/div><div class=\"custom-section\"><div id=\"86d8970f-444b-907c-0a45-d008d510de46\" class=\"section-title\">Example <button class=\"copy-to-clipboard-button\" onclick=\"Dox.copyToClipboard(this)\">Copy<\/button><\/div><div class=\"section-content\">   <pre><code class=\"language-lua\">    --[[!\n        @fqxn Dox\n        @desc &lt;strong&gt;Dox&lt;/strong&gt; auto-generates documentation for code by reading and parsing comment blocks.\n        <br>&lt;br&gt;\n        <br>&lt;br&gt;Note:Dox is intended only to be used by being subclassed.\n        <br>&lt;br&gt;Subclasses of Dox (called parsers), provide the required parameters to properly parse comments blocks for specific languages.\n        @ex&lt;br&gt;--Many Wow! How Yay! Much Meta!\n        <br>&lt;br&gt;--...Meta End\n    !]]<\/code><\/pre><\/div><\/div><div class=\"custom-section\"><div id=\"f17edc97-06b8-1f4a-2bfb-738fb63efb6f\" class=\"section-title\">Example <button class=\"copy-to-clipboard-button\" onclick=\"Dox.copyToClipboard(this)\">Copy<\/button><\/div><div class=\"section-content\">   <pre><code class=\"language-lua\">--for this example, we're using Lua\n\n--create the Lua language parser object (with the project name)\nlocal oDoxLua = DoxLua(\"MyProject\");\n\n--import a directory recursively (read & parse files)\nlocal pImport = \"C:\\\\Path\\\\To\\\\My\\\\Project\"\n\nlocal function importFiles(pDir)\n\n    for _, pFile in pairs(io.listfiles(pDir, false, nil, \"lua\")) do\n        oDoxLua.importFile(pFile, true); --don't refresh the data until we're done importing\n        --print(pFile);\n    end\n\nend\n\nlocal tFolders = io.listdirs(pImport, true, importFiles); --set recursion to true\n\n--set the output path\noDoxLua.setOutputPath(\"C:\\\\Users\\\\MyUsername\\\\MyProject\");\n\n--[[we don't need to set a Dox.BUILDER since it defaults\n    to Dox.BUILDER.HTML and that's what we want]]\n\n--refresh the data\noDoxLua.refresh();\n\n--export html help file.\noDoxLua.export(); --profit!<\/code><\/pre><\/div><\/div><\/div>`,
+        "subtable": {
+        "Builders": {
+            "value": ``,
+            "subtable": {
+            "DoxBuilder": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   This is the class (when subclassed) that builds the output using Dox's finalized data.<\/div><\/div><\/div>`,
+                "subtable": {
+                "Methods": {
+                    "value": ``,
+                    "subtable": {
+                    "build": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   This is the build method that does the heavy lifting in building the output file.\n    <br><br>After the basic <em>this<\/em> and <em>cdat<\/em> parameters, this method must accept the following parameters in the following order:\n    <ol>\n        <li><em>(string)<\/em> <strong>sTitle<\/strong> The title of the documentation project.<\/li>\n        <li><em>(string or nil)<\/em> <strong>vIntro<\/strong> The (optional) intro page code. If not provided here, the intro will be the default provided by Dox.<\/li>\n        <li><em>(table)<\/em> <strong>tFinalizedData<\/strong> Dox's finalized data used to build the output document.<\/li>\n        The finalized data table has keys of strings whose values are strings. The table is a heirarchical list of fqxn's (Fully Qualified Dox Names). The data for each item is stored in the <em><strong>__call<\/strong><\/em> metamethod. To extract the data from a given index, simply call it. A string will be returned containing the item's data.\n    <\/ol><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "clearColumnWrappers": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Removes all column wrappers, or only the named display group.<\/div><\/div><div class=\"custom-section\"><div id=\"86cb5aee-d873-c316-7d98-69e9622b7ac8\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string|nil<\/em><\/strong>   <em>sDisplay<\/em>   The display group to clear; nil clears all groups.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "eachColumnWrapper": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Iterates over copies of one display group's column wrappers.<\/div><\/div><div class=\"custom-section\"><div id=\"365c7021-142f-42bf-9188-fdfbb7aa6568\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sDisplay<\/em>   The display group.<br><\/div><\/div><div class=\"custom-section\"><div id=\"a7a57ec6-bbb5-db69-ce43-5de91857d305\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>function<\/em><\/strong>   <em>fIterator<\/em>   Returns a column index and a copied wrapper pair; missing groups are empty.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "getColumnWrapper": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Returns a copy of one wrapper pair; missing wrappers return two empty strings.<\/div><\/div><div class=\"custom-section\"><div id=\"84ae4f3b-a496-2efa-41c9-298db7c74eff\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sDisplay<\/em>   The display group.   <strong><em>number<\/em><\/strong>   <em>nColumn<\/em>   The column index.<br><\/div><\/div><div class=\"custom-section\"><div id=\"dede4cdb-c442-af70-4dac-b680c531bb88\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tWrapper<\/em>   Opening and closing strings.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "getColumnWrapperCount": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Gets the total number of column wrappers in this <strong>DoxBuilder<\/strong>.<\/div><\/div><div class=\"custom-section\"><div id=\"8cbd61bb-d246-7ab5-e2b6-0c40f345ef76\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>number<\/em><\/strong>   <em>nColumnWrappers<\/em>   The number of the column wrappers in this <strong>DoxBuilder<\/strong>.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "getColumnWrappers": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Returns a copy of a display group; missing groups return an empty table.<\/div><\/div><div class=\"custom-section\"><div id=\"0b797786-276a-7ae9-acfb-80086e81bb37\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sDisplay<\/em>   The display group.<br><\/div><\/div><div class=\"custom-section\"><div id=\"9d2d3ce3-bac3-afaa-959e-c65d02333ce7\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tWrappers<\/em>   The wrapper pairs.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "getDefaultFilename": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Returns the default filename of the final ouput document that is used if one is not provided by the user.<\/div><\/div><div class=\"custom-section\"><div id=\"95a3d107-ee53-31d3-e35a-99f19215c1ff\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sFilename<\/em>   The default filename.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "setColumnWrapper": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Replaces a wrapper or appends the next column, creating a group when necessary. Empty strings leave content unwrapped.<\/div><\/div><div class=\"custom-section\"><div id=\"d6f29e5a-33e2-6a33-0604-754316297aae\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sDisplay<\/em>   The display group.   <strong><em>number<\/em><\/strong>   <em>nColumn<\/em>   Positive integer column index; gaps are rejected.   <strong><em>string<\/em><\/strong>   <em>sOpen<\/em>   Opening wrapper.   <strong><em>string<\/em><\/strong>   <em>sClose<\/em>   Closing wrapper.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    }
+                    }
+                }
+                }
+            },
+            "DoxBuilderHTML": {
+                "value": ``,
+                "subtable": {
+                "Constructor": {
+                    "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Initializes HTML content wrappers, the copy control and output defaults.<\/div><\/div><\/div>`,
+                    "subtable": null
+                },
+                "Functions": {
+                    "value": ``,
+                    "subtable": {
+                    "IsAbsolutePath": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Tests whether a path is absolute before attempting a source-folder fallback.<\/div><\/div><div class=\"custom-section\"><div class=\"section-title\">Visibility<\/div><div class=\"section-content\">   local<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "LoadDoxAsset": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Loads a required builder asset using the module path, then paths relative to this file; reports all attempted paths on failure.<\/div><\/div><div class=\"custom-section\"><div class=\"section-title\">Visibility<\/div><div class=\"section-content\">   local<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "TryOpenAndLoad": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Loads an existing asset file; returns nil when the file cannot be opened.<\/div><\/div><div class=\"custom-section\"><div class=\"section-title\">Visibility<\/div><div class=\"section-content\">   local<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "luaTableToJson": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Serializes the root documentation hierarchy using sorted keys and readable indentation.<\/div><\/div><div class=\"custom-section\"><div class=\"section-title\">Visibility<\/div><div class=\"section-content\">   local<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "processTable": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Recursively serializes each callable documentation node and its children.<\/div><\/div><div class=\"custom-section\"><div class=\"section-title\">Visibility<\/div><div class=\"section-content\">   local<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "resolveInheritance": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Resolves an inherited documentation chain, rejects missing targets and cycles, and caches each completed node's content.<\/div><\/div><div class=\"custom-section\"><div class=\"section-title\">Visibility<\/div><div class=\"section-content\">   local<\/div><\/div><div class=\"custom-section\"><div id=\"ed5aa9d0-3a8a-8f2d-cf06-a793d9723daf\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tTarget<\/em>   The finalized documentation node to resolve.<br><\/div><\/div><div class=\"custom-section\"><div id=\"114e14b6-cd42-0488-74c8-1c48177a721f\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sContent<\/em>   The resolved documentation HTML.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    }
+                    }
+                },
+                "Methods": {
+                    "value": ``,
+                    "subtable": {
+                    "build": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Builds the HTML page with its stylesheet, documentation data, navigation and required Prism scripts.<\/div><\/div><div class=\"custom-section\"><div id=\"b9fc05e3-d5f9-d501-10b6-6a9d4fbde0c6\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>Dox.PRISM<\/em><\/strong>   <em>ePrismTheme<\/em>   Optional code theme; defaults to Okaidia and is used only for this build.   <strong><em>string<\/em><\/strong>   <em>sBannerURL<\/em>   Optional image URL. Failed images show a notice while preserving the normal header.   <strong><em>Dox.THEME<\/em><\/strong>   <em>ePageTheme<\/em>   Optional page palette; defaults to Midnight Blue and does not affect Prism.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "buildJS": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Combines serialized documentation data, optional introduction and browser navigation code.<\/div><\/div><div class=\"custom-section\"><div class=\"section-title\">Visibility<\/div><div class=\"section-content\">   private<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "buildJSONTable": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Serializes the hierarchical documentation model into JavaScript data, escaping keys and content.<\/div><\/div><div class=\"custom-section\"><div class=\"section-title\">Visibility<\/div><div class=\"section-content\">   private<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "formatBlockContent": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Formats one documentation item as a content card.<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "formatCombinedBlockContent": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Formats repeated documentation items as one content card, with one section ID.<\/div><\/div><div class=\"custom-section\"><div id=\"f45d6f0e-b3ea-f452-1591-161a0b413ef5\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sID<\/em>   Optional complete HTML ID attribute; a unique ID is generated when omitted.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "generatePrismScripts": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Collects code language classes and emits the required Prism script dependencies.<\/div><\/div><div class=\"custom-section\"><div class=\"section-title\">Visibility<\/div><div class=\"section-content\">   private<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "getExampleWrapper": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Returns an example wrapper using the active source parser's Prism language. The language is supplied for each item, avoiding mutable state in shared builders.<\/div><\/div><div class=\"custom-section\"><div id=\"ae021348-6d92-0ad3-4172-9705ea61e24b\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>Dox.SYNTAX<\/em><\/strong>   <em>eSyntax<\/em>   The active parser's syntax definition.<br><\/div><\/div><div class=\"custom-section\"><div id=\"20bde8a9-5ef0-0047-86aa-94262606d7fa\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tWrapper<\/em>   Opening and closing HTML strings for the example.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "prepJSONString": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Escapes documentation strings for embedding in the generated script.<\/div><\/div><div class=\"custom-section\"><div class=\"section-title\">Visibility<\/div><div class=\"section-content\">   private<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "refresh": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Builds the hierarchical documentation data and applies inherited documentation.<\/div><\/div><\/div>`,
+                        "subtable": null
+                    }
+                    }
+                }
+                }
+            },
+            "HTML": {
+                "value": ``,
+                "subtable": {
+                "Data": {
+                    "value": ``,
+                    "subtable": {
+                    "CSS": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Shared documentation layout and Midnight Blue defaults. Selected page themes override palette variables at build time. Shared variables control the palette; layout rules keep navigation and content readable at desktop and narrow widths.<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "HTML": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   The core HTML code that is modified by the builder when creating the final HTML document.<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "JS": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   The core Javascript code that is used when creating the final HTML document.<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "Prism%20Languages": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   A list of all Prism.js laguage names used when showing example code in the final HTML document.<\/div><\/div><\/div>`,
+                        "subtable": null
+                    }
+                    }
+                },
+                "Themes": {
+                    "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Twenty page palettes applied after the shared CSS. Midnight Blue preserves the original design; Zenburn and Synthwave Protocol use Studio's palettes. These palettes do not alter Prism code themes.<\/div><\/div><div class=\"custom-section\"><div id=\"c82f46e4-48c6-8433-9801-cb33a9ace769\" class=\"section-title\">Field(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>Each<\/em>   keyed entry contains a display name and CSS variable overrides. Keys match Dox.THEME enum values.<br><\/div><\/div><\/div>`,
+                    "subtable": null
+                }
+                }
+            },
+            "PulsarLua": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Builds Lua autocomplete data for every imported Dox entry and project-named Pulsar option-provider packages. No documented source is executed.<\/div><\/div><\/div>`,
+                "subtable": {
+                "Constructor": {
+                    "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Initializes a JSON completion exporter with no HTML wrappers.<\/div><\/div><\/div>`,
+                    "subtable": null
+                },
+                "Functions": {
+                    "value": ``,
+                    "subtable": {
+                    "definition": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Maps documented Lua primitive types or references to named documentation types. Ambiguous union types remain unknown.<\/div><\/div><div class=\"custom-section\"><div id=\"b365c6b4-1067-3396-4e79-977eb69103ac\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sType<\/em>   Documented type.<br><\/div><\/div><div class=\"custom-section\"><div id=\"d99f4abe-cbd1-1f5b-007b-a536fe0c7cf0\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tDefinition<\/em>   Provider type definition.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "insert": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Inserts a dotted name into nested provider tables, preserving existing children. Callable classes retain their table members.<\/div><\/div><div class=\"custom-section\"><div id=\"b71ab680-27df-7212-6159-9d3187a00e77\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tRoot<\/em>   Global environment definition.   <strong><em>string<\/em><\/strong>   <em>sName<\/em>   Dotted name.   <strong><em>table<\/em><\/strong>   <em>tDefinition<\/em>   Documentation definition.<br><\/div><\/div><div class=\"custom-section\"><div id=\"6c74e8c2-14dd-3b9c-9230-ff7d90140cdf\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tNode<\/em>   Inserted node.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "normalizeCallable": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Represents definitions containing both a call signature and members as provider tables. Retains constructor arguments and return metadata; the provider can resolve their fields and call results.<\/div><\/div><div class=\"custom-section\"><div id=\"9e42b8ae-5f58-28bc-976e-a558a7a38da2\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tNode<\/em>   Definition tree to normalize.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "normalizeName": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Maps the conventional Methods documentation section to its callable owner. Explicit PulsarLua names bypass this convention.<\/div><\/div><div class=\"custom-section\"><div id=\"53ba6a1a-43b2-a5a7-d06b-698e74e4aa8e\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sName<\/em>   Documentation-qualified name.<br><\/div><\/div><div class=\"custom-section\"><div id=\"16206b38-012b-e7c6-b134-caa4155d6b13\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sName<\/em>   Code-qualified name.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "prepareBlock": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Converts all documentation entries into provider definitions; honors existing PulsarLua overrides without requiring that tag.<\/div><\/div><div class=\"custom-section\"><div id=\"d7df7616-791e-d0dd-460e-91a0baddba87\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>DoxBlock<\/em><\/strong>   <em>oBlock<\/em>   Parsed documentation block.<br><\/div><\/div><div class=\"custom-section\"><div id=\"e618d6f5-e1ff-ce30-5f9a-cea754cf10b3\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tEntry<\/em>   Name, type, parameters, returns and field metadata.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "resolveCallReturns": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Expands documented named table returns on callable owners into instance field shapes so the provider can infer members after a constructor call. Missing return documentation is never invented.<\/div><\/div><div class=\"custom-section\"><div id=\"b5e93bb7-e88d-b47b-d701-a62408cd776b\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tNode<\/em>   Definition tree containing callable tables.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "resolveEntry": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Resolves inherited completion metadata before insertion; rejects missing targets and cycles without producing partial output.<\/div><\/div><div class=\"custom-section\"><div id=\"eddb7bb7-92ea-fbf5-de6d-2bdb44881ad0\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tEntry<\/em>   Prepared documentation entry.<br><\/div><\/div><div class=\"custom-section\"><div id=\"4cd3a515-94ec-d038-d0d0-7168e8ace2d3\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tDefinition<\/em>   Resolved completion metadata.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "resolveTypes": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Replaces references to undocumented types with explicit unknown definitions, preserving documented references for the provider to revive.<\/div><\/div><div class=\"custom-section\"><div id=\"d9c4eade-c873-cc21-c32d-2f8f9d482aa8\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tNode<\/em>   Completion definition to validate recursively.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    }
+                    }
+                },
+                "JSON": {
+                    "value": ``,
+                    "subtable": {
+                    "array": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Marks a numerically indexed list for JSON array output, including empty lists.<\/div><\/div><div class=\"custom-section\"><div id=\"0028d16f-c6c9-9e3e-6c4e-5137b790124c\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>table|nil<\/em><\/strong>   <em>tItems<\/em>   Optional list.<br><\/div><\/div><div class=\"custom-section\"><div id=\"42c525c0-c974-69e3-1a81-18dff469ecf1\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tArray<\/em>   Marked array.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "encode": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Encodes completion data as deterministic JSON. Explicit array markers preserve empty argument lists; unsupported values are rejected.<\/div><\/div><div class=\"custom-section\"><div id=\"320a16d1-e450-1928-6c64-3dd934200f9b\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>any<\/em><\/strong>   <em>vValue<\/em>   A scalar or acyclic completion table.<br><\/div><\/div><div class=\"custom-section\"><div id=\"8ccacbaf-4cde-ac9a-5551-3dcd5489b8f8\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sJSON<\/em>   Encoded JSON.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "escape": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Escapes quotes, backslashes and control bytes without changing Unicode text.<\/div><\/div><div class=\"custom-section\"><div id=\"13e66a3f-0e71-2f91-04f1-b0c7f2b9a285\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sText<\/em>   Text to encode.<br><\/div><\/div><div class=\"custom-section\"><div id=\"c7a507ff-e6a4-2dd6-678d-089004273af9\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sJSON<\/em>   A quoted JSON string.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    }
+                    }
+                },
+                "Methods": {
+                    "value": ``,
+                    "subtable": {
+                    "build": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Builds a project-named Pulsar package ZIP using the shared documentation export interface.<\/div><\/div><div class=\"custom-section\"><div id=\"7c7df087-bad0-20ba-b0c2-284ba2482acc\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sTitle<\/em>   Documentation project title.   <strong><em>string<\/em><\/strong>   <em>sIntro<\/em>   Unused HTML introduction.   <strong><em>table<\/em><\/strong>   <em>tData<\/em>   Prepared completion definitions.<br><\/div><\/div><div class=\"custom-section\"><div id=\"8886b8d4-fca7-e35c-e1aa-c9621ead9be5\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sZIP<\/em>   Package archive bytes.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "buildPackage": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Creates a project-named ZIP ready to unpack into Pulsar's packages directory. The installed Lua provider supplies completion UI and inference.<\/div><\/div><div class=\"custom-section\"><div id=\"724a0159-dcc0-61c0-8d4f-7402366f0bfd\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sTitle<\/em>   Project title used for the package name.   <strong><em>table<\/em><\/strong>   <em>tData<\/em>   Prepared completion definitions.<br><\/div><\/div><div class=\"custom-section\"><div id=\"1945aff6-15a0-c3d0-c408-f5e1587f1d9d\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sZIP<\/em>   ZIP bytes.   <strong><em>string<\/em><\/strong>   <em>sName<\/em>   Generated package directory name.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "formatBlockContent": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Returns unwrapped text for compatibility with the shared builder interface.<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "formatCombinedBlockContent": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Returns unwrapped combined content for compatibility with the shared builder interface.<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "refresh": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Includes all blocks in a nested Lua provider hierarchy, retaining argument order and documented enum fields. Explicit PulsarLua names take precedence.<\/div><\/div><div class=\"custom-section\"><div id=\"a100a9b3-1c33-789a-ebc0-d3846d208d29\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tBlocks<\/em>   Imported Dox blocks.   <strong><em>function<\/em><\/strong>   <em>fProcessBlockItem<\/em>   Shared formatter, unused because provider data consumes raw tags.<br><\/div><\/div><div class=\"custom-section\"><div id=\"cadad46f-e920-dfa8-536e-c18e561c063c\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tData<\/em>   Provider options.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    }
+                    }
+                },
+                "Package": {
+                    "value": ``,
+                    "subtable": {
+                    "build": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Creates a dependency-free stored ZIP containing a project-named Pulsar package. It does not install or modify editor packages.<\/div><\/div><div class=\"custom-section\"><div id=\"857695c3-157e-3012-8827-23578063242e\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sName<\/em>   Filesafe package directory name.   <strong><em>string<\/em><\/strong>   <em>sManifest<\/em>   Package manifest JSON.   <strong><em>string<\/em><\/strong>   <em>sData<\/em>   Completion data JSON.<br><\/div><\/div><div class=\"custom-section\"><div id=\"76beced4-b14e-d8ad-8a86-eaf30d3544d3\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sArchive<\/em>   Binary ZIP bytes.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "crc32": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Calculates the ZIP checksum for stored file bytes. Uses Lua 5.3 or later integer bit operations.<\/div><\/div><div class=\"custom-section\"><div id=\"eac4465b-ba5a-94f4-ee53-17bf16b2ba88\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sBytes<\/em>   File content.<br><\/div><\/div><div class=\"custom-section\"><div id=\"f0295682-da5a-400c-602b-096894848496\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>number<\/em><\/strong>   <em>nCRC<\/em>   Unsigned CRC-32.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    }
+                    }
+                }
+                }
+            }
+            }
+        },
+        "Components": {
+            "value": ``,
+            "subtable": {
+            "DoxBlockTag": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Used to create DoxBlockTags used in a Dox parser.<br>While Dox ships with many pre-made DoxBlockTags, users may also create and add their own by subclassing Dox.<\/div><\/div><div class=\"custom-section\"><div id=\"fe735ed1-f5b7-4421-b2a6-e9084e5d15a6\" class=\"section-title\">Example <button class=\"copy-to-clipboard-button\" onclick=\"Dox.copyToClipboard(this)\">Copy<\/button><\/div><div class=\"section-content\">   <pre><code class=\"language-lua\">    local tAliases          = {\"fqxn\"};\n    local sDisplay          = \"FQXN\";\n    local bRequired         = true;\n    local bMultipleAllowed  = false;\n    local bCombined         = false;\n    local bUtil             = false;\n    local nExtraColumns     = 0;\n    local oFQXN             = DoxBlockTag(tAliases, sDisplay, bRequired, bMultipleAllowed, bCombined, bUtil, nExtraColumns);\n    --TODO more examples<\/code><\/pre><\/div><\/div><\/div>`,
+                "subtable": {
+                "Methods": {
+                    "value": ``,
+                    "subtable": {
+                    "DoxBlockTag": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   This is the constructor for the class.<\/div><\/div><div class=\"custom-section\"><div id=\"aa3c064b-ae11-e071-f561-0600245b410a\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>tAliases<\/em>   A table of aliases that may be used. Each alias must be unique to every other DoxBlockTag's alias. There must be at least one alias.   <strong><em>string<\/em><\/strong>   <em>sDisplay<\/em>   The display text for the tag (as opposed to the alias).   <strong><em>boolean|nil<\/em><\/strong>   <em>bRequired<\/em>   Whether this DoxBlockTag is required. Defaults to false if nil.   <strong><em>boolean|nil<\/em><\/strong>   <em>bMultipleAllowed<\/em>   Whether multiple of this DoxBlockTag are permitted in a DoxBlock. Defaults to false if nil.   <strong><em>boolean|nil<\/em><\/strong>   <em>bCombined<\/em>   Whether the content in each of multiple of this DoxBlockTag should be combined under one section. Defaults to false if nil.   <strong><em>boolean|nil<\/em><\/strong>   <em>bIsUtil<\/em>   Whether this DoxBlockTag is a utility tag. If so, it may still be used by the builder but its contents should be ignored in the builder's final output. Defaults to false if nil.   <strong><em>number|nil<\/em><\/strong>   <em>nExtraColumns<\/em>   The number of extra columns this DoxBlockTag has. Defaults to 0 if nil. Zero extra columns means one content column; two extra columns means three content columns, as demonstrated by the @param DoxBlockTag.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "eachAlias": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Returns an iterator that returns each alias in this <strong>DoxBlockTag<\/strong>.<\/div><\/div><div class=\"custom-section\"><div id=\"99a7b6a6-3d51-8f08-464d-9b89e09d1db6\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>function<\/em><\/strong>   <em>fIterator<\/em>   The iterator.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "getColumnCount": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Gets the total number of text columns in this <strong>DoxBlockTag<\/strong>.\n    <br>For example, the Return(s) <strong>DoxBlockTag<\/strong> has three total columns:\n    <br>The first for the type, the second for example variable name, the third for the description of the return value.<\/div><\/div><div class=\"custom-section\"><div id=\"21486d22-f2c4-ada9-ac29-db36b11eae90\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>number<\/em><\/strong>   <em>nColumns<\/em>   The number of the columns in this <strong>DoxBlockTag<\/strong>.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "getDisplay": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Gets the display title of this <strong>DoxBlockTag<\/strong>.<\/div><\/div><div class=\"custom-section\"><div id=\"74d5a20e-9607-aa1a-f7ff-d45cb63d7c69\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sDisplay<\/em>   The display title of this block tag.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "hasAlias": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Determines whether a given alias exists in this <strong>DoxBlockTag<\/strong>.<\/div><\/div><div class=\"custom-section\"><div id=\"b9ae8aa5-98e9-af1d-8322-4a27e92a3001\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sAlias<\/em>   The alias to check.<br><\/div><\/div><div class=\"custom-section\"><div id=\"a078d453-a81d-6680-d382-005969543883\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>boolean<\/em><\/strong>   <em>bExists<\/em>   Returns true if the input alias exists, false otherwise.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "isCombined": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Determines whether all items using this block tag will be combined into one section in the final output.\n    <br><strong>Note<\/strong>: Even if this is set to true upon creation, it will logically auto-set to false if multiple of this <strong>DoxBlockTag<\/strong> are not allowed.<\/div><\/div><div class=\"custom-section\"><div id=\"3e65f5be-fa1d-f3c2-f8c1-a0b93270aa61\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>boolean<\/em><\/strong>   <em>bCombined<\/em>   Returns true if combined, false otherwise.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "isMultipleAllowed": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Determines whether multiple of this <strong>DoxBlockTag<\/strong> are allowed.<\/div><\/div><div class=\"custom-section\"><div id=\"ecf0599c-7c09-24ab-dcec-18c774c69675\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>boolean<\/em><\/strong>   <em>bCombined<\/em>   Returns true if multiple are allowed, false otherwise.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "isRequired": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Determines whether this <strong>DoxBlockTag<\/strong> is required in every block.<\/div><\/div><div class=\"custom-section\"><div id=\"2e86f93e-0b6a-5bfe-2208-dbe822e44e0c\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>boolean<\/em><\/strong>   <em>bRequired<\/em>   Returns true if it's required, false otherwise.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "isUtil": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Determines whether this <strong>DoxBlockTag<\/strong> is utility. Utility tags are used by Builders and their contents should not included in the finalized output by the builder.<\/div><\/div><div class=\"custom-section\"><div id=\"4aa5feec-b3ae-8e58-71f2-3f289d407677\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>boolean<\/em><\/strong>   <em>bUtil<\/em>   Returns true if it's mere utility, false otherwise.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    }
+                    }
+                }
+                }
+            },
+            "DoxMime": {
+                "value": ``,
+                "subtable": {
+                "Methods": {
+                    "value": ``,
+                    "subtable": {
+                    "DoxMime": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Creates a file-extension mapping and optional documentation preprocessor.<\/div><\/div><div class=\"custom-section\"><div id=\"62b2b54b-9db6-d950-2c2a-5bb53e1b3841\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sName<\/em>   File extension, optionally starting with a dot.   <strong><em>function|nil<\/em><\/strong>   <em>fPreProcessor<\/em>   Converts raw documentation text; nil preserves it.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "getName": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Returns the normalized lowercase file extension.<\/div><\/div><div class=\"custom-section\"><div id=\"366629e4-73f8-7d73-b455-54c76d4c62eb\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sName<\/em>   The extension without a leading dot.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "getPreProcessor": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Returns the documentation preprocessor.<\/div><\/div><div class=\"custom-section\"><div id=\"012b9d1a-ebaf-cd9a-ebc9-d503aeca50dc\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>function<\/em><\/strong>   <em>fPreProcessor<\/em>   The preprocessing function.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "setPreProcessor": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Replaces the documentation preprocessor.<\/div><\/div><div class=\"custom-section\"><div id=\"9111c190-81b3-45e8-c40d-b33ddc0cfab0\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>function<\/em><\/strong>   <em>fPreProcessor<\/em>   The new preprocessing function.<br><\/div><\/div><\/div>`,
+                        "subtable": null
+                    }
+                    }
+                }
+                }
+            },
+            "DoxSyntax": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Defines source-language comment delimiters, documentation escaping and Prism highlighting names.<\/div><\/div><\/div>`,
+                "subtable": {
+                "Methods": {
+                    "value": ``,
+                    "subtable": {
+                    "DoxSyntax": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Creates a source-language syntax definition.<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "getCommentClose": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Returns the closing source-comment delimiter.<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "getCommentOpen": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Returns the opening source-comment delimiter.<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "getEscapeCharacter": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Returns the documentation escape character.<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "getEscapeCharater": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Retains the original spelling for compatibility; use getEscapeCharacter in new code.<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "getName": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Returns the language display name.<\/div><\/div><\/div>`,
+                        "subtable": null
+                    },
+                    "getPrismName": {
+                        "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Returns the Prism syntax-highlighting language name.<\/div><\/div><\/div>`,
+                        "subtable": null
+                    }
+                    }
+                }
+                }
+            }
+            }
+        },
+        "Fields": {
+            "value": ``,
+            "subtable": {
+            "Private": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div id=\"0d5f9b8c-d066-97f5-0356-072df9ed85a8\" class=\"section-title\">Field(s)<\/div><div class=\"section-content\">   <strong><em>finalized<\/em><\/strong>   <em>The<\/em>   finalized data once imported items have been refreshed.<br><\/div><\/div><\/div>`,
+                "subtable": null
+            }
+            }
+        },
+        "Functions": {
+            "value": ``,
+            "subtable": {
+            "escapePattern": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Escapes special characters in a string so it can be used in a Lua pattern match.\n    <br>Used by the <a href=\"#Classes.Dox.Methods.extractBlockStrings\">extractBlockStrings<\/a> method.<\/div><\/div><div class=\"custom-section\"><div class=\"section-title\">Visibility<\/div><div class=\"section-content\">   local<\/div><\/div><div class=\"custom-section\"><div id=\"5a3b4796-1892-c469-bac9-84fe8169d47f\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>pattern<\/em>   A string containing the pattern to be escaped.<br><\/div><\/div><div class=\"custom-section\"><div id=\"5973bae3-6459-ede3-015c-4fd6520a481e\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>Returns<\/em><\/strong>   <em>the<\/em>   escaped string with special characters prefixed by a \`%\`.<br><\/div><\/div><\/div>`,
+                "subtable": null
+            },
+            "extractLuaComments": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Collects actual Lua Dox comments, skipping quoted strings, long strings, ordinary comments, and incomplete blocks. Escaped example brackets remain unchanged for the existing MIME preprocessor.<\/div><\/div><div class=\"custom-section\"><div class=\"section-title\">Visibility<\/div><div class=\"section-content\">   local<\/div><\/div><div class=\"custom-section\"><div id=\"80a6de1b-6656-d395-1f73-8522305f1bad\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sInput<\/em>   Lua source text.<br><\/div><\/div><div class=\"custom-section\"><div id=\"f2fcd60e-cf3e-e306-8e78-e1626d137c54\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>Complete<\/em>   Dox comments joined with newlines.<br><\/div><\/div><\/div>`,
+                "subtable": null
+            }
+            }
+        },
+        "Glossary": {
+            "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   This contains terms and definitions not otherwise found in the Dox documentation.<\/div><\/div><\/div>`,
+            "subtable": {
+            "FQXN": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   This is the Fully Qualified Dox Name of a given item.\n<br>For example, the FQXN of this specific document item that you're reading now is <strong>Dox.Glossary.FQXN<\/strong>.\n<br>\n<br>FQXNs are used to not only arrange documentation hierarchically, but also to create internal anchor links. For example, to link to this documentation item, a link is created as follows:\n<br>&lt;a href=&quot;#Dox.Glossary.FQXN&quot;&gt;Dox.Glossary.FQXN&lt;/a&gt;\n<br><br>\n<strong>Note<\/strong>: Whether FQXNs may contain spaces is up to each <a href=\"#Dox.Components.DoxBuilder\">DoxBuilder<\/a>.<br>For example, the <a href=\"#Dox.Components.DoxBuilderHTML\">DoxBuilderHTML<\/a> allows spaces seemlessly in FQXNs and handles them at several points in the code so the links still function properly while maintaining the visual spaces in the FQXN names.<\/div><\/div><\/div>`,
+                "subtable": null
+            }
+            }
+        },
+        "Methods": {
+            "value": ``,
+            "subtable": {
+            "eachBlockTag": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Returns an iterator that returns each <a href=\"#Dox.Components.DoxBlockTag\">DoxBlockTag<\/a> available to the instance.<\/div><\/div><div class=\"custom-section\"><div id=\"bb6a4d3a-5b13-d971-9f77-a31f83033da7\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>function<\/em><\/strong>   <em>fIterator<\/em>   The iterator.<br><\/div><\/div><\/div>`,
+                "subtable": null
+            },
+            "export": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Builds and writes the selected documentation format. Pulsar Lua produces a project-named package inside a ZIP; other builders retain their normal output format.<\/div><\/div><div class=\"custom-section\"><div class=\"section-title\">Note<\/div><div class=\"section-content\">   Pulsar packages require Lua 5.3 or newer. Unpack into Pulsar's packages folder and enable a Lua autocomplete provider.<\/div><\/div><div class=\"custom-section\"><div id=\"ca429781-440c-eee1-fbd5-c02259d30d95\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string|nil<\/em><\/strong>   <em>sFilename<\/em>   Optional output filename without its extension.<br><\/div><\/div><div class=\"custom-section\"><div id=\"264aca32-66c6-7d3d-2742-38eefc016fba\" class=\"section-title\">Return(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>pOut<\/em>   The written file path.<br><\/div><\/div><\/div>`,
+                "subtable": null
+            },
+            "extractBlockStrings": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Extracts Dox comment blocks from a string input and stores them for later processing.<\/div><\/div><div class=\"custom-section\"><div class=\"section-title\">Visibility<\/div><div class=\"section-content\">   private<\/div><\/div><div class=\"custom-section\"><div id=\"c09dbc8a-f4d3-0a04-6f93-dff1a00c5745\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sInput<\/em>   The string from which the comment blocks should be extracted.<br><\/div><\/div><\/div>`,
+                "subtable": null
+            },
+            "refresh": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Refreshes the finalized data<\/div><\/div><\/div>`,
+                "subtable": null
+            },
+            "setBanner": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Sets an optional documentation banner image URL. An empty string restores the normal header. Missing or unreadable images show a notice without hiding the documentation.<\/div><\/div><div class=\"custom-section\"><div id=\"aafb503e-af2d-1818-0c79-1041e1e4ada4\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>string<\/em><\/strong>   <em>sURL<\/em>   Image URL, relative output path, or an empty string.<br><\/div><\/div><\/div>`,
+                "subtable": null
+            },
+            "setBlockTagOrder": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Sets this instance's documentation section order using tag aliases. Unlisted tags retain their existing relative order after listed tags. Repeated items within a section retain source order. Call refresh before exporting the new order.<\/div><\/div><div class=\"custom-section\"><div id=\"475aa4a7-9207-b82d-c2aa-09489fd5df16\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>table|nil<\/em><\/strong>   <em>tAliases<\/em>   A contiguous alias list; nil or an empty list restores the original order. Aliases are case-insensitive. Unknown aliases and aliases identifying the same tag more than once are rejected before the order changes.<br><\/div><\/div><\/div>`,
+                "subtable": null
+            },
+            "setPrismTheme": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Selects the Prism code theme for subsequent HTML builds on this document. Other documents and their shared builder remain unchanged.<\/div><\/div><div class=\"custom-section\"><div id=\"49aec8f7-ee11-64eb-aba7-b61cd18f3998\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>Dox.PRISM<\/em><\/strong>   <em>eTheme<\/em>   The theme enum member; its value names the Prism stylesheet.<br><\/div><\/div><\/div>`,
+                "subtable": null
+            },
+            "setTheme": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Selects a documentation page palette for subsequent builds on this object. Defaults to Midnight Blue; Prism themes and other Dox objects are unaffected.<\/div><\/div><div class=\"custom-section\"><div id=\"72e6b662-71f7-3a6a-84c4-019138d2a069\" class=\"section-title\">Parameter(s)<\/div><div class=\"section-content\">   <strong><em>Dox.THEME<\/em><\/strong>   <em>eTheme<\/em>   Page theme enum member whose value identifies an HTML palette.<br><\/div><\/div><\/div>`,
+                "subtable": null
+            }
+            }
+        },
+        "PRISM": {
+            "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Prism code themes. Values are the official stylesheet names used when building HTML; Okaidia is the default.<\/div><\/div><div class=\"custom-section\"><div id=\"4d8611d2-23db-bcfa-0ee3-49bd0fdb0b50\" class=\"section-title\">Field(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>COY<\/em>   Coy; value: prism-coy.   <strong><em>table<\/em><\/strong>   <em>DARK<\/em>   Dark; value: prism-dark.   <strong><em>table<\/em><\/strong>   <em>DEFAULT<\/em>   Default; value: prism.   <strong><em>table<\/em><\/strong>   <em>FUNKY<\/em>   Funky; value: prism-funky.   <strong><em>table<\/em><\/strong>   <em>OKAIDIA<\/em>   Okaidia; value: prism-okaidia.   <strong><em>table<\/em><\/strong>   <em>SOLARIZED_LIGHT<\/em>   Solarized Light; value: prism-solarizedlight.   <strong><em>table<\/em><\/strong>   <em>TOMORROW_NIGHT<\/em>   Tomorrow Night; value: prism-tomorrow.   <strong><em>table<\/em><\/strong>   <em>TWILIGHT<\/em>   Twilight; value: prism-twilight.<br><\/div><\/div><\/div>`,
+            "subtable": null
+        },
+        "Statics": {
+            "value": ``,
+            "subtable": {
+            "BlockTags": {
+                "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   This is a list of all built-in <a href=\"#Dox.Components.DoxBlockTag\">BlockTags<\/a>.\n    <br>While subclasses (parsers) <i>may<\/i> provide their own additional BlockTags, the ones listed below are always guaranteed to be available.<br><br>\n    Wrapper availability depends on the selected builder and is not a property of the tag.<br>\n    <table class=\"table table-striped table-bordered table-responsive\">\n        <thead class=\"thead-dark\">\n            <tr>\n                <th scope=\"col\">Display<\/th>\n                <th scope=\"col\">Aliases<\/th>\n                <th scope=\"col\">Required<\/th>\n                <th scope=\"col\">Multiple Allowed<\/th>\n                <th scope=\"col\">Combined<\/th>\n                <th scope=\"col\"># Columns<\/th>\n            <\/tr>\n        <\/thead>\n        <tbody>\n            <tr>\n                <td>FQXN<\/td>\n                <td>fqxn<\/td>\n                <td>yes<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Description<\/td>\n                <td>des, desc, description<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Bug(s)<\/td>\n                <td>bug<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>yes<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>TODO<\/td>\n                <td>todo<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>yes<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Scope<\/td>\n                <td>scope<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Visibility<\/td>\n                <td>vis, visi, visibility<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Note<\/td>\n                <td>note<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Summary<\/td>\n                <td>summary<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Parameter(s)<\/td>\n                <td>parameter, param, par<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>yes<\/td>\n                <td>3<\/td>\n            <\/tr>\n            <tr>\n                <td>Field(s)<\/td>\n                <td>field<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>yes<\/td>\n                <td>3<\/td>\n            <\/tr>\n            <tr>\n                <td>Field(s) - Private<\/td>\n                <td>privatefield, prifield, prifi<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>yes<\/td>\n                <td>3<\/td>\n            <\/tr>\n            <tr>\n                <td>Field(s) - Protected<\/td>\n                <td>protectedfield, profield, profi<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>yes<\/td>\n                <td>3<\/td>\n            <\/tr>\n            <tr>\n                <td>Field(s) - Public<\/td>\n                <td>publicfield, pubfield, pubfi<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>yes<\/td>\n                <td>3<\/td>\n            <\/tr>\n            <tr>\n                <td>Field(s) - Static Private<\/td>\n                <td>staticprivatefield, staprifield, staprifi<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>yes<\/td>\n                <td>3<\/td>\n            <\/tr>\n            <tr>\n                <td>Field(s) - Static Public<\/td>\n                <td>staticpublicfield, stapubfield, stapubfi<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>yes<\/td>\n                <td>3<\/td>\n            <\/tr>\n            <tr>\n                <td>Property<\/td>\n                <td>prop, property<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Throws<\/td>\n                <td>throws<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Return(s)<\/td>\n                <td>return, ret<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>yes<\/td>\n                <td>3<\/td>\n            <\/tr>\n            <tr>\n                <td>Example<\/td>\n                <td>ex, example<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Code<\/td>\n                <td>code<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Requires<\/td>\n                <td>requires<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>yes<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Uses<\/td>\n                <td>uses<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>yes<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Features<\/td>\n                <td>features<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Parent<\/td>\n                <td>parent<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Inheritdoc<\/td>\n                <td>inheritdoc<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Interface<\/td>\n                <td>interface<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Security<\/td>\n                <td>security<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Performance<\/td>\n                <td>performance<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Planned Features<\/td>\n                <td>planned<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Issue(s)<\/td>\n                <td>issue<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>yes<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Since<\/td>\n                <td>since<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Deprecated<\/td>\n                <td>deprecated<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Changelog<\/td>\n                <td>changelog, versionhistory<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Version<\/td>\n                <td>version, ver<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>See<\/td>\n                <td>see<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>yes<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Author(s)<\/td>\n                <td>author<\/td>\n                <td>no<\/td>\n                <td>yes<\/td>\n                <td>yes<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Email<\/td>\n                <td>email<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>License<\/td>\n                <td>license<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Website<\/td>\n                <td>www, web, website<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>GitHub<\/td>\n                <td>github<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Facebook<\/td>\n                <td>fb, facebook<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>X (Twitter)<\/td>\n                <td>x, twitter<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n            <tr>\n                <td>Copyright<\/td>\n                <td>copy, copyright<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>no<\/td>\n                <td>1<\/td>\n            <\/tr>\n        <\/tbody>\n    <\/table><\/div><\/div><\/div>`,
+                "subtable": null
+            }
+            }
+        },
+        "THEME": {
+            "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Documentation page themes. Values identify palettes in the HTML Themes module; Midnight Blue is the default. Prism highlighting is selected separately.<\/div><\/div><div class=\"custom-section\"><div id=\"7bb962c2-4e34-8f19-5dbb-858bb03b7332\" class=\"section-title\">Field(s)<\/div><div class=\"section-content\">   <strong><em>table<\/em><\/strong>   <em>ALUCARD<\/em>   Alucard; value: alucard.   <strong><em>table<\/em><\/strong>   <em>CATPPUCCIN_FRAPPE<\/em>   Catppuccin Frappe; value: catppuccin_frappe.   <strong><em>table<\/em><\/strong>   <em>CATPPUCCIN_LATTE<\/em>   Catppuccin Latte; value: catppuccin_latte.   <strong><em>table<\/em><\/strong>   <em>CATPPUCCIN_MACCHIATO<\/em>   Catppuccin Macchiato; value: catppuccin_macchiato.   <strong><em>table<\/em><\/strong>   <em>CATPPUCCIN_MOCHA<\/em>   Catppuccin Mocha; value: catppuccin_mocha.   <strong><em>table<\/em><\/strong>   <em>DRACULA<\/em>   Dracula; value: dracula.   <strong><em>table<\/em><\/strong>   <em>GRUVBOX_DARK<\/em>   Gruvbox Dark; value: gruvbox_dark.   <strong><em>table<\/em><\/strong>   <em>GRUVBOX_LIGHT<\/em>   Gruvbox Light; value: gruvbox_light.   <strong><em>table<\/em><\/strong>   <em>MIDNIGHT_BLUE<\/em>   Midnight Blue; value: midnight_blue.   <strong><em>table<\/em><\/strong>   <em>NORD<\/em>   Nord; value: nord.   <strong><em>table<\/em><\/strong>   <em>ROSE_PINE<\/em>   Rose Pine; value: rose_pine.   <strong><em>table<\/em><\/strong>   <em>ROSE_PINE_DAWN<\/em>   Rose Pine Dawn; value: rose_pine_dawn.   <strong><em>table<\/em><\/strong>   <em>ROSE_PINE_MOON<\/em>   Rose Pine Moon; value: rose_pine_moon.   <strong><em>table<\/em><\/strong>   <em>SOLARIZED_DARK<\/em>   Solarized Dark; value: solarized_dark.   <strong><em>table<\/em><\/strong>   <em>SOLARIZED_LIGHT<\/em>   Solarized Light; value: solarized_light.   <strong><em>table<\/em><\/strong>   <em>SYNTHWAVE_PROTOCOL<\/em>   Synthwave Protocol; value: synthwave_protocol.   <strong><em>table<\/em><\/strong>   <em>TOKYO_NIGHT<\/em>   Tokyo Night; value: tokyo_night.   <strong><em>table<\/em><\/strong>   <em>TOKYO_NIGHT_MOON<\/em>   Tokyo Night Moon; value: tokyo_night_moon.   <strong><em>table<\/em><\/strong>   <em>TOKYO_NIGHT_STORM<\/em>   Tokyo Night Storm; value: tokyo_night_storm.   <strong><em>table<\/em><\/strong>   <em>ZENBURN<\/em>   Zenburn; value: zenburn.<br><\/div><\/div><\/div>`,
+            "subtable": null
+        },
+        "init": {
+            "value": `<div class=\"container-fluid\"><div class=\"custom-section\"><div class=\"section-title\">Description<\/div><div class=\"section-content\">   Initializes Dox components, builders and parsers in one require call, after LuaEx. No initializer function or configuration options are returned. Lua caches the module after successful initialization.<\/div><\/div><div class=\"custom-section\"><div class=\"section-title\">Throws<\/div><div class=\"section-content\">   LUAEX_INIT is not exactly true, class/collection dependencies are absent, or a module fails to load. Failed initialization may leave loaded modules/globals; package.path is restored.<\/div><\/div><div class=\"custom-section\"><div id=\"87f80801-4e48-938d-f5f8-8b526f049e64\" class=\"section-title\">Example <button class=\"copy-to-clipboard-button\" onclick=\"Dox.copyToClipboard(this)\">Copy<\/button><\/div><div class=\"section-content\">   <pre><code class=\"language-lua\">require(\"dox.init\");<\/code><\/pre><\/div><\/div><\/div>`,
+            "subtable": null
+        }
+        }
+    }
+    }
+
+
+    const doxData = {
+        "Modules": {
+            "value": `
+
+            <div class="DOX_intro container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="p-5 rounded">
+
+        <h1>Dox</h1>
+<h2>Version 2.1</h2>
+<p>Dox turns structured source comments into browsable HTML documentation and
+Pulsar autocomplete packages. Keep names, descriptions, parameters, return
+values and examples beside the code they describe.</p>
+<h3>Initialize and generate</h3>
+<pre><code class="language-lua">local initLuaEx = require(&quot;LuaEx.load&quot;);
+initLuaEx();
+require(&quot;dox.init&quot;);
+
+local document = DoxLua(&quot;My project&quot;);
+document.setOutputPath(&quot;docs&quot;);
+document.importFiles({&quot;MyLibrary.lua&quot;});
+document.refresh();
+document.export(&quot;index&quot;);
+</code></pre>
+<p>Place the LuaEx and dox folders on the module search path, and create the output
+directory before exporting. Dox initializes immediately on import and requires
+<code>LUAEX_INIT == true</code>.</p>
+<p>Select <code>Dox.BUILDER.PULSAR_LUA</code> with <code>document.setBuilder</code> to export a Pulsar
+package ZIP from the same comments. The <a href="#Dox">Dox API</a> covers parsers, tags,
+builders, page palettes, syntax-highlighting themes and output settings.</p>
+
+<details>
+<summary>View changelog</summary>
+<h1>Dox changelog</h1>
+<h2>v2.1</h2>
+<h3>Added</h3>
+<ul>
+<li>Standalone, immediate initialization through <code>require(&quot;dox.init&quot;)</code>.</li>
+<li>Versioned documentation introduction and generated HTML API reference for GitHub Pages.</li>
+<li>A current repository guide to writing comments and generating HTML and Pulsar packages.</li>
+</ul>
+<h3>Changed</h3>
+<ul>
+<li>Dox modules reside under the lowercase <code>dox</code> namespace, with the initializer inside that folder.</li>
+<li>Core, HTML-builder and Pulsar-builder imports use the standalone module paths.</li>
+<li>Initialization requires <code>LUAEX_INIT == true</code>; LuaEx no longer loads Dox automatically.</li>
+<li>The README preserves its existing title image and describes the current API.</li>
+</ul>
+<h3>Removed</h3>
+<ul>
+<li>Obsolete README notices that described the standalone repository as archived or moved into LuaEx.</li>
+</ul>
+
+</details>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        `,
+        "subtable": userData
+        }
+    };
+
+    
+
+class Dox {
+    constructor() {
+        if (Dox.instance) {
+            return Dox.instance;
+        }
+        Dox.instance = this;
+        this.data = doxData;
+        this.activeFQXN = "Modules";
+        this.restoreLocation();
+        // Only local fragment links belong to the documentation navigator.
+        document.body.addEventListener('click', (event) => {
+            const anchor = event.target.closest('a[href]');
+            if (!anchor || !anchor.getAttribute('href').startsWith('#')) {
+                return;
+            }
+            const fragment = anchor.getAttribute('href').slice(1);
+            if (!fragment) {
+                event.preventDefault();
+                return;
+            }
+            const path = this.pathFromFragment(fragment);
+            if (this.fqxnIsValid(path)) {
+                event.preventDefault();
+                this.setActiveFQXN(path);
+                this.updatePage();
+            }
+        });
+        // History traversal renders the stored location without adding another entry.
+        window.addEventListener('popstate', () => {
+            this.restoreLocation();
+            this.updatePage(false);
+        });
+        window.addEventListener('hashchange', () => {
+            this.restoreLocation();
+            this.updatePage(false);
+        });
+    }
+    byID(id) {
+        return document.getElementById(id);
+    }
+    static copyToClipboard(button) {
+        const code = button.closest('.custom-section').querySelector('pre code, pre');
+        if (!code) {
+            return;
+        }
+        const textarea = document.createElement('textarea');
+        textarea.value = code.textContent;
+        document.body.appendChild(textarea);
+        textarea.select();
+        const copied = document.execCommand('copy');
+        textarea.remove();
+        button.textContent = copied ? 'Copied' : 'Copy failed';
+        window.setTimeout(() => { button.textContent = 'Copy'; }, 1500);
+    }
+    fqxnIsValid(path) {
+        return this.getDataByFQDN(path) !== null;
+    }
+    getActiveFQXN() {
+        return this.activeFQXN;
+    }
+    getDataByFQDN(path) {
+        let current = this.data;
+        let node = null;
+        for (const part of path.split('.')) {
+            if (!current || !Object.prototype.hasOwnProperty.call(current, part)) {
+                return null;
+            }
+            node = current[part];
+            current = node.subtable;
+        }
+        return node;
+    }
+    makeLink(path, label) {
+        const anchor = document.createElement('a');
+        anchor.href = '#' + path.replace(/^Modules\.?/, '');
+        anchor.textContent = label.split('%20').join(' ');
+        anchor.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            this.setActiveFQXN(path);
+            this.updatePage();
+        });
+        return anchor;
+    }
+    pathFromFragment(fragment) {
+        let decoded;
+        try {
+            decoded = decodeURIComponent(fragment);
+        } catch (_) {
+            return '';
+        }
+        return 'Modules.' + decoded.replace(/^Modules\.?/, '').split(' ').join('%20');
+    }
+    restoreLocation() {
+        const path = window.location.hash ? this.pathFromFragment(window.location.hash.slice(1)) : 'Modules';
+        this.activeFQXN = this.fqxnIsValid(path) ? path : 'Modules';
+    }
+    setActiveFQXN(path) {
+        if (!this.fqxnIsValid(path)) {
+            return false;
+        }
+        this.activeFQXN = path;
+        return true;
+    }
+    updateBreadcrumb() {
+        const breadcrumb = this.byID('DOX_breadcrumb');
+        breadcrumb.replaceChildren();
+        const parts = this.activeFQXN.split('.');
+        parts.forEach((part, index) => {
+            const item = document.createElement('li');
+            item.className = 'breadcrumb-item';
+            const label = index === 0 ? 'Overview' : part;
+            if (index === parts.length - 1) {
+                item.textContent = label.split('%20').join(' ');
+                item.classList.add('active');
+                item.setAttribute('aria-current', 'page');
+            } else {
+                item.appendChild(this.makeLink(parts.slice(0, index + 1).join('.'), label));
+            }
+            breadcrumb.appendChild(item);
+        });
+    }
+    updateContent() {
+        const node = this.getDataByFQDN(this.activeFQXN);
+        const content = this.byID('DOX_content');
+        content.innerHTML = node.value || '<div class="dox-empty">Choose a topic from the navigation to explore its documentation.</div>';
+        this.byID('DOX_topic').textContent = this.activeFQXN === 'Modules' ? 'Documentation overview' : this.activeFQXN.split('.').slice(-1)[0].split('%20').join(' ');
+        this.byID('DOX_location').textContent = this.activeFQXN.replace(/^Modules\.?/, '').split('%20').join(' ') || 'Explore the project reference';
+    }
+    updateNavMenu() {
+        const menu = this.byID('DOX_navmenu');
+        menu.replaceChildren();
+        const active = this.getDataByFQDN(this.activeFQXN);
+        const parentPath = this.activeFQXN.split('.').slice(0, -1).join('.');
+        const groupPath = active.subtable ? this.activeFQXN : parentPath;
+        const group = this.getDataByFQDN(groupPath);
+        const upPath = groupPath.split('.').slice(0, -1).join('.');
+        this.byID('DOX_navheading').textContent = groupPath === 'Modules' ? 'Project reference' : groupPath.split('.').slice(-1)[0].split('%20').join(' ');
+        if (upPath) {
+            const item = document.createElement('li');
+            const anchor = this.makeLink(upPath, '← Back to parent');
+            anchor.className = 'nav-link dox-up';
+            item.appendChild(anchor);
+            menu.appendChild(item);
+        }
+        Object.keys(group.subtable || {}).sort().forEach((key) => {
+            const path = groupPath + '.' + key;
+            const item = document.createElement('li');
+            item.className = 'nav-item';
+            const anchor = this.makeLink(path, key);
+            anchor.className = 'nav-link';
+            if (path === this.activeFQXN) {
+                anchor.classList.add('active');
+                anchor.setAttribute('aria-current', 'page');
+            }
+            item.appendChild(anchor);
+            menu.appendChild(item);
+        });
+    }
+    updatePage(recordHistory = true) {
+        this.updateNavMenu();
+        this.updateBreadcrumb();
+        this.updateContent();
+        Prism.highlightAll();
+        if (recordHistory) {
+            const hash = this.activeFQXN === 'Modules' ? '' : '#' + this.activeFQXN.slice(8);
+            if (window.location.hash !== hash) {
+                history.pushState({ activeFQXN: this.activeFQXN }, '', window.location.pathname + window.location.search + hash);
+            }
+        }
+    }
+}
+
+
+    function bootDox() {
+        const oDox = new Dox();
+        oDox.updatePage(false);
+    }
+
+    if (window.Prism) {
+        bootDox();
+    } else {
+        window.addEventListener('load', bootDox);
+    }
+    </script>
+</body>
+</html>

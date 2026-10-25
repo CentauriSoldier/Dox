@@ -1,520 +1,1014 @@
---[[*
-@authors Centauri Soldier
-@copyright Copyright © 2016 Centauri Soldier
-@description
-	<h2>Dox</h2>
-	<h3>The Simple Lua Documentation Generator</h3>
-	<p>Dox is a light-weight script designed to parse crafted lua comments regarding modules and functions and output them to readable, sorted and linked HTML. Dox enables you to quickly and simply create documentation for your lua code without the need to install programs or to run anything other than the Dox script. In fact, it's so simple, you can have documentation in as few as 2 lines of code.</p>
-@email
-@features
-	<h3>Multi-platform</h3>
-	<p>Dox works with all major versions of Windows as well as Unix systems(linux, Mac etc.).</p>
-	<p>Dox can be used on unix based systems or Windows without having to convert directory or file paths. Dox will auto-detect and convert paths as needed.</p>
-	<h3>No Dependencies</h3>
-	<p>Dox needs nothing but itself and your lua files in order to run correctly. No installing, no configuring, no mess.</p>
-	<h3>Dox is Robust</h3>
-	<p>Dox is fine with you mixing up your code. Functions from different modules may be in one single file or you may even have a single module spread around different files. Dox is very forgiving in how you organize your modules. You could even have all your dox comments for multiple modules in a single file <i>(although such a practice is not likely to be desired or convenient, just meant as demonstration)</i>. Simply put, Dox loves your code no matter where it's at and how it's organized <i>(or unorganized, for that matter)</i>. Dox will sort it all out for you when it's processed. There's no need for you go out of your way to organize functions or modules a certain way. Organize them how you please and Dox will do the rest.</p>
-@license <p>The MIT License (MIT)<br>
-<br>
-Copyright (c) 2016 Centauri Soldier<br>
-<br>
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:<br>
-<br>
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.<br>
-<br>
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-</p>
-@plannedfeatures
-<ul>
-	<li>Allow themes to set images</li>
-	<li>Set return section in the html to show no return if none are listed.</li>
-	<li>Finish and port the new util filesystem function to 'os.lua' in the luax module</li>
-	<li>Allow Table Input for themes</li>
-	<li>Responsive CSS for menus</li>
-	<li>Force all menu items into the top menu if there only one module in the output</li>
-	<li>Dox menu item with home, usage and other useful pages</li>
-	<li>Add project info function (for all compiled modules);</li>
-	<li>ADD the ability to get HTML string only without needing to write a file</li>
-	<li>TODO - AddSupport for custom, external css ===>>> PUT INTO HTML HEAD <link rel="stylesheet" href="..dox.PageVars.CSSPathAndVersion.."></li>
-	<li>Add a 'Custom' line type</li>
-	<li>Add support for new lines after certain tags in the function block</li>
-	<li>Add Support for TODO, Current Features and Planned Feature</li>
-	<li>Add auto-css assignment if css tag is not present in file (using lua debug library to get directory of this file)</li>
-	<li>Using Bootstrap for CSS aspects.</li>
-	<li>More theme support.</li>
-	<li>Add the ability (using an @nosnippet tag) to ignore the processing of a given block as a snippets (applies only if processing snippets).</li>
-	<li>Local hyperlink support in blocks (for linking to other blocks).</li>
-</ul>
-@moduleid dox|Dox,dox.base64|Dox.Base64,dox.css|Dox.CSS,dox.html|Dox.HTML,dox.theme|Dox.Theme,dox.parse|Dox.Parse,dox.util|Dox.Util
-@todo
-<ul>
-	<li>Add Mac Support</li>
-	<li>Test wrapping block items in '&lt;pre&gt;' html tags</li>
-	<li>Auto-remove parantheses in function name before processing</li>
-	<li>Return the paramters/return as a table instead of a string (convert blockToTable to work for the html)</li>
-	<li>More awareness in function sorting</li>
-	<li>Put question marks where version info goes when the info is not available</li>
-	<li>Redo Block layout to be simpler</li>
-	<li>Fix HTML bug that occurs when module info is not present</li>
-	<li>Create css for inner--module html classes such as 'parameter'.</li>
-	<li>Create code glossary for the terms used within the dox code such as 'module', 'block', etc.</li>
-	<li>Allow multiple types in parameters for functions</li>
-	<li>Clean up css and html (get some help from someone who knows html/css well)</li>
-	<li>Fix the space-finding (%s) pattern matching attempt in gsub</li>
-	<li>Fix the top-right contentwrapper corner, it's cutting off part of the scroll bar</li>
-	<li>CONSIDER AUTO-CHECKING FOR LINKS AND ADDING THEM FOR THE 'getAccordionList()' method in dox.html</li>
-	<li>Deal with module name conflicts</li>
-	<li>Add CSS/HTML validation tags to the footer, update the footer with real data back to the github</li>
-	<li>Fix the width issue in the css #contentwrapper (it's currently using a hack)</li>
-	<li>Write a short guide showing how to add tags to the different block types (HIGH)</li>
-	<li>Create a LOVE-based GUI for making these blocks (LOW)</li>
-	<li>Find out why 'funct' triggers an error (as it should) but 'function' does not when looking for an extra character on the 'func' tag LOW PRIORITY</li>
+local DoxBlock              = DoxBlock;
+local DoxBuilderHTML        = DoxBuilderHTML;
+local DoxBuilderPulsarLua   = DoxBuilderPulsarLua;
+local SortedDictionary      = SortedDictionary;
+local assert                = assert;
+local class                 = class;
+local clone                 = clone;
+local enum                  = enum;
+local error                 = error;
+local io                    = io;
+local ipairs                = ipairs;
+local pairs                 = pairs;
+local rawtype               = rawtype;
+local require               = require;
+local string                = string;
+local table                 = table;
+local type                  = type;
 
-</ul>
-@usage
-	<h2>Take a breath...</h2>
-	Now, I know this is a new way to document your code, but I've made it as painless as possible. Once you read this section, you'll be ready to start documenting and you'll see how simple Dox is to use.
-	<h2>Function Info Block</h2>
-		<p>
-		This is primary element of Dox that makes it work. In fact, without at least one function info block, Dox will not process the target module since there would be no information to process.
-		<br><br>
-		The function info block is wrapped in a multi-line lua comment whose start tag is <i><b>--<span>[</span>[!</b></i> and end tag is <i><b>!]<span>]</span></b></i>.
-		</p>
-	<h3>Function Info Block Block Tags</h3>
-		<p>
-		Elements inside the function info block are designated by an "\@" symbol directly followed by the desired tag and tag information.
-		<br>
-		Below is a list of currently usable tags for this block as well as their formatting and usage details.
-		</p>
-		<ul>
-			<li>description <em>or</em> desc <em>(a description of the function)</em></li>
-			<li>example <em>or</em> examples <em>(an example of this function being used)</em></li>
-			<li>function <em>or</em> func <em>(the full name of the function)</em></li>
-			<li>module <em>or</em> mod <em>(the module to which this function belongs)</em></li>
-			<li>parameter <em>or</em> param <em>(details for each function parameter)</em></li>
-			<li>return <em>or</em> ret <em>(details on the return value)</em></li>
-			<li>Scope <em>()</em></li>
-			<li>Usage <em>()</em></li>
-		</ul>
-	<h2>Module Info Block</h2>
-		<p>
-		The module information is wrapped in a multiline lua comment whose start tag is <i><b>--<span>[</span>[</b><b>*</b></i> and end tag is <i><b>*</b></i><b>]<span>]</span></b>. The content of this block is displayed at the top of the module page within and accordion menu (the one you're using right now).
-		<br><br>
-		<b>Note:</b> Unlike (at least one) function info block, the module info block is <b>not</b> required. Dox will function just fine with or without the module info block; you may omit the entire thing if you wish. Additionaly, if you do choose to use the module info block, only one of the tags (listed below) are required: the 'module' tag is required if using the module info block although you may use one, all or none of the remaining tags (or anything in between).
-		<br><br>
-		Unlike the function info block, the module info block has <b>no</b> tags that are sensitive to spaces and new lines. This feature makes it very easy to use html with your module info block. As you can see, you're reading text right now that has been formatted within the comment block of the dox.lua file.
-		<br><br>
-		Within the block are tags. These tags start and end just like html tags do, with <i>&lt;tagname&gt;</i> as the start tag and <i>&lt;/tagname&gt;</i> as the end tag where <i>tagname</i> is the name of the tag. Below is a complete list of supported tags.
-		</p>
-		<ul>
-			<li>authors</li>
-			<li>copyright</li>
-			<li>dependencies</li>
-			<li>description</li>
-			<li>features</li>
-			<li>email</li>
-			<li>license</li>
-			<li>moduleid<i>(required)</i></li>
-			<li>plannedfeatures</li>
-			<li>todo</li>
-			<li>usage</li>
-			<li>version</li>
-			<li>versionhistory</li>
-			<li>website</li>
-		</ul>
-		<h3>The moduleid Tag</h3>
-		<p>You may enter one to many items for the <i>'moduleid'</i> tag. For example, if your module name is <b><i>myClass</i></b> then you'd enter it exactly as the class name since the <i>'moduleid'</i> tag <b>is</b> case sensitive.; however, you can control how it's displayed at the top of the page. To include a display name, simply use a pipe (<b>|</b>) and type the display next like this <b><code>myClass|MyClass</code></b>.
-		<br><br>
-		If you have sub modules such as <b><i>myClass.otherStuff</i></b> and you'd like the module block for <b><i>myClass</i></b> to display on the <b><i>myClass.otherStuff</i></b> page, use a comma to indicate another module and simlpy add it the <i>'moduleid'</i> tag like so: <b><code>myClass|MyClass,myClass.otherStuff</code></b> and if you'd like a differnt display name for that module too, just add it in: <b><code>myClass|MyClass,myClass.otherStuff|MyClass.otherStuff</code></b>. It's that easy.
-		</p>
-	<h2>Special Characters</h2>
-		<p>The '\@' symbol cannot be used in your text without escaping it since it is a special character that tells Dox where to start a line; however, you can escape it in your text using a backslash <i>(\)</i> and the '\@' will be put there by Dox when processing is complete: E.g., \@. Additionaly, any text inside free-format items (like authors, website, description, etc. as opposed to items like param, function, etc. that are more restricted) is treated like html including any html tags you may want to use. Of course, this means that you'll need to escape the '\<' and '\>' symbols in your text if you want them to be presented as-is.
-		<br><br>
-		Below is a complete list of special characters that need escaped to be displayed as themselves.
-		</p>
-		<br>
-		<ul>
-			<li>\@</li>
-			<li>&gt;</li>
-			<li>&lt;</li>
-		</ul>
-@version 0.0.8
-@versionhistory
-<ul>
-	<li>
-		<b>0.1.0</b>
-		<br>
-		<p>Added the ability to output Atom snippets from code (for cson snippet files, json is not yet supported).</p>
-	</li>
-	<li>
-		<b>0.0.9</b>
-		<br>
-		<p>Added support for unix systems.</p>
-	</li>
-	<li>
-		<b>0.0.8</b>
-		<br>
-		<p>Fixed a bug in the local 'import()' function.</p>
-	</li>
-	<li>
-		<b>0.0.7</b>
-		<br>
-		<p>Added the ability to allow a module block to be displayed for multiple modules as desired</p>
-		<p>Module names can now be displayed differently as desired.</p>
-	</li>
-	<li>
-		<b>0.0.6</b>
-		<br>
-		<p>Fixed a bug that was omitting the last entry of blocks.</p>
-		<p>Added the ability for dox to normally and recursively scan directories and process all files at once.</p>
-	</li>
-	<li>
-		<b>0.0.5</b>
-		<br>
-		<p>Fixed a bug that allowed empty modules and empty blocks.</p>
-		<p>Reconfigured Start and End tags to be easier to use.</p>
-		<p>Reconfigured function blocks tags to be easier to use.</p>
-	</li>
-	<li>
-		<b>0.0.4</b>
-		<br>
-		<p>Added the binary module and included embeded images for the output.</p>
-		<p>Added the <i>Welcome.html</i> page.</p>
-	</li>
-	<li>
-		<b>0.0.3</b>
-		<br>
-		<p>Moved from a single-page output to a multi-page one.</p>
-		<p>Added the Module Info panel for each module.</p>
-		<p>Output CSS to and external file (style.css).</p>
-	</li>
-	<li>
-		<b>0.0.2</b>
-		<br>
-		<p>Refactored the code and ported all logical functions to modules.</p>
-	</li>
-	<li>
-		<b>0.0.1</b>
-		<br>
-		<p>Created Dox in all its wonder...and despair.</p>
-	</li>
-</ul>
-@website https://github.com/CentauriSoldier/Dox
-*]]
-dox = {};
 
---warn the user if debug is missing
-if type(debug) ~= "table" then
-	error("Dox requires the debug library to operate. Please use a version of lua that includes the debug library.")
+local _nExampleInsertPoint  = 6; --where in the _tBuiltInBlockTags table to put the Example BlockTag
+local _pStaticsRequirePath  = "dox.Statics";
+local _eSyntax              = require(_pStaticsRequirePath..".DoxSyntaxEnum");
+local _tBuiltInBlockTags    = require(_pStaticsRequirePath..".BuiltInBlockTags");
+
+
+local _eOutputType = enum("DoxOutput", {"HTML"});--, "MD"});
+
+
+--[[!
+@fqxn Dox.Glossary
+@desc This contains terms and definitions not otherwise found in the Dox documentation.
+!]]
+
+--[[!
+@fqxn Dox.Glossary.FQXN
+@desc This is the Fully Qualified Dox Name of a given item.
+<br>For example, the FQXN of this specific document item that you're reading now is <strong>Dox.Glossary.FQXN</strong>.
+<br>
+<br>FQXNs are used to not only arrange documentation hierarchically, but also to create internal anchor links. For example, to link to this documentation item, a link is created as follows:
+<br>&lt;a href=&quot;#Dox.Glossary.FQXN&quot;&gt;Dox.Glossary.FQXN&lt;/a&gt;
+<br><br>
+<strong>Note</strong>: Whether FQXNs may contain spaces is up to each <a href="#Dox.Components.DoxBuilder">DoxBuilder</a>.<br>For example, the <a href="#Dox.Components.DoxBuilderHTML">DoxBuilderHTML</a> allows spaces seemlessly in FQXNs and handles them at several points in the code so the links still function properly while maintaining the visual spaces in the FQXN names.
+!]]
+
+--[[!
+    @fqxn Dox.Functions.escapePattern
+    @desc Escapes special characters in a string so it can be used in a Lua pattern match.
+    <br>Used by the <a href="#Classes.Dox.Methods.extractBlockStrings">extractBlockStrings</a> method.
+    @vis local
+    @param string pattern A string containing the pattern to be escaped.
+    @ret Returns the escaped string with special characters prefixed by a `%`.
+!]]
+local function escapePattern(pattern)
+    -- Escape special characters in the pattern
+    local escapedPattern = pattern:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1");
+
+    -- Preserve delimiter whitespace and accept Windows endings for newline terminators.
+    escapedPattern = escapedPattern:gsub("\n", "\r?\n");
+
+    return escapedPattern;
 end
 
---prevents 'processFile()' from resetting 'dox.Modules' and writing files while being called by 'processDir()'
-local bDirProcessing = false;
+--[[!
+@fqxn Dox.Functions.extractLuaComments
+@vis local
+@desc Collects actual Lua Dox comments, skipping quoted strings, long strings, ordinary comments, and incomplete blocks. Escaped example brackets remain unchanged for the existing MIME preprocessor.
+@param string sInput Lua source text.
+@ret string Complete Dox comments joined with newlines.
+!]]
+local function extractLuaComments(sInput)
+    local nIndex    = 1;
+    local nLength   = #sInput;
+    local tComments = {};
+
+    while (nIndex <= nLength) do
+        local sCharacter = sInput:sub(nIndex, nIndex);
+
+        if (sCharacter == '"' or sCharacter == "'") then
+            -- An escaped quote does not end a short string.
+            local sQuote = sCharacter;
+            nIndex = nIndex + 1;
+
+            while (nIndex <= nLength) do
+                sCharacter = sInput:sub(nIndex, nIndex);
+
+                if (sCharacter == "\\") then
+                    nIndex = nIndex + 2;
+                elseif (sCharacter == sQuote) then
+                    nIndex = nIndex + 1;
+                    break;
+                else
+                    nIndex = nIndex + 1;
+                end
+            end
+
+        elseif (sInput:sub(nIndex, nIndex + 1) == "--" or sCharacter == "[") then
+            local bComment = sCharacter == "-";
+            local nStart   = nIndex + (bComment and 2 or 0);
+            local nOpen, nContent, sEquals = sInput:find("%[(=*)%[", nStart);
+
+            if (nOpen == nStart) then
+                -- Lua long brackets close only at the matching equals level.
+                local nClose, nAfter = sInput:find("]"..sEquals.."]", nContent + 1, true);
+
+                if (not nClose) then
+                    break;
+                end
+
+                if (bComment and sEquals == "" and sInput:sub(nContent + 1, nContent + 1) == "!" and
+                    sInput:sub(nClose - 1, nClose - 1) == "!") then
+                    table.insert(tComments, sInput:sub(nIndex, nAfter));
+                end
+
+                nIndex = nAfter + 1;
+            elseif (bComment) then
+                -- Ordinary line comments may contain marker-like text.
+                nIndex = sInput:find("[\r\n]", nStart) or (nLength + 1);
+            else
+                nIndex = nIndex + 1;
+            end
+        else
+            nIndex = nIndex + 1;
+        end
+    end
+
+    return table.concat(tComments, "\n");
+end
+
 
 --[[
-@module dox
-@func getLocalPath
-@scope local
-@desc Determines the relative path from which the script is called.
-@ret sPath string The local path from which dox is run.
-
-local function getLocalPath()
-	--determine the call location
-	local sPath = debug.getinfo(1, "S").source;
-	--remove the calling filename
-	sPath = sPath:gsub("@", ""):gsub("dox.lua", "");
-	--remove the "/" at the end
-	return sPath:sub(1, sPath:len() - 1);
-end
-]]
---allows the loading of files relatively without the need for absolute paths
---[[
-@module dox
-@func import
-@scope local
-@desc A version of the 'require()' function that uses the local path. Used to require the other local modules the 'dox.lua' file needs.
-@file dox.lua
-
-local function import(sFile)
-	local sPath = getLocalPath();
-
-	--format the path to be suitable for the 'require()' function
-	sPath = sPath:gsub("\\", "."):gsub("/", ".");
-	sFile = sFile:gsub("\\", "."):gsub("/", ".");
-
-	--call it in
-	require(sPath..'.'..sFile);
-end
-]]
---determine the call location
---local sPath = debug.getinfo(1, "S").source;
---remove the calling filename
---sPath = sPath:gsub("@", ""):gsub("init.lua", "");
---remove the "/" at the end
---sPath = sPath:sub(1, sPath:len() - 1);
---update the package.path
---package.path = package.path..";"..sPath.."\\?.lua";
-
---warn the user if debug is missing
-assert(type(debug) == "table", "Dox requires the debug library during initialization. Please enable the debug library before initializing Dox.");
-
---determine the call location
-local sPath = debug.getinfo(1, "S").source;
---remove the calling filename
-sPath = sPath:gsub("@", ""):gsub("[Dd][Oo][Xx].[Ll][Uu][Aa]", "");
---remove the "/" at the end
-sPath = sPath:sub(1, sPath:len() - 1);
---update the package.path (use the main directory to prevent namespace issues)
-package.path = package.path..";"..sPath.."\\..\\?.lua";
-
---import the utility functions
-require("dox.util");
---rename some of the util functions for convenience
-local trim = dox.util.trim;
---import the settings file
-require("dox.settings");
---import the theme file
-require("dox.theme");
---import the base64 file
-require("dox.base64");
---import the css file
-require("dox.css");
---import the parse file
-require("dox.parse");
---import the html file
-require("dox.html");
---import the atom file
-require("dox.atom");
-
-
---MAKE THIS RETURN THE STATUS OF THE WRITE PROCESS TOO!!!
+██████╗  ██████╗ ██╗  ██╗
+██╔══██╗██╔═══██╗╚██╗██╔╝
+██║  ██║██║   ██║ ╚███╔╝
+██║  ██║██║   ██║ ██╔██╗
+██████╔╝╚██████╔╝██╔╝ ██╗
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝]]
 --[[!
-@module dox
-@func writeOutput
-@scope local
-@desc Write the index file, welcome files, modules files and CSS as well as any other files required for a complete output. Used in 'dox.processFile()' and 'dox.processDir'
-@param sDirectory string The desired output directory.
-!]]
-local function writeOutput(pDir)
+@fqxn Dox
+@bug In an FQXN with multiple spaces, only the first is handled correcly.
+@desc <strong>Dox</strong> auto-generates documentation for code by reading and parsing comment blocks.
+<br><br>
+Note: Dox is intended only to be used by being subclassed.
+<br>Subclasses of Dox (called parsers), provide the required parameters to properly parse comments blocks for specific languages.
+<br><a href="https://imgflip.com/i/910ysh"><img style="width: 200px; height: 200px" class="rounded float-left img-thumbnail" src="https://i.imgflip.com/910ysh.jpg" title="made at imgflip.com"/></a>
+<br>--...Meta End
+@ex
+    --\[\[!
+        \@fqxn Dox
+        \@desc &lt;strong&gt;Dox&lt;/strong&gt; auto-generates documentation for code by reading and parsing comment blocks.
+        <br>&lt;br&gt;
+        <br>&lt;br&gt;Note:Dox is intended only to be used by being subclassed.
+        <br>&lt;br&gt;Subclasses of Dox (called parsers), provide the required parameters to properly parse comments blocks for specific languages.
+        \@ex&lt;br&gt;--Many Wow! How Yay! Much Meta!
+        <br>&lt;br&gt;--...Meta End
+    !\]\]
+@ex
+--for this example, we're using Lua
 
-	if type(pDir) == "string" then
+--create the Lua language parser object (with the project name)
+local oDoxLua = DoxLua("MyProject");
 
-		--TODO - DELETE THE LAST DASH IN THE INPUT STRING (IF THE DASH EXISTS)
-		if pDir:gsub("%s", "") ~= "" then
+--import a directory recursively (read & parse files)
+local pImport = "C:\\Path\\To\\My\\Project"
 
-			--sort and purge the modules
-			dox.parse.sortModules();
+local function importFiles(pDir)
 
-			if dox.parse.getModuleCount() > 0 then
-
-				--create all critical folders
-				for nIndex, sFolder in pairs(dox.CriticalFolders) do
-					os.execute('mkdir "'..pDir..'/'..sFolder..'"');
-				end
-
-				--update the css (in case of theme changes)
-				dox.css.update();
-
-			--the css file
-			local hCSSFile = io.open(pDir.."/style.css", "w");
-
-				if hCSSFile then
-					hCSSFile:write(dox.PageVars.CSS);
-					hCSSFile:close();
-				end
-
-			--the welcome file
-			local hWelcomeFile = io.open(pDir.."/dox/welcome.html", "w");
-
-				if hWelcomeFile then
-					hWelcomeFile:write(dox.html.buildWelcome());
-					hWelcomeFile:close();
-				end
-
-			--the index file
-			local hIndexFile = io.open(pDir.."/index.html", "w");
-
-				if hIndexFile then
-					hIndexFile:write(dox.html.buildIndex());
-					hIndexFile:close();
-				end
-
-			--the module(s)
-			local tModules = dox.Modules;
-			--this has the process order for the modules
-			local tMeta = getmetatable(tModules);
-
-			TextFile.WriteFromString(_ExeFolder.."\\modules.lua", serialize.table(tModules), false);
-			--process the modules
-				for nIndex, sModule in pairs(tMeta.ProcessOrder) do
-					local tModule = tModules[sModule];
-
-					--write the module file
-					local hModuleFile = io.open(pDir.."/modules/"..sModule..".html", "w");
-
-					if hModuleFile then
-						hModuleFile:write(dox.html.buildModule(sModule));
-						hModuleFile:close();
-					end
-
-				end
-
-			end
-
-		end
-
-	end
+    for _, pFile in pairs(io.listfiles(pDir, false, nil, "lua")) do
+        oDoxLua.importFile(pFile, true); --don't refresh the data until we're done importing
+        --print(pFile);
+    end
 
 end
 
+local tFolders = io.listdirs(pImport, true, importFiles); --set recursion to true
 
---ADD THE ABILITY TO CHECK IF THE FILE EXISTS
---[[!
-@module dox
-@func dox.processFile
-@desc Processes a Lua file for use with Dox and readies it for output. This is one of two functions, including 'dox.processDir' that are used by the end-user. Use either of these two functions to create HTML output. While 'dox.processDir' is used for an entire directory, this funcitons will process only one file.
-@param pInputFile string The path to the file dox reads.
-@param pOutputFile string The path to the directory in which Dox writes the output file.
-@param sTheme string,nil The name of the color scheme to use in the out HTML. If nil, Dox will use the default theme.
-@param pAtomSnippetsFile string The full path to the atom snippets file. If it does not exist, it will be created. If nil, snippets will not be written.
-@param sSnippetSection string The section name for the snippets. Having sections allows for mutiple calls to write to the same file without overwrites.  If nil, snippets will not be written.
-@example dox.processFile("C:\\Files\\myModule.lua", "C:\\Files\\Dox Output", nil, nil);
+--set the output path
+oDoxLua.setOutputPath("C:\\Users\\MyUsername\\MyProject");
+
+--\[\[we don't need to set a Dox.BUILDER since it defaults
+    to Dox.BUILDER.HTML and that's what we want\]\]
+
+--refresh the data
+oDoxLua.refresh();
+
+--export html help file.
+oDoxLua.export(); --profit!
+@prifi string blockOpen Set during contruction, this is the string that tells Dox when to <strong>start</strong> reading a <a href="#Dox.Components.DoxBlock">DoxBlock</a>.
+@prifi string blockClose Set during contruction, this is the string that tells Dox when to <strong>stop</strong> reading a <a href="#Dox.Components.DoxBlock">DoxBlock</a>.
+@prifi table blockTags A complete list of <a href="#Dox.Components.DoxBlockTag">DoxBlockTags</a> available to the instance.
+<br>It's built during construction by first importing all built-in <a href="#Dox.Components.DoxBlockTag">DoxBlockTags</a>, then by creating and inserting the example <strong>BlockTags</strong> and finally by inputting all input varargs (input <strong>BlockTags</strong>) if any are provided.--TODO FINISH
+@summary
+Below is the layout and hierarchy of Dox and all its elements.
+<!-- Parsers -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingParsers">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseParsers" aria-expanded="true" aria-controls="collapseParsers">
+          📦 Parsers
+        </button>
+      </h2>
+      <div id="collapseParsers" class="accordion-collapse collapse show"
+           aria-labelledby="headingParsers" data-bs-parent="#doxAccordion">
+        <div class="accordion-body">
+          <p>Language-specific modules that scan your source for <code>--\[\[! … \]\]</code> blocks and <code>\@tags</code>, then emit <strong>DoxBlockTag</strong> objects.</p>
+          <ul>
+            <li><code>DoxSyntax.lua</code> – core tokenizer, finds raw tags and text</li>
+            <li><code>DoxLua.lua</code>, <code>DoxCPP.lua</code>, etc. – apply comment-style rules and normalize into <code>DoxBlockTag</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Components -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingComponents">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseComponents" aria-expanded="false" aria-controls="collapseComponents">
+          🔧 Components
+        </button>
+      </h2>
+      <div id="collapseComponents" class="accordion-collapse collapse"
+           aria-labelledby="headingComponents" data-bs-parent="#doxAccordion">
+        <div class="accordion-body">
+          <p>Core in-memory models and the abstract builder interface.</p>
+          <ul>
+            <li><strong>DoxBlockTag.lua</strong> – represents one <code>\@tag</code> (name, type, description)</li>
+            <li><strong>DoxBlock.lua</strong> – groups tags &amp; text into a logical block</li>
+            <li><strong>DoxBuilder.lua</strong> – abstract base with <code>refresh()</code> and <code>build()</code> signatures</li>
+            <li><strong>DoxMime.lua</strong> – escaping &amp; formatting helpers</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Builders -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingBuilders">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseBuilders" aria-expanded="false" aria-controls="collapseBuilders">
+          🏗️ Builders
+        </button>
+      </h2>
+      <div id="collapseBuilders" class="accordion-collapse collapse"
+           aria-labelledby="headingBuilders" data-bs-parent="#doxAccordion">
+        <div class="accordion-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h5>HTML Builder</h5>
+              <ul>
+                <li><code>DoxBuilderHTML.lua</code> – nests by FQXN, injects CSS/JS, outputs HTML page</li>
+                <li><code>Data/dox.css</code> &amp; <code>prism.js</code> for styling &amp; highlighting</li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <h5>PulsarLua Builder</h5>
+              <ul>
+                <li><code>DoxBuilderPulsarLua.lua</code> – filters <code>\@display PulsarLua</code>, builds nested table, emits JSON (to adapt for CSON snippets)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Integration -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingIntegration">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseIntegration" aria-expanded="false" aria-controls="collapseIntegration">
+          🔄 How It Fits Together
+        </button>
+      </h2>
+      <div id="collapseIntegration" class="accordion-collapse collapse"
+           aria-labelledby="headingIntegration" data-bs-parent="#doxAccordion">
+        <div class="accordion-body">
+          <ol>
+            <li><strong>Parse</strong> source → <code>DoxBlockTag</code> → <code>DoxBlock</code></li>
+            <li><strong>Refresh</strong> in builder → nest by FQXN → <code>tFinalizedData</code></li>
+            <li><strong>Build</strong> in builder → serialize to HTML/JSON/CSON</li>
+            <li><strong>Output</strong> injected into docs or editor snippets</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+@todo <!--TODO-->
+<ul>
+    <li>allow user to suround content block with (optional tags) tags...</li>
+    <li>color dead anchor links</li>
+    <li>add option to get and print TODO, BUG, etc.</li>
+    <li>parse single-line comments too</li>
+    <li>add tooltip with \@des info (if available) in sidemenu items</li>
+    <li>allow custom BlockTag sort order (in what order items are displayed in the output)</li>
+    <li>allow escaping . in FQXN</li>
+    <li>fix bug in fqxns with multiple-spaces</li>
+</ul>
+
 !]]
-function dox.processFile(pInputFile, pOutDir, sTheme, pAtomSnippetsFile, sSnippetSection)
-	local hInputFile = io.open(pInputFile, "r");
+return class("Dox",
+{--metamethods
+    __tostring = function(this, cdat)
+        local pri = cdat.pri;
 
-	--ensure the 'pOutDir' has a '/' on the end (for linux)
-	if package.config:sub(1,1) =="/" then
+        return pri.name.." ("..pri.blockOpen.." ... "..pri.blockClose..")";
+    end,
+},
+{--static public
+    --TODO move this out to the builder section and call it in
+    BUILDER = enum("Dox.BUILDER", {"HTML", "PULSAR_LUA"}, {DoxBuilderHTML(), DoxBuilderPulsarLua()}, true),
+    OUTPUT  = _eOutputType,
+    --[[!
+    @fqxn Dox.PRISM
+    @pulsarlua table Dox.PRISM
+    @desc Prism code themes. Values are the official stylesheet names used when building HTML; Okaidia is the default.
+    @field table COY Coy; value: prism-coy.
+    @field table DARK Dark; value: prism-dark.
+    @field table DEFAULT Default; value: prism.
+    @field table FUNKY Funky; value: prism-funky.
+    @field table OKAIDIA Okaidia; value: prism-okaidia.
+    @field table SOLARIZED_LIGHT Solarized Light; value: prism-solarizedlight.
+    @field table TOMORROW_NIGHT Tomorrow Night; value: prism-tomorrow.
+    @field table TWILIGHT Twilight; value: prism-twilight.
+    !]]
+    PRISM = enum("Dox.PRISM",
+    {
+        "COY", "DARK", "DEFAULT", "FUNKY", "OKAIDIA", "SOLARIZED_LIGHT", "TOMORROW_NIGHT", "TWILIGHT",
+    },
+    {
+        "prism-coy", "prism-dark", "prism", "prism-funky", "prism-okaidia", "prism-solarizedlight", "prism-tomorrow", "prism-twilight",
+    }, true),
+    SYNTAX  = _eSyntax,
+    --[[!
+    @fqxn Dox.THEME
+    @pulsarlua table Dox.THEME
+    @desc Documentation page themes. Values identify palettes in the HTML Themes module; Midnight Blue is the default. Prism highlighting is selected separately.
+    @field table ALUCARD Alucard; value: alucard.
+    @field table CATPPUCCIN_FRAPPE Catppuccin Frappe; value: catppuccin_frappe.
+    @field table CATPPUCCIN_LATTE Catppuccin Latte; value: catppuccin_latte.
+    @field table CATPPUCCIN_MACCHIATO Catppuccin Macchiato; value: catppuccin_macchiato.
+    @field table CATPPUCCIN_MOCHA Catppuccin Mocha; value: catppuccin_mocha.
+    @field table DRACULA Dracula; value: dracula.
+    @field table GRUVBOX_DARK Gruvbox Dark; value: gruvbox_dark.
+    @field table GRUVBOX_LIGHT Gruvbox Light; value: gruvbox_light.
+    @field table MIDNIGHT_BLUE Midnight Blue; value: midnight_blue.
+    @field table NORD Nord; value: nord.
+    @field table ROSE_PINE Rose Pine; value: rose_pine.
+    @field table ROSE_PINE_DAWN Rose Pine Dawn; value: rose_pine_dawn.
+    @field table ROSE_PINE_MOON Rose Pine Moon; value: rose_pine_moon.
+    @field table SOLARIZED_DARK Solarized Dark; value: solarized_dark.
+    @field table SOLARIZED_LIGHT Solarized Light; value: solarized_light.
+    @field table SYNTHWAVE_PROTOCOL Synthwave Protocol; value: synthwave_protocol.
+    @field table TOKYO_NIGHT Tokyo Night; value: tokyo_night.
+    @field table TOKYO_NIGHT_MOON Tokyo Night Moon; value: tokyo_night_moon.
+    @field table TOKYO_NIGHT_STORM Tokyo Night Storm; value: tokyo_night_storm.
+    @field table ZENBURN Zenburn; value: zenburn.
+    !]]
+    THEME = enum("Dox.THEME",
+    {
+        "ALUCARD",
+        "CATPPUCCIN_FRAPPE",
+        "CATPPUCCIN_LATTE",
+        "CATPPUCCIN_MACCHIATO",
+        "CATPPUCCIN_MOCHA",
+        "DRACULA",
+        "GRUVBOX_DARK",
+        "GRUVBOX_LIGHT",
+        "MIDNIGHT_BLUE",
+        "NORD",
+        "ROSE_PINE",
+        "ROSE_PINE_DAWN",
+        "ROSE_PINE_MOON",
+        "SOLARIZED_DARK",
+        "SOLARIZED_LIGHT",
+        "SYNTHWAVE_PROTOCOL",
+        "TOKYO_NIGHT",
+        "TOKYO_NIGHT_MOON",
+        "TOKYO_NIGHT_STORM",
+        "ZENBURN",
+    },
+    {
+        "alucard",
+        "catppuccin_frappe",
+        "catppuccin_latte",
+        "catppuccin_macchiato",
+        "catppuccin_mocha",
+        "dracula",
+        "gruvbox_dark",
+        "gruvbox_light",
+        "midnight_blue",
+        "nord",
+        "rose_pine",
+        "rose_pine_dawn",
+        "rose_pine_moon",
+        "solarized_dark",
+        "solarized_light",
+        "synthwave_protocol",
+        "tokyo_night",
+        "tokyo_night_moon",
+        "tokyo_night_storm",
+        "zenburn",
+    }, true),
 
-		if pOutDir:sub(pOutDir:len()) ~= "/" then
-			pOutDir = pOutDir.."/";
-		end
+},
+{--private
+    --[[@qxn Classes.Dox.Fields]]
+    bannerURL           = "",
+    blockOpen           = "",
+    blockClose          = "",
+    blockTags           = {},
+    defaultBlockTags    = {},
+    blockStrings        = {},
+    builder             = null,
+    --[[!@fqxn Dox.Fields.Private @field finalized The finalized data once imported items have been refreshed.!]]
+    finalized           = {}; --this is the final, processed data (updated using the refresh() method in the subclass)
+    html                = "", --this is updated on refresh
+    Intro__auto_F       = "", --the custom welcome message (if any)
+    mimeTypes           = SortedDictionary(), --TODO throw error on removal of last item
+    name                = "",
+    output              = "",
+    OutputPath__auto__  = "",
+    prismCSS            = "",
+    prismTheme          = null,
+    --prismScripts        = {},
+    requiredBlockTags   = {},
+    snippetClose        = "",
+    snippetOpen         = "", --TODO add snippet info DO NOT ALLOW USER TO SET/GET THIS
+    syntax              = null,
+    --Start 	        = "##### START DOX [SUBCLASS NAME] SNIPPETS -->>> ID: ",
+    --End 	            = "#####   <<<-- END DOX [SUBCLASS NAME] SNIPPETS ID: ",
+    tagOpen             = "",
+    theme               = null,
+    title               = "",
+    --[[!
+    @fqxn Dox.Methods.extractBlockStrings
+    @vis private
+    @desc Extracts Dox comment blocks from a string input and stores them for later processing.
+    @par string sInput The string from which the comment blocks should be extracted.
+    !]]
+    extractBlockStrings = function(this, cdat, sInput, oDoxMime)
+        --local tBlockStrings         = {};
+        local pri           = cdat.pri;
+        local fTrim         = string.trim;
+        local oDoxSyntax    = pri.syntax.value;
+        local sOpenPrefix   = oDoxSyntax.getCommentOpen();
+        local sCloseSuffix  = oDoxSyntax.getCommentClose();
+        local sBlockOpen    = pri.blockOpen;
+        local sBlockClose   = pri.blockClose;
 
-	end
+        -- Lua strings and ordinary comments must not introduce documentation blocks.
+        if (pri.syntax == _eSyntax.LUA) then
+            sInput = extractLuaComments(sInput);
+        end
 
-	if hInputFile then
+        local sPattern = escapePattern(sOpenPrefix..sBlockOpen).."(.-)"..escapePattern(sBlockClose..sCloseSuffix);
+        for sMatch in sInput:gmatch(sPattern) do
+            local fPreProcessor = oDoxMime.getPreProcessor();
+            local sUnprocessedBlock = fTrim(sMatch);
+            local sBlock = fPreProcessor(sUnprocessedBlock);
 
-		--ignore the module reset if called by 'processDir()'
-		if not bDirProcessing then
-			--reset the modules table
-			dox.Modules = {};
-		end
+            if not (pri.blockStrings[sBlock]) then
+                pri.blockStrings[sBlock] = true;
+            end
 
-		--set the default theme
-		dox.theme.setActive("Plain");
+        end
 
-		--ADD PROCESSING FOR CUSTOM THEME
-		if type(sTheme) == "table" then
+    end,
+    processBlockItem = function(this, cdat, oBlockTag, sContent)
+        local sTableDataItems = "";
+        local nColumnCount    = oBlockTag.getColumnCount();
+        local sCurrent        = sContent;
+        local nStart          = 1;
+        local nEnd            = -1;
+        local tContent        = {};
+        local oBuilder        = cdat.pri.builder.value;
+        -- Iterate over the number of columns
+        for x = 1, nColumnCount - 1 do
+            -- Find the index of the next space
+            local nStart, nEnd = sCurrent:find(" ", 1);
 
-		--import only the table items that exists in other themes and fill in the gaps with elements from the default themes table !~!~!!!!!!!!!!!!!!!!!!!!!!!!!
+            -- Check if a space is found
+            if not nStart then
+                error("Unable to find space for column " .. x.." in block:\n"..sContent)--TODO better message
+            end
 
-		elseif type(sTheme) == "string" then
+            -- Extract the substring between the current start and end indices
+            tContent[x] = sCurrent:sub(1, nEnd - 1);
 
-			--if the themes exists, set it as active
-			if dox.Theme.Themes[sTheme] then
-				dox.theme.setActive(sTheme);
-			end
+            -- Update sCurrent to start from the next character after the space
+            sCurrent = sCurrent:sub(nEnd + 1);
+        end
 
-		end
+        -- Add the remaining part of sCurrent as the last content item
+        tContent[nColumnCount] = sCurrent;
 
-		--read the file
-		local sLuaString = hInputFile:read("*all");
+        for x = 1, #tContent do
+            local tWrapper = oBuilder.getColumnWrapper(oBlockTag.getDisplay(), x);
 
-		--get a list of all dox comment blocks
-		local tBlocks = dox.parse.getBlocks(sLuaString);
+            -- The parser supplies the language per example; shared builders keep no parser state.
+            if (oBlockTag.getDisplay() == "Example" and type(oBuilder.getExampleWrapper) == "function") then
+                tWrapper = oBuilder.getExampleWrapper(cdat.pri.syntax);
+            end
+            --local tWrapper   = oBlockTag.getColumnWrapper(x);
+            local sWrapFront = tWrapper[1];
+            local sWrapBack  = tWrapper[2];
+            --sTableDataItems = sTableDataItems.."<td>"..sWrapFront..tContent[x]..sWrapBack.."</td>";
+            sTableDataItems = sTableDataItems.."   "..sWrapFront..tContent[x]..sWrapBack.."";
+        end
 
-		--process all dox comment blocks
-		for nIndex, sBlock in pairs(tBlocks) do
-			--LOG("Processing Block #"..nIndex..":\n"..sBlock.."\n");
-			local tBlock = dox.parse.processBlock(sBlock);
+        local sDisplay = oBlockTag.getDisplay();
+        local sID = "";
 
-			--make sure there's a valid block
-			if tBlock then
-				dox.parse.importBlockToModules(tBlock);
-			end
+        if (sDisplay == "Example") then
+            sDisplay = sDisplay.." "..oBuilder.getCopyToClipboardButton();
+            sID = ' id="'..string.uuid()..'"'
+        end
 
-		end
+        return {
+            id = sID,
+            display = sDisplay,
+            content = sTableDataItems,--TODO break up content into columns as needed
+        };
+    end,
+    processBlockString = function(this, cdat)
+        local pri = cdat.pri;
+    end,
+    --[[!
+    @fqxn Dox.Methods.refresh
+    @pulsarlua function Dox.refresh
+    @desc Refreshes the finalized data
+    !]]
+    refresh = function(this, cdat)
+        local pri       = cdat.pri;
+        local oBuilder  = pri.builder.value;
 
-		--read the source file (again) since the gabage collector destoys it's contents before it gets here
-		hInputFile:close();
-		hInputFile = io.open(pInputFile, "r");
-		sLuaString = hInputFile:read("*all");
+        --create all the blocks
+        local tBlocks = {};
+        local nBlockID = 0;
 
-		--[[get the module info and store it in the module's 'Info' table
-		but only if the module already exists. This means that there are
-		no modules without this info table (even if it's entries are blank)
-		and no info tables for modules that have no	substance (e.g., no
-		info tables for modules that have no function entries).]]
-		dox.parse.importModuleInfo(sLuaString);
+        for sRawBlock, _ in pairs(pri.blockStrings) do
+            nBlockID = nBlockID + 1;
+            --create the DoxBlock
+            tBlocks[nBlockID] = DoxBlock(   sRawBlock,      pri.syntax,     pri.tagOpen,
+                                            pri.blockTags,  pri.requiredBlockTags);
+        end
 
-		--close the source file (again)
-		hInputFile:close();
+        --call the builder's refresh method and reset the finalized data table        
+        local tFinalized = oBuilder.refresh(tBlocks, pri.processBlockItem);
 
-		--write the file but only if not called by 'processDir()'
-		if not bDirProcessing then
-			--write the files
-			writeOutput(pOutDir);
+        if not (type(tFinalized) == "table") then
+            error("Error refreshing Dox data in method, 'refresh' in builder, '"..oBuilder.getName().."'. Method must return a table value. Got type, "..type(tFinalized)..".", 2);
+        end
 
-			--process callback function (if it exists)
-			if (type(dox.onProcess) == "function") then
-				dox.onProcess();
-			end
+        pri.finalized = tFinalized;
+    end,
+},
+{--protected
+    Dox = function(this, cdat, sName, sTitle, sBlockOpen, sBlockClose, sTagOpen, eSyntax, tMimeTypes, ...)
+        type.assert.string(sName,       "%S+",      "Dox subclass name must not be blank.");
+        type.assert.string(sTitle,      "%S+",      "Dox documentation title name must not be blank.");
+        type.assert.string(sBlockOpen,  "%S+",      "Block Open symbol must not be blank.");
+        type.assert.string(sBlockClose, "%S+",      "Block Close symbol must not be blank.");
+        type.assert.string(sTagOpen,    "%S+",      "Tag Open symbol must not be blank.");
+        type.assert.custom(eSyntax,     "Dox.SYNTAX");
+        type.assert.table(tMimeTypes,   "number",   "DoxMime", 1);
 
-		end
+        local pri               = cdat.pri;
+        pri.syntax              = eSyntax;
+        pri.prismTheme          = Dox.PRISM.OKAIDIA;
+        pri.theme               = Dox.THEME.MIDNIGHT_BLUE;
+        pri.builder             = Dox.BUILDER.HTML; --default builder, can be changed later
+                                  --pri.builder.value.setSyntax(cdat.pri.syntax);
+        pri.blockOpen           = sBlockOpen;
+        pri.blockClose          = sBlockClose;
+        pri.name                = sName;
+        pri.title               = sTitle;
+        pri.tagOpen             = sTagOpen;
+        pri.requiredBlockTags   = {};
 
-	end
+        for _, oDoxMime in pairs(tMimeTypes) do
+            pri.mimeTypes.add(oDoxMime.getName(), oDoxMime);
+        end
 
-	return false
-end
+        --import all built-in BlockTags
+        for _, oBlockTag in ipairs(_tBuiltInBlockTags) do
+            local oClonedBlockTag = clone(oBlockTag);
+            table.insert(pri.blockTags, oClonedBlockTag);
+
+            if (oBlockTag.isRequired()) then
+                table.insert(pri.requiredBlockTags, oClonedBlockTag);
+            end
+
+        end
+
+        --create and inject the example block tag (language-specific)
+        --local tExampleWrapper = pri.builder.value.getExampleWrapper(eSyntax);
+        --table.insert(pri.blockTags,
+        --    DoxBlockTag({"ex", "example"}, "Example", false, true, false, false, 0)--,
+                        --{tExampleWrapper.open, tExampleWrapper.close})
+        --);
+
+        --store all input BlockTags and log required ones found
+        for nIndex, oBlockTag in ipairs({...} or arg) do
+            --validate the type
+            type.assert.custom(oBlockTag, "DoxBlockTag");
+
+            --search for required blocktags conflicts
+            for _, oBuiltInBlockTag in pairs(pri.blockTags) do
+
+                for sAlias in oBuiltInBlockTag.eachAlias() do
+
+                    if ( oBlockTag.hasAlias(sAlias) ) then
+                        error(  "Error creating Dox subclass, '${subclass}'.\nBuilt-in BlockTag, '${display}', cannot be overriden or duplicated." %
+                                {subclass = sName,
+                                 display = oBuiltInBlockTag.getDisplay()},
+                                 2);
+                    end
+
+                end
+
+            end
+
+            --clone the blocktag
+            local oClonedBlockTag = clone(oBlockTag);
+            --store the block tag
+            table.insert(pri.blockTags, oClonedBlockTag);
+
+            --if the BlockTag is required, store it
+            if (oBlockTag.isRequired()) then
+                table.insert(pri.requiredBlockTags, oClonedBlockTag);
+            end
+
+        end
 
 
+        -- Retain the instance's original order for resets without changing shared defaults.
+        pri.defaultBlockTags = clone(pri.blockTags);
+
+        -- Reject aliases shared by different tags before parsing any documentation.
+        local tAliases = {};
+
+        for _, oBlockTag in ipairs(pri.blockTags) do
+            for sAlias in oBlockTag.eachAlias() do
+                if (tAliases[sAlias]) then
+                    error("Duplicate Dox BlockTag alias: "..sAlias, 2);
+                end
+
+                tAliases[sAlias] = true;
+            end
+        end
+
+    end,
+    eachBlockTag__FNL = function(this, cdat)
+        local nIndex = 0;
+        local tBlockTags = cdat.pri.blockTags;
+
+        return function()
+            nIndex = nIndex + 1;
+            local oBlockTag = tBlockTags[nIndex];
+
+            if (oBlockTag) then
+                return oBlockTag.getDisplay(), oBlockTag;
+            end
+        end;
+    end,
+    getBlockTagByDisplay__FNL = function(this, cdat, sDisplay)
+        type.assert.string(sDisplay, "%S+");
+        local vRet;
+
+        for _, oBlockTag in ipairs(cdat.pri.blockTags) do
+
+            if (oBlockTag.getDisplay() == sDisplay) then
+                vRet = oBlockTag;
+                break;
+            end
+
+        end
+
+        return vRet;
+    end,
+},
+{--public
+    addMimeType__FNL = function(this, cdat, oDoxMime)
+        type.assert.custom(oDoxMime, "DoxMime");
+        cdat.pri.mimeTypes.add(oDoxMime.getName(), oDoxMime);
+    end,
+    --[[!
+    @fqxn Dox.Methods.eachBlockTag
+    @pulsarlua function Dox.eachBlockTag
+    @desc Returns an iterator that returns each <a href="#Dox.Components.DoxBlockTag">DoxBlockTag</a> available to the instance.
+    @return function fIterator The iterator.
+    !]]
+    eachBlockTag__FNL = function(this, cdat)
+        local tBlockTags    = cdat.pri.blockTags;
+        local nIndex        = 0;
+        local nMax          = #tBlockTags;
+
+        return function()
+            nIndex = nIndex + 1;
+
+            if (nIndex <= nMax) then
+                return clone(tBlockTags[nIndex]);
+            end
+
+        end
+
+    end,
+    --[[!
+    @fqxn Dox.Methods.export
+    @pulsarlua function Dox.export
+    @desc Builds and writes the selected documentation format. Pulsar Lua produces a project-named package inside a ZIP; other builders retain their normal output format.
+    @param string|nil sFilename Optional output filename without its extension.
+    @return string pOut The written file path.
+    @note Pulsar packages require Lua 5.3 or newer. Unpack into Pulsar's packages folder and enable a Lua autocomplete provider.
+    !]]
+    export__FNL = function(this, cdat, sFilename)
+        local pri          = cdat.pri;
+        local cBuilder     = pri.builder.value;
+        local bPackage     = pri.builder == Dox.BUILDER.PULSAR_LUA;
+        local sExtension   = bPackage and "zip" or cBuilder.getMime().value;
+        local sMode        = bPackage and "wb" or "w";
+
+        -- Rebuild completion metadata for the selected builder, even when selection
+        -- changed after an HTML refresh. Package identity comes from the title.
+        if (bPackage) then
+            this.refresh();
+        end
+
+        sFilename = (rawtype(sFilename) == "string" and sFilename:isfilesafe()) and sFilename or
+                    (pri.title:isfilesafe() and pri.title or cBuilder.getDefaultFilename());
+
+        local pOut = pri.OutputPath.."/"..sFilename.."."..sExtension;
+
+        pri.output = cBuilder.build(pri.title, pri.Intro, pri.finalized, pri.prismTheme, pri.bannerURL, pri.theme);
+
+        local hFile, sOpenError = io.open(pOut, sMode);
+
+        if (not hFile) then
+            error("Error outputting Dox: "..tostring(sOpenError), 2);
+        end
+
+        -- Close the handle even after a failed write, and report either failure.
+        local bWritten, sWriteError = hFile:write(pri.output);
+        local bClosed, sCloseError  = hFile:close();
+
+        if (not bWritten or not bClosed) then
+            error("Error outputting Dox: "..tostring(sWriteError or sCloseError), 2);
+        end
+
+        return pOut;
+    end,
 
 
+    getOutput__FNL = function(this, cdat)
+        return cdat.pri.output;
+    end,
+    getSyntax__FNL = function(this, cdat)
+        return cdat.pri.syntax;
+    end,
+    getMimeTypes__FNL = function(this, cdat)
+        --return clone(cdat.pri.mimeTypes);--TODO this must return an iterator
+        return cdat.pri.mimeTypes;
+    end,
+    getName__FNL = function(this, cdat)
+        return cdat.pri.name;
+    end,
+    getBlockClose__FNL = function(this, cdat)
+        return cdat.pri.blockClose;
+    end,
+    getBlockOpen__FNL = function(this, cdat)
+        return cdat.pri.blockOpen;
+    end,
+    getTagOpen__FNL = function(this, cdat)
+        return cdat.pri.tagOpen;
+    end,
+    --[[importDirectory__FNL = function(this, cdat, pDir, bRecursion)
+        type.assert.string(pDir, "%S+");
+        local bRecurse = bRecursion;
 
---[[!
-@mod dox
-@func dox.processDir
-@desc Does the same as dox.processFile() but for an entire directory. Note: if a file called .doxignore is found, the directory (and sub directories) will be ignored.
-@param sDir string The full path to the directory.
-@param pOutDir string The full path to the directory that will store the output.
-@param sTheme string,nil The name of the color scheme to use in the out HTML. If nil, Dox will use the default theme.
-@param bRecursive bool,nil If true, Dox will search all subdirectories of the given path as well in search of lua files.
-@param pAtomSnippetsFile string The full path to the atom snippets file. If it does not exist, it will be created. If nil, snippets will not be written.
-@param sSnippetSection string The section name for the snippets. Having sections allows for mutiple calls to write to the same file without overwrites.  If nil, snippets will not be written.
-!]]
-function dox.processDir(sDir, pOutDir, sTheme, bRecursive, pAtomSnippetsFile, sSnippetSection)
-	--tell dox to process the entire directory before writing
-	bDirProcessing = true;
+        if (rawtype(bRecurse) ~= "boolean") then
+            bRecurse = false;
+        end
+        --TODO rewrite this to check for .doxignore files and .git!!!!!!!
+        --local tFiles, tRel = io.dir(pDir, bRecurse, 0, cdat.pri.fileTypes);--TODO BUG FIX CHANGE this to use new mime table
+        --local tMimeTypes = {};
 
-	--check for an OnProcess function
-	local bRunDoxOnProcess = type(dox.onProcess) == "function";
+    --    for _, sType in cdat.pri.mimeTypes() do
+        --    tMimeTypes[#tMimeTypes + 1] = sType;
+        --end
 
-	--get all the files in the directory
-	--local tFiles = dox.util.fileFind(sDir, "*.lua", bRecursive);
-	local tFiles = dox.util.getProcessList(sDir, bRecursive);
+        local tFiles, tRel = io.dir(pDir, bRecurse, 0);--TODO BUG FIX CHANGE this to use new mime table
 
-	if tFiles then
-		--reset the modules table
-		dox.Modules = {};
+        --TODO THROW ERROR FOR FAILURE
+        for _, pFile in pairs(tFiles) do
+            cdat.pub.importFile(pFile, true);
+        end
 
-		for nIndex, pFile in pairs(tFiles) do
-			dox.processFile(pFile, pOutDir, sTheme, pAtomSnippetsFolder);
-		end
+        cdat.pri.refresh();
+    end,]]
+    importFile__FNL = function(this, cdat, pFile)--, bSkipRefresh)
+        type.assert.string(pFile, "%S+");
 
-		--write the file
-		writeOutput(pOutDir);
+        --get the path parts (to find the filetype)
+        local tParts    = io.splitpath(pFile);
+        --TODO THROW ERROR ON tParts Fail
+        local sExt = tParts.extension:lower();
+        local oActiveDoxMime;
 
-		--process callback function (if it exists)
-		if (bRunDoxOnProcess) then
-			dox.onProcess();
-		end
+        for _, oDoxMime in cdat.pri.mimeTypes() do
 
-	end
+            if (sExt == oDoxMime.getName()) then
+                oActiveDoxMime = oDoxMime;
+                break;
+            end
 
-	--allow 'processFile()' access to the 'writeOutput()' function again
-	bDirProcessing = false;
+        end
 
-	return false;--TODO why is this returning false?
-end
+        if (oActiveDoxMime) then
+            local hFile = io.open(pFile, "r");
 
-return dox;
+            if not (hFile) then
+                error("Error importing file to Dox.\nCould not open file: '"..pFile.."'.");
+            else
+
+                local sContent = hFile:read("*all");
+                cdat.pub.importString(sContent, oActiveDoxMime, true);
+                --cdat.pri.extractBlockStrings(sContent);
+                hFile:close();
+
+                --if not (bSkipRefresh) then
+                --    cdat.pri.refresh();
+                --end
+
+            end
+
+        end
+
+    end,
+    importFiles__FNL = function(this, cdat, tFiles)--, bSkipRefresh)
+        type.assert.table(tFiles, "number", "string", 1);
+
+        for nIndex, pFile in pairs(tFiles) do
+            type.assert.string(pFile, "%S+");
+
+            --get the path parts (to find the filetype)
+            local tParts    = io.splitpath(pFile);
+            --TODO THROW ERROR ON tParts Fail
+            local sExt = tParts.extension:lower();
+            local oActiveDoxMime;
+
+            for _, oDoxMime in cdat.pri.mimeTypes() do
+
+                if (sExt == oDoxMime.getName()) then
+                    oActiveDoxMime = oDoxMime;
+                    break;
+                end
+
+            end
+
+            if (oActiveDoxMime) then
+                local hFile = io.open(pFile, "r");
+
+                if not (hFile) then
+                    error("Error importing file to Dox.\nCould not open file: '"..pFile.."'.");
+                else
+
+                    local sContent = hFile:read("*all");
+                    cdat.pub.importString(sContent, oActiveDoxMime, true);
+                    --cdat.pri.extractBlockStrings(sContent);
+                    hFile:close();
+
+                    --if not (bSkipRefresh) then
+                    --    cdat.pri.refresh();
+                    --end
+
+                end
+
+            end
+
+        end
+
+    end,
+    importString__FNL = function(this, cdat, sInput, oDoxMime)--, bSkipRefresh)
+        type.assert.custom(oDoxMime, "DoxMime");
+        type.assert.string(sInput);
+        local sWorking = sInput;
+
+        cdat.pri.extractBlockStrings(sWorking, oDoxMime);
+
+        --if not (bSkipRefresh) then
+        --    cdat.pri.refresh();
+        --end
+
+    end,
+    refresh__FNL = function(this, cdat)
+        cdat.pri.refresh();
+    end,
+    --[[!
+    @fqxn Dox.Methods.setBanner
+    @pulsarlua function Dox.setBanner
+    @desc Sets an optional documentation banner image URL. An empty string restores the normal header. Missing or unreadable images show a notice without hiding the documentation.
+    @param string sURL Image URL, relative output path, or an empty string.
+    !]]
+    setBanner__FNL = function(this, cdat, sURL)
+        type.assert.string(sURL);
+        cdat.pri.bannerURL = sURL;
+    end,
+
+
+    --[[!
+    @fqxn Dox.Methods.setBlockTagOrder
+    @pulsarlua function Dox.setBlockTagOrder
+    @desc Sets this instance's documentation section order using tag aliases. Unlisted tags retain their existing relative order after listed tags. Repeated items within a section retain source order. Call refresh before exporting the new order.
+    @param table|nil tAliases A contiguous alias list; nil or an empty list restores the original order. Aliases are case-insensitive. Unknown aliases and aliases identifying the same tag more than once are rejected before the order changes.
+    !]]
+    setBlockTagOrder__FNL = function(this, cdat, tAliases)
+        local pri = cdat.pri;
+
+        if (tAliases == nil) then
+            pri.blockTags = clone(pri.defaultBlockTags);
+            return;
+        end
+
+        if (rawtype(tAliases) ~= "table") then
+            error("Dox tag order must be an alias list or nil.", 2);
+        end
+
+        local nCount = 0;
+
+        for nIndex in pairs(tAliases) do
+            if (rawtype(nIndex) ~= "number" or nIndex % 1 ~= 0 or nIndex < 1) then
+                error("Dox tag order must be a contiguous alias list.", 2);
+            end
+
+            nCount = nCount + 1;
+        end
+
+        if (nCount == 0) then
+            pri.blockTags = clone(pri.defaultBlockTags);
+            return;
+        end
+
+        local tOrdered = {};
+        local tSelected = {};
+
+        for nIndex = 1, nCount do
+            local sAlias = tAliases[nIndex];
+
+            if (rawtype(sAlias) ~= "string" or not sAlias:match("^[^%s]+$")) then
+                error("Dox tag order requires non-blank aliases in a contiguous list.", 2);
+            end
+
+            local oSelected;
+
+            for _, oBlockTag in ipairs(pri.blockTags) do
+                if (oBlockTag.hasAlias(sAlias)) then
+                    oSelected = oBlockTag;
+                    break;
+                end
+            end
+
+            if (not oSelected or tSelected[oSelected]) then
+                error("Dox tag order contains an unknown or repeated tag: "..sAlias, 2);
+            end
+
+            tSelected[oSelected] = true;
+            tOrdered[#tOrdered + 1] = oSelected;
+        end
+
+        for _, oBlockTag in ipairs(pri.blockTags) do
+            if (not tSelected[oBlockTag]) then
+                tOrdered[#tOrdered + 1] = oBlockTag;
+            end
+        end
+
+        pri.blockTags = tOrdered;
+    end,
+
+
+    setBuilder__FNL = function(this, cdat, eBuilder)
+        type.assert.custom(eBuilder, "Dox.BUILDER");
+        cdat.pri.builder = eBuilder;
+        --eBuilder.value.setSyntax(cdat.pri.syntax);
+    end,
+
+
+    --[[!
+    @fqxn Dox.Methods.setPrismTheme
+    @pulsarlua function Dox.setPrismTheme
+    @desc Selects the Prism code theme for subsequent HTML builds on this document. Other documents and their shared builder remain unchanged.
+    @param Dox.PRISM eTheme The theme enum member; its value names the Prism stylesheet.
+    !]]
+    setPrismTheme__FNL = function(this, cdat, eTheme)
+        type.assert.custom(eTheme, "Dox.PRISM");
+        cdat.pri.prismTheme = eTheme;
+    end,
+
+
+    --[[!
+    @fqxn Dox.Methods.setTheme
+    @pulsarlua function Dox.setTheme
+    @desc Selects a documentation page palette for subsequent builds on this object. Defaults to Midnight Blue; Prism themes and other Dox objects are unaffected.
+    @param Dox.THEME eTheme Page theme enum member whose value identifies an HTML palette.
+    !]]
+    setTheme__FNL = function(this, cdat, eTheme)
+        type.assert.custom(eTheme, "Dox.THEME");
+        cdat.pri.theme = eTheme;
+    end,
+},
+nil,    --extending class
+false,  --if the class is final
+nil     --interface(s) (either nil, or interface(s))
+);
