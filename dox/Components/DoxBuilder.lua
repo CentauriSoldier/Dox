@@ -3,10 +3,13 @@ local class     = class;
 local clone     = clone;
 local enum      = enum;
 local error     = error;
+local io        = io;
 local ipairs    = ipairs;
 local math      = math;
 local pairs     = pairs;
+local pcall     = pcall;
 local rawtype   = rawtype;
+local tostring  = tostring;
 local type      = type;
 
 
@@ -35,6 +38,35 @@ return class("DoxBuilder",
     copyToClipboardButton = "",
     defaultFilename = "",
     newLine = "",
+    outputExtension = "",
+    outputMode = "w",
+    --[[!
+    @fqxn Dox.Builders.DoxBuilder.Methods.writeOutput
+    @vis protected
+    @desc Writes output bytes and closes the handle after returned or raised write failures. Reports open, write and close errors with the destination path.
+    @param string pPath Destination file.
+    @param string sOutput File content.
+    @param string sMode File-open mode.
+    !]]
+    writeOutput = function(this, cdat, pPath, sOutput, sMode)
+        local hFile, sOpenError = io.open(pPath, sMode);
+
+        if (not hFile) then
+            error("Error outputting Dox to '"..pPath.."': "..tostring(sOpenError), 2);
+        end
+
+        -- Always close an opened handle, including when a backend raises.
+        local bWriteCall, bWritten, sWriteError = pcall(hFile.write, hFile, sOutput);
+        local bCloseCall, bClosed, sCloseError  = pcall(hFile.close, hFile);
+
+        if (not bWriteCall or not bWritten or not bCloseCall or not bClosed) then
+            local sReason = not bWriteCall and bWritten or
+                            (not bWritten and sWriteError) or
+                            (not bCloseCall and bClosed) or sCloseError;
+            error("Error outputting Dox to '"..pPath.."': "..tostring(sReason), 2);
+        end
+    end,
+
     DoxBuilder = function(this, cdat, sName, eMime, sCopyToClipBoardButton, sDefaultFilename, sNewLine, tColumnWrappers)
         type.assert.custom(eMime, "DoxBuilder.MIME");
         type.assert.string(sName, "%S+");
@@ -51,6 +83,7 @@ return class("DoxBuilder",
         pri.mime                    = eMime;
         pro.copyToClipboardButton   = type(sCopyToClipBoardButton) == "string" and sCopyToClipBoardButton or "";
         pro.defaultFilename         = sDefaultFilename;
+        pro.outputExtension         = eMime.value;
         pro.newLine                 = rawtype(sNewLine) == "string" and sNewLine or "\n";
 
         --import column wrappers
@@ -100,6 +133,39 @@ return class("DoxBuilder",
         error("Error in DoxBuilder. The 'build' method has not been defined in the child class.", 4);
     end,
 
+
+    --[[!
+    @fqxn Dox.Builders.DoxBuilder.Methods.export
+    @pulsarlua function DoxBuilder.export
+    @desc Builds and writes one file. Subclasses may override this method for multiple files; Dox owns the destination directory. The directory must already exist.
+    @param string pOutputPath Existing output directory.
+    @param string|nil sFilename Optional filename without an extension; invalid names retain the existing title/default fallback.
+    @param string sTitle Project title.
+    @param string sIntro Project introduction.
+    @param table tFinalizedData This builder's refreshed data.
+    @param Dox.PRISM ePrismTheme HTML code theme.
+    @param string sBannerURL Optional banner.
+    @param Dox.THEME ePageTheme HTML page theme.
+    @param Dox.SYNTAX eSyntax Source-language syntax.
+    @ret string pOut Written file path.
+    @ret string sOutput Written content, used by Dox.getOutput.
+    !]]
+    export = function(this, cdat, pOutputPath, sFilename, sTitle, sIntro, tFinalizedData, ePrismTheme, sBannerURL, ePageTheme, eSyntax)
+        local pro = cdat.pro;
+        local sOutput;
+        local pOut;
+
+        type.assert.string(pOutputPath);
+        sFilename = (rawtype(sFilename) == "string" and sFilename:isfilesafe()) and sFilename or
+                    (sTitle:isfilesafe() and sTitle or pro.defaultFilename);
+        pOut      = pOutputPath.."/"..sFilename.."."..pro.outputExtension;
+
+        -- Formatting and filesystem decisions belong to the selected builder.
+        sOutput = this.build(sTitle, sIntro, tFinalizedData, ePrismTheme, sBannerURL, ePageTheme, eSyntax);
+        pro.writeOutput(pOut, sOutput, pro.outputMode);
+
+        return pOut, sOutput;
+    end,
 
     --[[!
     @fqxn Dox.Builders.DoxBuilder.Methods.clearColumnWrappers

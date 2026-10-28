@@ -38,6 +38,7 @@ local bSuccess, sError = pcall(function()
     --require Dox Builders
     DoxBuilderHTML      = require(pDoxBuilders..".HTML.DoxBuilderHTML");
     DoxBuilderPulsarLua = require(pDoxBuilders..".Pulsar.Lua.DoxBuilderPulsarLua");
+    DoxBuilderGitHubWiki = require(pDoxBuilders..".GitHubWiki.DoxBuilderGitHubWiki");
 
     --require Dox and Dox parsers (subclasses)
     Dox                     = require(pDox..".Dox");

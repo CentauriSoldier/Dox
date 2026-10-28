@@ -207,6 +207,8 @@ return class("DoxBuilderPulsarLua", {}, {}, {}, {}, {
     !]]
     DoxBuilderPulsarLua = function(this, cdat, super)
         super("DoxBuilderPulsarLua", DoxBuilder.MIME.LUACOMPLETERC, "", "completions", "\n", {});
+        cdat.pro.outputExtension = "zip";
+        cdat.pro.outputMode      = "wb";
     end,
 
 

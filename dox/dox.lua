@@ -1,6 +1,7 @@
 local DoxBlock              = DoxBlock;
 local DoxBuilderHTML        = DoxBuilderHTML;
 local DoxBuilderPulsarLua   = DoxBuilderPulsarLua;
+local DoxBuilderGitHubWiki  = DoxBuilderGitHubWiki;
 local SortedDictionary      = SortedDictionary;
 local assert                = assert;
 local class                 = class;
@@ -308,7 +309,7 @@ return class("Dox",
 },
 {--static public
     --TODO move this out to the builder section and call it in
-    BUILDER = enum("Dox.BUILDER", {"HTML", "PULSAR_LUA"}, {DoxBuilderHTML(), DoxBuilderPulsarLua()}, true),
+    BUILDER = enum("Dox.BUILDER", {"HTML", "PULSAR_LUA", "GITHUB_WIKI"}, {DoxBuilderHTML(), DoxBuilderPulsarLua(), DoxBuilderGitHubWiki()}, true),
     OUTPUT  = _eOutputType,
     --[[!
     @fqxn Dox.PRISM
@@ -709,44 +710,20 @@ return class("Dox",
     --[[!
     @fqxn Dox.Methods.export
     @pulsarlua function Dox.export
-    @desc Builds and writes the selected documentation format. Pulsar Lua produces a project-named package inside a ZIP; other builders retain their normal output format.
-    @param string|nil sFilename Optional output filename without its extension.
+    @desc Refreshes the selected builder and delegates output to it. HTML writes one page, Pulsar Lua writes a ZIP, and GitHub Wiki writes Markdown pages. setOutputPath remains the only destination setting.
+    @param string|nil sFilename Optional output filename without its extension; GitHub Wiki defaults to Home.
     @return string pOut The written file path.
     @note Pulsar packages require Lua 5.3 or newer. Unpack into Pulsar's packages folder and enable a Lua autocomplete provider.
     !]]
     export__FNL = function(this, cdat, sFilename)
-        local pri          = cdat.pri;
-        local cBuilder     = pri.builder.value;
-        local bPackage     = pri.builder == Dox.BUILDER.PULSAR_LUA;
-        local sExtension   = bPackage and "zip" or cBuilder.getMime().value;
-        local sMode        = bPackage and "wb" or "w";
+        local pri      = cdat.pri;
+        local oBuilder = pri.builder.value;
+        local pOut;
 
-        -- Rebuild completion metadata for the selected builder, even when selection
-        -- changed after an HTML refresh. Package identity comes from the title.
-        if (bPackage) then
-            this.refresh();
-        end
-
-        sFilename = (rawtype(sFilename) == "string" and sFilename:isfilesafe()) and sFilename or
-                    (pri.title:isfilesafe() and pri.title or cBuilder.getDefaultFilename());
-
-        local pOut = pri.OutputPath.."/"..sFilename.."."..sExtension;
-
-        pri.output = cBuilder.build(pri.title, pri.Intro, pri.finalized, pri.prismTheme, pri.bannerURL, pri.theme);
-
-        local hFile, sOpenError = io.open(pOut, sMode);
-
-        if (not hFile) then
-            error("Error outputting Dox: "..tostring(sOpenError), 2);
-        end
-
-        -- Close the handle even after a failed write, and report either failure.
-        local bWritten, sWriteError = hFile:write(pri.output);
-        local bClosed, sCloseError  = hFile:close();
-
-        if (not bWritten or not bClosed) then
-            error("Error outputting Dox: "..tostring(sWriteError or sCloseError), 2);
-        end
+        -- Each export prepares data for its selected builder before delegation.
+        this.refresh();
+        pOut, pri.output = oBuilder.export(pri.OutputPath, sFilename, pri.title, pri.Intro, pri.finalized,
+                                          pri.prismTheme, pri.bannerURL, pri.theme, pri.syntax);
 
         return pOut;
     end,

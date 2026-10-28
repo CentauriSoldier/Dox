@@ -3,15 +3,36 @@
 ## [**v0.70**] (*in progress*)
 
 ### Added
+- **Dox.BUILDER.GITHUB_WIKI** and **DoxBuilderGitHubWiki** for local Wiki Markdown export: **Home.md**, **_Sidebar.md**, API pages, parent/member navigation, FQXN links and parser-language code examples.
+- Static HTML-to-Markdown formatting for descriptions, headings, emphasis, lists, tables, links and images, with protected code content and safe delimiters.
+- Deterministic portable API filenames, escaped landing-page URLs, and pre-write validation of duplicate FQXNs, filename collisions and documentation inheritance.
+- Native exporter and initialization regression suites, documented in **tests/README.md**.
 - Standalone, immediate initialization through `require("dox.init")`.
 - Versioned documentation introduction and generated HTML API reference for GitHub Pages.
 - A current repository guide to writing comments and generating HTML and Pulsar packages.
 
 ### Changed
+- **Dox.export** refreshes the selected builder and delegates output to it. Formatting, file extensions, text/binary modes and file writes belong to the builder layer.
+- **Dox.setOutputPath** remains the sole destination setting; builders do not retain independent output directories.
+- **DoxBuilder.export** supplies the checked single-file writer inherited by HTML and Pulsar. Pulsar selects ZIP/binary output; Wiki overrides export for multiple Markdown pages.
+- Export retains the returned-path and **getOutput** conventions. Wiki returns its landing-page path and content; failures retain the last successful output.
+- Switching builders or importing additional blocks no longer requires a manual refresh before export.
 - Dox modules reside under the lowercase `dox` namespace, with the initializer inside that folder.
 - Core, HTML-builder and Pulsar-builder imports use the standalone module paths.
 - Initialization requires `LUAEX_INIT == true`; LuaEx no longer loads Dox automatically.
 - The README preserves its existing title image and describes the current API.
+
+### Fixed
+- Builder writes close opened handles after raised as well as returned write failures, reporting destination-specific open/write/close errors.
+
+### Verification
+- **308 native exporter checks** passed on Windows Lua **5.4.9**: all 30 parsers across HTML/Pulsar/Wiki, all HTML palettes and Prism themes, format switching, custom tags/order, inheritance, filename encoding and filesystem failures.
+- Eight fresh-process initialization cases passed, including dependency rejection, LuaEx levels 0–5, repeated imports and failed-import path restoration/retry.
+- The pre-change HTML sample matched apart from generated IDs; its Pulsar ZIP remained byte-identical. Generated packages also passed independent ZIP/JSON checks.
+- All 52 Dox source files passed syntax loading and exported in all three formats. The Wiki corpus contained 130 Markdown pages and 389 validated generated page links.
+- Local headless-browser checks passed for HTML introduction, navigation, topic routing and Back history, plus a rendered Markdown preview. CDN requests were blocked and the Prism UI hook was stubbed; live GitHub rendering and installed Pulsar integration remain unverified.
+- The 48-file CoG corpus exported through HTML/Pulsar. Wiki rejected an existing duplicate FQXN before writing pages and preserved existing output. CoG source comments remain unchanged.
+- Four unresolved fragment links in existing Dox source comments remain. The broader LuaEx run passed 16 suites; formatter/serializer suites could not run because their configured test files were missing.
 
 ### Removed
 - Obsolete README notices that described the standalone repository as archived or moved into LuaEx.
