@@ -1,0 +1,19 @@
+--[[!
+@fqxn Dox.DoxJava
+@desc Language-specific documentation parser retaining its syntax, MIME types and delimiters.
+!]]
+namespace Dox {
+    final class DoxJava : Dox.Parser requires(Dox.DoxMime, Dox.SYNTAX) {
+        private static createMimeTypes(sTitle) {
+            type.assert.string(sTitle, "%S+", "Dox Parser title name must not be blank.");
+            return {
+                Dox.DoxMime("java"),
+            };
+        }
+
+        public DoxJava(sTitle) {
+            base("DoxJava", sTitle, "!", "!", "@", Dox.SYNTAX.JAVA,
+                DoxJava.createMimeTypes(sTitle));
+        }
+    }
+}

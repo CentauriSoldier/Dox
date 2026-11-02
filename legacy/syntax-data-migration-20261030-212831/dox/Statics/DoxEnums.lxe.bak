@@ -1,0 +1,43 @@
+--[[!
+@fqxn Dox.Enums
+@desc Native Prism/page themes preserving legacy member names, order and payloads.
+    Class-valued SYNTAX declarations remain pending coordinated loader support.
+!]]
+namespace Dox {
+    public enum PRISM {
+        COY = "prism-coy";
+        DARK = "prism-dark";
+        DEFAULT = "prism";
+        FUNKY = "prism-funky";
+        OKAIDIA = "prism-okaidia";
+        SOLARIZED_LIGHT = "prism-solarizedlight";
+        TOMORROW_NIGHT = "prism-tomorrow";
+        TWILIGHT = "prism-twilight";
+    }
+
+    public enum THEME {
+        ALUCARD = "alucard";
+        CATPPUCCIN_FRAPPE = "catppuccin_frappe";
+        CATPPUCCIN_LATTE = "catppuccin_latte";
+        CATPPUCCIN_MACCHIATO = "catppuccin_macchiato";
+        CATPPUCCIN_MOCHA = "catppuccin_mocha";
+        DRACULA = "dracula";
+        GRUVBOX_DARK = "gruvbox_dark";
+        GRUVBOX_LIGHT = "gruvbox_light";
+        MIDNIGHT_BLUE = "midnight_blue";
+        NORD = "nord";
+        ROSE_PINE = "rose_pine";
+        ROSE_PINE_DAWN = "rose_pine_dawn";
+        ROSE_PINE_MOON = "rose_pine_moon";
+        SOLARIZED_DARK = "solarized_dark";
+        SOLARIZED_LIGHT = "solarized_light";
+        SYNTHWAVE_PROTOCOL = "synthwave_protocol";
+        TOKYO_NIGHT = "tokyo_night";
+        TOKYO_NIGHT_MOON = "tokyo_night_moon";
+        TOKYO_NIGHT_STORM = "tokyo_night_storm";
+        ZENBURN = "zenburn";
+    }
+
+    -- SYNTAX remains pending: its DoxSyntax instance payloads need coordinated
+    -- access to classes in the same unpublished discovery batch.
+}

@@ -1,0 +1,132 @@
+--[[!
+@fqxn Dox.DoxSyntax
+@desc Defines source-language comment delimiters, documentation escaping and Prism highlighting names.
+!]]
+namespace Dox {
+    final class DoxSyntax {
+        private static _tDefinitions = setmetatable({}, {__mode = "k"});
+        private name = "";
+        private commentOpen = "";
+        private commentClose = "";
+        private escapeCharacter = "";
+        private prismName = "";
+
+        --[[!
+        @fqxn Dox.DoxSyntax.fromEnum
+        @desc Resolves an enum's syntax data after discovery, caching one syntax
+            object per member. Existing native syntax-object payloads pass through.
+        @param enumitem eSyntax Syntax member containing data or a native DoxSyntax.
+        @ret DoxSyntax oSyntax Stable syntax object for this member.
+        !]]
+        public static fromEnum(eSyntax) {
+            assert(rawtype(eSyntax) == "table" and lxe.isMember(eSyntax, eSyntax.Parent),
+                "DoxSyntax requires a syntax enum member.");
+            local oSyntax = DoxSyntax._tDefinitions[eSyntax];
+            if (oSyntax) then return oSyntax; end
+            local value = eSyntax.Value;
+            if (class.isinstanceof(value, DoxSyntax)) then
+                oSyntax = value;
+            else
+                assert(rawtype(value) == "table", "Syntax enum value must contain syntax data.");
+                oSyntax = DoxSyntax(value.name, value.commentOpen, value.commentClose,
+                    value.escapeCharacter, value.prismName);
+            end
+            DoxSyntax._tDefinitions[eSyntax] = oSyntax;
+            return oSyntax;
+        }
+
+        -- Construction and restoration enforce the same delimiter rules.
+        private static validateDefinition(sName, sCommentOpen, sCommentClose, sEscapeCharacter, sPrismName) {
+            type.assert.string(sName,               "%S+");
+            type.assert.string(sCommentOpen,        "%S+");
+            type.assert.string(sCommentClose);
+
+            -- A newline is a valid terminator for line-based source comments.
+            if (sCommentClose == "") then
+                error("DoxSyntax closing delimiter cannot be empty.", 2);
+            end
+            type.assert.string(sEscapeCharacter,    "%S+");
+            type.assert.string(sPrismName,          "%S+");
+        }
+
+        --[[!
+        @fqxn Dox.DoxSyntax.Methods.DoxSyntax
+        @pulsarlua function DoxSyntax
+        @desc Creates a source-language syntax definition.
+        !]]
+        public DoxSyntax(sName, sCommentOpen, sCommentClose, sEscapeCharacter, sPrismName) {
+            DoxSyntax.validateDefinition(sName, sCommentOpen, sCommentClose, sEscapeCharacter, sPrismName);
+            local pri           = this;
+            pri.name            = sName;
+
+            pri.commentOpen     = sCommentOpen;
+            pri.commentClose    = sCommentClose;
+            pri.escapeCharacter = sEscapeCharacter;
+            pri.prismName       = sPrismName;
+        }
+
+        --[[!
+        @fqxn Dox.DoxSyntax.Methods.getCommentClose
+        @pulsarlua function DoxSyntax.getCommentClose
+        @desc Returns the closing source-comment delimiter.
+        !]]
+        public getCommentClose() {
+            return this.commentClose;
+        }
+
+        --[[!
+        @fqxn Dox.DoxSyntax.Methods.getCommentOpen
+        @pulsarlua function DoxSyntax.getCommentOpen
+        @desc Returns the opening source-comment delimiter.
+        !]]
+        public getCommentOpen() {
+            return this.commentOpen;
+        }
+
+        --[[!
+        @fqxn Dox.DoxSyntax.Methods.getEscapeCharacter
+        @pulsarlua function DoxSyntax.getEscapeCharacter
+        @desc Returns the documentation escape character.
+        !]]
+        public getEscapeCharacter() {
+            return this.escapeCharacter;
+        }
+
+        --[[!
+        @fqxn Dox.DoxSyntax.Methods.getEscapeCharater
+        @pulsarlua function DoxSyntax.getEscapeCharater
+        @desc Retains the original spelling for compatibility; use getEscapeCharacter in new code.
+        !]]
+        public getEscapeCharater() {
+            return this.escapeCharacter;
+        }
+
+        --[[!
+        @fqxn Dox.DoxSyntax.Methods.getName
+        @pulsarlua function DoxSyntax.getName
+        @desc Returns the language display name.
+        !]]
+        public getName() {
+            return this.name;
+        }
+
+        --[[!
+        @fqxn Dox.DoxSyntax.Methods.getPrismName
+        @pulsarlua function DoxSyntax.getPrismName
+        @desc Returns the Prism syntax-highlighting language name.
+        !]]
+        public getPrismName() {
+            return this.prismName;
+        }
+
+        --[[!
+        @fqxn Dox.DoxSyntax.validateSnapshot
+        @desc Validates native restored/copied definition fields without changing delimiters.
+        !]]
+        private validateSnapshot(tState) {
+            local pri = tState.pri;
+            DoxSyntax.validateDefinition(pri.name, pri.commentOpen, pri.commentClose,
+                pri.escapeCharacter, pri.prismName);
+        }
+    }
+}

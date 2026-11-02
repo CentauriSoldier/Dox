@@ -1,0 +1,19 @@
+--[[!
+@fqxn Dox.DoxAda
+@desc Language-specific documentation parser retaining its syntax, MIME types and delimiters.
+!]]
+namespace Dox {
+    final class DoxAda : Dox.Parser requires(Dox.DoxMime, Dox.SYNTAX) {
+        private static createMimeTypes(sTitle) {
+            type.assert.string(sTitle, "%S+", "Dox Parser title name must not be blank.");
+            return {
+                Dox.DoxMime("ada"),
+            };
+        }
+
+        public DoxAda(sTitle) {
+            base("DoxAda", sTitle, "!", "!", "@", Dox.SYNTAX.ADA,
+                DoxAda.createMimeTypes(sTitle));
+        }
+    }
+}

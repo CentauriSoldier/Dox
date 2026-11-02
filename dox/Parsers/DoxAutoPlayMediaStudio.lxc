@@ -1,0 +1,20 @@
+--[[!
+@fqxn Dox.DoxAutoPlayMediaStudio
+@desc AutoPlay Media Studio documentation parser with Lua syntax and HTML entity decoding for autoplay files.
+!]]
+namespace Dox {
+    final class DoxAutoPlayMediaStudio : Dox.Parser requires(Dox.DoxMime, Dox.SYNTAX) {
+        private static createMimeTypes(sTitle) {
+            type.assert.string(sTitle, "%S+", "Dox documentation title name must not be blank.");
+            return {
+                Dox.DoxMime("lua"),
+                Dox.DoxMime("autoplay", require("dox.Parsers.AutoPlayPreprocessor")()),
+            };
+        }
+
+        public DoxAutoPlayMediaStudio(sTitle) {
+            base("DoxAutoPlayMediaStudio", sTitle, "!", "!", "@", Dox.SYNTAX.LUA,
+                DoxAutoPlayMediaStudio.createMimeTypes(sTitle));
+        }
+    }
+}

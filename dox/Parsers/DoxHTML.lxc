@@ -1,0 +1,20 @@
+--[[!
+@fqxn Dox.DoxHTML
+@desc Language-specific documentation parser retaining its syntax, MIME types and delimiters.
+!]]
+namespace Dox {
+    final class DoxHTML : Dox.Parser requires(Dox.DoxMime, Dox.SYNTAX) {
+        private static createMimeTypes(sTitle) {
+            type.assert.string(sTitle, "%S+", "Dox Parser title name must not be blank.");
+            return {
+                Dox.DoxMime("html"),
+                Dox.DoxMime("htm"),
+            };
+        }
+
+        public DoxHTML(sTitle) {
+            base("DoxHTML", sTitle, "!", "!", "@", Dox.SYNTAX.HTML,
+                DoxHTML.createMimeTypes(sTitle));
+        }
+    }
+}

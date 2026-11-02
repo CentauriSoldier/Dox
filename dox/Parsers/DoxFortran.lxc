@@ -1,0 +1,19 @@
+--[[!
+@fqxn Dox.DoxFortran
+@desc Language-specific documentation parser retaining its syntax, MIME types and delimiters.
+!]]
+namespace Dox {
+    final class DoxFortran : Dox.Parser requires(Dox.DoxMime, Dox.SYNTAX) {
+        private static createMimeTypes(sTitle) {
+            type.assert.string(sTitle, "%S+", "Dox Parser title name must not be blank.");
+            return {
+                Dox.DoxMime("f90"),
+            };
+        }
+
+        public DoxFortran(sTitle) {
+            base("DoxFortran", sTitle, "!", "!", "@", Dox.SYNTAX.FORTRAN,
+                DoxFortran.createMimeTypes(sTitle));
+        }
+    }
+}

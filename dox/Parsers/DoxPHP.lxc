@@ -1,0 +1,19 @@
+--[[!
+@fqxn Dox.DoxPHP
+@desc Language-specific documentation parser retaining its syntax, MIME types and delimiters.
+!]]
+namespace Dox {
+    final class DoxPHP : Dox.Parser requires(Dox.DoxMime, Dox.SYNTAX) {
+        private static createMimeTypes(sTitle) {
+            type.assert.string(sTitle, "%S+", "Dox Parser title name must not be blank.");
+            return {
+                Dox.DoxMime("php"),
+            };
+        }
+
+        public DoxPHP(sTitle) {
+            base("DoxPHP", sTitle, "!", "!", "@", Dox.SYNTAX.PHP,
+                DoxPHP.createMimeTypes(sTitle));
+        }
+    }
+}

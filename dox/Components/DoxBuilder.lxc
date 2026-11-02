@@ -1,0 +1,347 @@
+--[[!
+@fqxn Dox.DoxBuilder
+@desc This is the class (when subclassed) that builds the output using Dox's finalized data.
+!]]
+namespace Dox {
+    class DoxBuilder {
+        public enum MIME within Dox.DoxBuilder {
+            HTML = "html";
+            LUACOMPLETERC = "luacompleterc";
+            MARKDOWN = "MD";
+            TXT = "txt";
+        }
+
+        private static const sImportError = "Cannot import column wrapper into DoxBuilder.";
+        private mime = null;
+        private Name = "";
+        protected blockWrapper = {open = "", close = ""};
+        protected columnWrappers = {};
+        protected copyToClipboardButton = "";
+        protected defaultFilename = "";
+        protected newLine = "";
+        protected outputExtension = "";
+        protected outputMode = "w";
+
+        --[[!
+        @fqxn Dox.DoxBuilder.getName
+        @desc Returns the builder name; subclasses cannot replace this getter.
+        !]]
+        public final getName() { return this.Name; }
+
+        --[[!
+        @fqxn Dox.DoxBuilder.Methods.writeOutput
+        @vis protected
+        @desc Writes output bytes and closes the handle after returned or raised write failures. Reports open, write and close errors with the destination path.
+        @param string pPath Destination file.
+        @param string sOutput File content.
+        @param string sMode File-open mode.
+        !]]
+        protected writeOutput(pPath, sOutput, sMode) {
+            local hFile, sOpenError = io.open(pPath, sMode);
+
+            if (not hFile) then
+                error("Error outputting Dox to '"..pPath.."': "..tostring(sOpenError), 2);
+            end
+
+            -- Always close an opened handle, including when a backend raises.
+            local bWriteCall, bWritten, sWriteError = pcall(hFile.write, hFile, sOutput);
+            local bCloseCall, bClosed, sCloseError  = pcall(hFile.close, hFile);
+
+            if (not bWriteCall or not bWritten or not bCloseCall or not bClosed) then
+                local sReason = not bWriteCall and bWritten or
+                                (not bWritten and sWriteError) or
+                                (not bCloseCall and bClosed) or sCloseError;
+                error("Error outputting Dox to '"..pPath.."': "..tostring(sReason), 2);
+            end
+        }
+
+        protected DoxBuilder(sName, eMime, sCopyToClipBoardButton, sDefaultFilename, sNewLine, tColumnWrappers) {
+            assert(lxe.isMember(eMime, DoxBuilder.MIME), "DoxBuilder MIME must be a declared MIME member.");
+            type.assert.string(sName, "%S+");
+            type.assert.string(sDefaultFilename);
+            assert(sDefaultFilename:isfilesafe(), "Error creating DoxBuilder. Default filename must be a file-safe string.");
+
+            if (sCopyToClipBoardButton ~= nil and rawtype(sCopyToClipBoardButton) ~= "string") then
+                error("DoxBuilder copy button must be a string or nil.", 2);
+            end
+            local pri = this;
+            local pro = this;
+
+            pri.Name                    = sName;
+            pri.mime                    = eMime;
+            pro.copyToClipboardButton   = type(sCopyToClipBoardButton) == "string" and sCopyToClipBoardButton or "";
+            pro.defaultFilename         = sDefaultFilename;
+            pro.outputExtension         = eMime.Value;
+            pro.newLine                 = rawtype(sNewLine) == "string" and sNewLine or "\n";
+
+            --import column wrappers
+            if (type(tColumnWrappers) == "table") then
+
+                for sDisplay, tWrapperSet in pairs(tColumnWrappers) do --indexed by DoxBlockTag Display name, contains tables of wrapper sets
+                    type.assert.string(sDisplay, "%S+", DoxBuilder.sImportError.." Tag display name cannot be empty.");
+
+                        type.assert.table(tWrapperSet, "number", "table", 1, nil, DoxBuilder.sImportError.." Expected numerically-indexed column wrapper table for display, '"..sDisplay.."'.");
+
+                    if (pro.columnWrappers[sDisplay] == nil) then
+                        pro.columnWrappers[sDisplay] = {};
+                    end
+
+                    for nColumn, tWrapper in ipairs(tWrapperSet) do
+
+                            type.assert.table(tWrapper, "number", "string", 2, 2, DoxBuilder.sImportError.." Expected numerically-indexed wrapper table with string values for display, '"..sDisplay.."'.");
+
+                        pro.columnWrappers[sDisplay][nColumn] = {};
+
+                        for nIndex, sWrapper in ipairs(tWrapper) do
+                            pro.columnWrappers[sDisplay][nColumn][nIndex] = sWrapper;
+                        end
+
+                    end
+
+                end
+
+            end
+        }
+
+        --[[!
+        @fqxn Dox.DoxBuilder.Methods.build
+        @pulsarlua function DoxBuilder.build
+        @desc This is the build method that does the heavy lifting in building the output file.
+        <br><br>This method must accept the following parameters in the following order:
+        <ol>
+        <li><em>(string)</em> <strong>sTitle</strong> The title of the documentation project.</li>
+        <li><em>(string or nil)</em> <strong>vIntro</strong> The (optional) intro page code. If not provided here, the intro will be the default provided by Dox.</li>
+        <li><em>(table)</em> <strong>tFinalizedData</strong> Dox's finalized data used to build the output document.</li>
+        The finalized data table has keys of strings whose values are strings. The table is a heirarchical list of fqxn's (Fully Qualified Dox Names). The data for each item is stored in the <em><strong>__call</strong></em> metamethod. To extract the data from a given index, simply call it. A string will be returned containing the item's data.
+        </ol>
+        !]]
+        public build(sTitle, sIntro, tFinalizedData, ePrismTheme, sBannerURL, ePageTheme, eSyntax) {
+            error("Error in DoxBuilder. The 'build' method has not been defined in the child class.", 4);
+        }
+
+        --[[!
+        @fqxn Dox.DoxBuilder.Methods.export
+        @pulsarlua function DoxBuilder.export
+        @desc Builds and writes one file. Subclasses may override this method for multiple files; Dox owns the destination directory. The directory must already exist.
+        @param string pOutputPath Existing output directory.
+        @param string|nil sFilename Optional filename without an extension; invalid names retain the existing title/default fallback.
+        @param string sTitle Project title.
+        @param string sIntro Project introduction.
+        @param table tFinalizedData This builder's refreshed data.
+        @param Dox.PRISM ePrismTheme HTML code theme.
+        @param string sBannerURL Optional banner.
+        @param Dox.THEME ePageTheme HTML page theme.
+        @param Dox.SYNTAX eSyntax Source-language syntax.
+        @ret string pOut Written file path.
+        @ret string sOutput Written content, used by Dox.getOutput.
+        !]]
+        public export(pOutputPath, sFilename, sTitle, sIntro, tFinalizedData, ePrismTheme, sBannerURL, ePageTheme, eSyntax) {
+            local pro = this;
+            local sOutput;
+            local pOut;
+
+            type.assert.string(pOutputPath);
+            sFilename = (rawtype(sFilename) == "string" and sFilename:isfilesafe()) and sFilename or
+                        (sTitle:isfilesafe() and sTitle or pro.defaultFilename);
+            pOut      = pOutputPath.."/"..sFilename.."."..pro.outputExtension;
+
+            -- Formatting and filesystem decisions belong to the selected builder.
+            sOutput = this.build(sTitle, sIntro, tFinalizedData, ePrismTheme, sBannerURL, ePageTheme, eSyntax);
+            pro.writeOutput(pOut, sOutput, pro.outputMode);
+
+            return pOut, sOutput;
+        }
+
+        --[[!
+        @fqxn Dox.DoxBuilder.Methods.clearColumnWrappers
+        @pulsarlua function DoxBuilder.clearColumnWrappers
+        @desc Removes all column wrappers, or only the named display group.
+        @param string|nil sDisplay The display group to clear; nil clears all groups.
+        !]]
+        public clearColumnWrappers(sDisplay) {
+            if (sDisplay == nil) then
+                this.columnWrappers = {};
+            else
+                type.assert.string(sDisplay, "%S+");
+                this.columnWrappers[sDisplay] = nil;
+            end
+        }
+
+        --[[!
+        @fqxn Dox.DoxBuilder.Methods.eachColumnWrapper
+        @pulsarlua function DoxBuilder.eachColumnWrapper
+        @desc Iterates over copies of one display group's column wrappers.
+        @param string sDisplay The display group.
+        @return function fIterator Returns a column index and a copied wrapper pair; missing groups are empty.
+        !]]
+        public eachColumnWrapper(sDisplay) {
+            type.assert.string(sDisplay, "%S+");
+            local nIndex = 0;
+            local tWrappers = this.getColumnWrappers(sDisplay);
+
+            return function()
+                nIndex = nIndex + 1;
+
+                if (tWrappers[nIndex]) then
+                    return nIndex, clone(tWrappers[nIndex]);
+                end
+            end;
+        }
+
+        public formatBlockContent(sID, sDisplay, sContent) {
+            error("Error in DoxBuilder. The 'formatBlockContent' method has not been defined in the child class.", 4);
+        }
+
+        public formatCombinedBlockContent(sDisplay, sCombinedContent, sID) {
+            error("Error in DoxBuilder. The 'formatCombinedBlockContent' method has not been defined in the child class.", 4);
+        }
+
+        --[[!
+        @fqxn Dox.DoxBuilder.Methods.getColumnWrapper
+        @pulsarlua function DoxBuilder.getColumnWrapper
+        @desc Returns a copy of one wrapper pair; missing wrappers return two empty strings.
+        @param string sDisplay The display group.
+        @param number nColumn The column index.
+        @return table tWrapper Opening and closing strings.
+        !]]
+        public getColumnWrapper(sDisplay, nColumn) {
+            local tColumnWrappers = this.columnWrappers;
+            local tRet = {
+                [1] = "",
+                [2] = "",
+            };
+
+            if (tColumnWrappers[sDisplay] ~= nil) then
+                local tWrappers = tColumnWrappers[sDisplay];
+
+                if (tWrappers[nColumn] ~= nil) then
+                    tRet = clone(tWrappers[nColumn]);
+                end
+
+            end
+
+            return tRet;
+        }
+
+        --[[!
+        @fqxn Dox.DoxBuilder.Methods.getColumnWrappers
+        @pulsarlua function DoxBuilder.getColumnWrappers
+        @desc Returns a copy of a display group; missing groups return an empty table.
+        @param string sDisplay The display group.
+        @return table tWrappers The wrapper pairs.
+        !]]
+        public getColumnWrappers(sDisplay) {
+            local tColumnWrappers = this.columnWrappers;
+            local tRet = {};
+
+            if (tColumnWrappers[sDisplay] ~= nil) then
+                tRet = clone(tColumnWrappers[sDisplay]);
+            end
+
+            return tRet;
+        }
+
+        --[[!
+        @fqxn Dox.DoxBuilder.Methods.getColumnWrapperCount
+        @pulsarlua function DoxBuilder.getColumnWrapperCount
+        @desc Gets the total number of column wrappers in this <strong>DoxBuilder</strong>.
+        @return number nColumnWrappers The number of the column wrappers in this <strong>DoxBuilder</strong>.
+        !]]
+        public getColumnWrapperCount(sDisplay) {
+            local nRet = 0;
+            local tColumnWrappers = this.columnWrappers;
+
+            if (tColumnWrappers[sDisplay] ~= nil) then
+
+                for _, __ in pairs(tColumnWrappers[sDisplay]) do
+                    nRet = nRet + 1;
+                end
+
+            end
+
+            return nRet;
+        }
+
+        public getCopyToClipboardButton() {
+            return this.copyToClipboardButton;
+        }
+
+        --[[!
+        @fqxn Dox.DoxBuilder.Methods.getDefaultFilename
+        @pulsarlua function DoxBuilder.getDefaultFilename
+        @desc Returns the default filename of the final ouput document that is used if one is not provided by the user.
+        @ret string sFilename The default filename.
+        !]]
+        public getDefaultFilename() {
+            return this.defaultFilename;
+        }
+
+        public getBlockWrapper() {
+            return clone(this.blockWrapper);
+        }
+
+        public getMime() {
+            return this.mime;
+        }
+
+        public getNewLine() {
+            return this.newLine;
+        }
+
+        --[[!
+        @fqxn Dox.DoxBuilder.Methods.setColumnWrapper
+        @pulsarlua function DoxBuilder.setColumnWrapper
+        @desc Replaces a wrapper or appends the next column, creating a group when necessary. Empty strings leave content unwrapped.
+        @param string sDisplay The display group.
+        @param number nColumn Positive integer column index; gaps are rejected.
+        @param string sOpen Opening wrapper.
+        @param string sClose Closing wrapper.
+        !]]
+        public setColumnWrapper(sDisplay, nColumn, sOpen, sClose) {
+            local pro = this;
+            local tColumnWrappers = pro.columnWrappers;
+            type.assert.string(sDisplay, "%S+");
+            type.assert.number(nColumn, true, true, false, true, false);
+            type.assert.string(sOpen);
+            type.assert.string(sClose);
+
+            local tWrappers = tColumnWrappers[sDisplay] or {};
+
+            -- Permit replacement and sequential append, without introducing gaps.
+            if (nColumn > #tWrappers + 1) then
+                error("Error setting column wrapper for item, '"..sDisplay.."'. Column index "..nColumn.." is out of bounds.", 2);
+            end
+
+            tWrappers[nColumn] = {
+                [1] = sOpen,
+                [2] = sClose,
+            };
+
+            tColumnWrappers[sDisplay] = tWrappers;
+        }
+
+        --[[!
+        @fqxn Dox.DoxBuilder.validateSnapshot
+        @desc Checks native builder metadata, MIME identity and copied wrapper records.
+        !]]
+        private validateSnapshot(tState) {
+            local pri, pro = tState.pri, tState.pro;
+            type.assert.string(pri.Name, "%S+");
+            assert(lxe.isMember(pri.mime, DoxBuilder.MIME), "Invalid saved builder MIME.");
+            for _, key in ipairs({"copyToClipboardButton", "defaultFilename", "newLine", "outputExtension", "outputMode"}) do
+                type.assert.string(pro[key]);
+            end
+            type.assert.table(pro.blockWrapper);
+            type.assert.string(pro.blockWrapper.open);
+            type.assert.string(pro.blockWrapper.close);
+            type.assert.table(pro.columnWrappers);
+            for display, wrappers in pairs(pro.columnWrappers) do
+                type.assert.string(display, "%S+");
+                type.assert.table(wrappers, "number", "table", 1);
+                for _, pair in ipairs(wrappers) do
+                    type.assert.table(pair, "number", "string", 2, 2);
+                end
+            end
+        }
+    }
+}

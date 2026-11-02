@@ -1,0 +1,83 @@
+--[[!
+@fqxn Dox.Enums
+@desc Native Prism/page themes preserving legacy member names, order and payloads.
+    SYNTAX stores immutable syntax data; DoxSyntax resolves objects after discovery.
+!]]
+namespace Dox {
+    public enum BUILDER {
+        HTML = "Dox.DoxBuilderHTML";
+        PULSAR_LUA = "Dox.DoxBuilderPulsarLua";
+        GITHUB_WIKI = "Dox.DoxBuilderGitHubWiki";
+    }
+
+    public enum OUTPUT {
+        HTML = 1;
+    }
+
+    public enum PRISM {
+        COY = "prism-coy";
+        DARK = "prism-dark";
+        DEFAULT = "prism";
+        FUNKY = "prism-funky";
+        OKAIDIA = "prism-okaidia";
+        SOLARIZED_LIGHT = "prism-solarizedlight";
+        TOMORROW_NIGHT = "prism-tomorrow";
+        TWILIGHT = "prism-twilight";
+    }
+
+    public enum THEME {
+        ALUCARD = "alucard";
+        CATPPUCCIN_FRAPPE = "catppuccin_frappe";
+        CATPPUCCIN_LATTE = "catppuccin_latte";
+        CATPPUCCIN_MACCHIATO = "catppuccin_macchiato";
+        CATPPUCCIN_MOCHA = "catppuccin_mocha";
+        DRACULA = "dracula";
+        GRUVBOX_DARK = "gruvbox_dark";
+        GRUVBOX_LIGHT = "gruvbox_light";
+        MIDNIGHT_BLUE = "midnight_blue";
+        NORD = "nord";
+        ROSE_PINE = "rose_pine";
+        ROSE_PINE_DAWN = "rose_pine_dawn";
+        ROSE_PINE_MOON = "rose_pine_moon";
+        SOLARIZED_DARK = "solarized_dark";
+        SOLARIZED_LIGHT = "solarized_light";
+        SYNTHWAVE_PROTOCOL = "synthwave_protocol";
+        TOKYO_NIGHT = "tokyo_night";
+        TOKYO_NIGHT_MOON = "tokyo_night_moon";
+        TOKYO_NIGHT_STORM = "tokyo_night_storm";
+        ZENBURN = "zenburn";
+    }
+
+    public enum SYNTAX {
+        ADA = table.readonly({name = "Ada", commentOpen = "--", commentClose = "--", escapeCharacter = "\\", prismName = "ada"});
+        ASSEMBLY_NASM = table.readonly({name = "Assembly (NASM)", commentOpen = "%{", commentClose = "%}", escapeCharacter = "\\", prismName = "asm6502"});
+        C = table.readonly({name = "C", commentOpen = "/*", commentClose = "*/", escapeCharacter = "\\", prismName = "c"});
+        C_SHARP = table.readonly({name = "C#", commentOpen = "/*", commentClose = "*/", escapeCharacter = "\\", prismName = "csharp"});
+        C_PLUS_PLUS = table.readonly({name = "C++", commentOpen = "/*", commentClose = "*/", escapeCharacter = "\\", prismName = "cpp"});
+        CSS = table.readonly({name = "CSS", commentOpen = "/*", commentClose = "*/", escapeCharacter = "\\", prismName = "css"});
+        DART = table.readonly({name = "Dart", commentOpen = "/*", commentClose = "*/", escapeCharacter = "\\", prismName = "dart"});
+        ELM = table.readonly({name = "Elm", commentOpen = "{-", commentClose = "-}", escapeCharacter = "\\", prismName = "elm"});
+        F_SHARP = table.readonly({name = "F#", commentOpen = "(*", commentClose = "*)", escapeCharacter = "\\", prismName = "fsharp"});
+        FORTRAN = table.readonly({name = "Fortran", commentOpen = "!", commentClose = "\n", escapeCharacter = "\\", prismName = "fortran"});
+        GO = table.readonly({name = "Go", commentOpen = "/*", commentClose = "*/", escapeCharacter = "\\", prismName = "go"});
+        GROOVY = table.readonly({name = "Groovy", commentOpen = "/*", commentClose = "*/", escapeCharacter = "\\", prismName = "groovy"});
+        HASKELL = table.readonly({name = "Haskell", commentOpen = "{-", commentClose = "-}", escapeCharacter = "\\", prismName = "haskell"});
+        HTML = table.readonly({name = "HTML", commentOpen = "<!--", commentClose = "-->", escapeCharacter = "\\", prismName = "markup"});
+        JAVA = table.readonly({name = "Java", commentOpen = "/*", commentClose = "*/", escapeCharacter = "\\", prismName = "java"});
+        JAVASCRIPT = table.readonly({name = "JavaScript", commentOpen = "/*", commentClose = "*/", escapeCharacter = "\\", prismName = "javascript"});
+        JULIA = table.readonly({name = "Julia", commentOpen = "#=", commentClose = "=#", escapeCharacter = "\\", prismName = "julia"});
+        KOTLIN = table.readonly({name = "Kotlin", commentOpen = "/*", commentClose = "*/", escapeCharacter = "\\", prismName = "kotlin"});
+        LUA = table.readonly({name = "Lua", commentOpen = "--[[", commentClose = "]]", escapeCharacter = "\\", prismName = "lua"});
+        MATLAB = table.readonly({name = "Matlab", commentOpen = "%{", commentClose = "%}", escapeCharacter = "\\", prismName = "matlab"});
+        OBJECTIVE_C = table.readonly({name = "Objective-C", commentOpen = "/*", commentClose = "*/", escapeCharacter = "\\", prismName = "objectivec"});
+        PERL = table.readonly({name = "Perl", commentOpen = "=pod", commentClose = "=cut", escapeCharacter = "\\", prismName = "perl"});
+        PHP = table.readonly({name = "PHP", commentOpen = "/*", commentClose = "*/", escapeCharacter = "\\", prismName = "php"});
+        PYTHON = table.readonly({name = "Python", commentOpen = '"""', commentClose = '"""', escapeCharacter = "\\", prismName = "python"});
+        RUBY = table.readonly({name = "Ruby", commentOpen = "=begin", commentClose = "=end", escapeCharacter = "\\", prismName = "ruby"});
+        RUST = table.readonly({name = "Rust", commentOpen = "/*", commentClose = "*/", escapeCharacter = "\\", prismName = "rust"});
+        SCALA = table.readonly({name = "Scala", commentOpen = "/*", commentClose = "*/", escapeCharacter = "\\", prismName = "scala"});
+        SWIFT = table.readonly({name = "Swift", commentOpen = "/*", commentClose = "*/", escapeCharacter = "\\", prismName = "swift"});
+        TYPESCRIPT = table.readonly({name = "TypeScript", commentOpen = "/*", commentClose = "*/", escapeCharacter = "\\", prismName = "typescript"});
+        XML = table.readonly({name = "XML", commentOpen = "<!--", commentClose = "-->", escapeCharacter = "\\", prismName = "markup"});
+    }
+}

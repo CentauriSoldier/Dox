@@ -47,12 +47,12 @@ end
 
 
 local function Import(oDocument, sBody)
-    oDocument.importString("--[[!\n"..sBody.."\n!]]", DoxMime("lua"));
+    oDocument.importString("--[[!\n"..sBody.."\n!]]", Dox.DoxMime("lua"));
 end
 
 
 local function Document(sTitle, sBody)
-    local oDocument = DoxLua(sTitle);
+    local oDocument = Dox.DoxLua(sTitle);
     oDocument.setOutputPath(pOut);
     if (sBody) then Import(oDocument, sBody); end
     return oDocument;
@@ -66,14 +66,14 @@ end
 
 -- Exercise the complete immediate initializer and every registered source parser.
 for _, sParser in ipairs({
-    "DoxAssemblyNASM", "DoxAutoPlayMediaStudio", "DoxC", "DoxCSharp", "DoxCPlusPlus",
+    "DoxAda", "DoxAssemblyNasm", "DoxAutoPlayMediaStudio", "DoxC", "DoxCSharp", "DoxCPlusPlus",
     "DoxCSS", "DoxDart", "DoxElm", "DoxFSharp", "DoxFortran", "DoxGo", "DoxGroovy",
     "DoxHaskell", "DoxHTML", "DoxJava", "DoxJavaScript", "DoxJulia", "DoxKotlin",
     "DoxLua", "DoxMatlab", "DoxObjectiveC", "DoxPerl", "DoxPHP", "DoxPython",
     "DoxRuby", "DoxRust", "DoxScala", "DoxSwift", "DoxTypeScript", "DoxXML",
 }) do
-    local oDocument = _G[sParser]("Parser Test");
-    local oSyntax = oDocument.getSyntax().value;
+    local oDocument = Dox[sParser]("Parser Test");
+    local oSyntax = Dox.DoxSyntax.fromEnum(oDocument.getSyntax());
     local sInput = oSyntax.getCommentOpen().."!\n@fqxn Parser.item\n@desc Parser content.\n@ex value = 1;\n!"..oSyntax.getCommentClose();
     local oMime;
     for _, oValue in oDocument.getMimeTypes()() do oMime = oValue; break; end
@@ -277,12 +277,12 @@ for _, sName in ipairs({
 }) do
     oThemes.setTheme(Dox.THEME[sName]);
     oThemes.export("theme");
-    Contains(oThemes.getOutput(), Themes[Dox.THEME[sName].value].css, "HTML palette "..sName);
+    Contains(oThemes.getOutput(), Themes[Dox.THEME[sName].Value].css, "HTML palette "..sName);
 end
 for _, sName in ipairs({"COY", "DARK", "DEFAULT", "FUNKY", "OKAIDIA", "SOLARIZED_LIGHT", "TOMORROW_NIGHT", "TWILIGHT"}) do
     oThemes.setPrismTheme(Dox.PRISM[sName]);
     oThemes.export("prism");
-    Contains(oThemes.getOutput(), Dox.PRISM[sName].value..".min.css", "Prism palette "..sName);
+    Contains(oThemes.getOutput(), Dox.PRISM[sName].Value..".min.css", "Prism palette "..sName);
 end
 oThemes.setIntro("<p>Introduction marker.</p>");
 oThemes.setBanner("missing-image.png");
@@ -295,7 +295,7 @@ oThemes.export("presentation");
 Check(not oThemes.getOutput():find("Introduction marker.", 1, true), "HTML introduction cleared");
 Check(not oThemes.getOutput():find('src="missing-image.png"', 1, true), "HTML banner cleared");
 
-local oWrappers = DoxBuilderHTML();
+local oWrappers = Dox.DoxBuilderHTML();
 oWrappers.setColumnWrapper("Custom", 1, "<b>", "</b>");
 Equal(oWrappers.getColumnWrapper("Custom", 1)[1], "<b>", "Custom wrappers");
 local tCopy = oWrappers.getColumnWrapper("Custom", 1);
@@ -310,10 +310,10 @@ Equal(oWrappers.getColumnWrapperCount("Parameter(s)"), 0, "All wrapper clearing"
 
 -- Custom multi-column tags and direct builder APIs use the same raw block model.
 local tTags = clone(require("dox.Statics.BuiltInBlockTags"));
-tTags[#tTags + 1] = DoxBlockTag({"custom"}, "Custom Fields", false, true, true, false, 2);
-local oBlock = DoxBlock("@fqxn Custom.item\n@custom string name First custom field.\n@custom number count Second custom field.",
+tTags[#tTags + 1] = Dox.DoxBlockTag({"custom"}, "Custom Fields", false, true, true, false, 2);
+local oBlock = Dox.DoxBlock("@fqxn Custom.item\n@custom string name First custom field.\n@custom number count Second custom field.",
                         Dox.SYNTAX.LUA, "@", tTags, {tTags[1]});
-local oWiki = DoxBuilderGitHubWiki();
+local oWiki = Dox.DoxBuilderGitHubWiki();
 local tData = oWiki.refresh({oBlock}, function() error("Wiki must not invoke the HTML formatter."); end);
 local tFiles = oWiki.build("Custom", "", tData, nil, "", nil, Dox.SYNTAX.LUA);
 Contains(tFiles["API-Custom.item.md"], "First custom field.", "Custom tag description");
@@ -333,7 +333,7 @@ oOrder.export();
 sOrdered = Read(pOut.."/API-Ordered.md");
 Check(sOrdered:find("OrderedDescription", 1, true) < sOrdered:find("OrderedExample", 1, true), "Tag order reset");
 Fails(function() oOrder.setBlockTagOrder({"desc", "description"}); end, "repeated");
-Fails(function() oOrder.setBuilder("HTML"); end, "Expected type");
+Fails(function() oOrder.setBuilder("HTML"); end, "Expected Dox.BUILDER member");
 
 -- Multi-level inheritance works in all output systems.
 local oChain = Document("Chain", "@fqxn Chain.A\n@inheritdoc Chain.B");

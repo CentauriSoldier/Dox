@@ -1,0 +1,170 @@
+[
+  {
+    "path": "dox/Builders/GitHubWiki/DoxBuilderGitHubWiki.lua",
+    "sha256": "12328133a0a4d7f6ba8ae6dbb95d1aa79cd8b8f067ca82b89427a3d4d25c6cfd"
+  },
+  {
+    "path": "dox/Builders/HTML/DoxBuilderHTML.lua",
+    "sha256": "4ad8a58e1924719e0d0c590cde9d2e92b434a88d50fa022089cbd46d30455ad0"
+  },
+  {
+    "path": "dox/Builders/Pulsar/Lua/DoxBuilderPulsarLua.lua",
+    "sha256": "7d991c5b91b7d1aa8396c1e715a9b5ef975eb97335ed7c2e4e94b4670b2daf86"
+  },
+  {
+    "path": "dox/Components/DoxBlock.lua",
+    "sha256": "43d9a2a9cbf483023dfe04409a2cca83433e0df18143744ad998322f83a60659"
+  },
+  {
+    "path": "dox/Components/DoxBlockTag.lua",
+    "sha256": "2316a28f0fffe81d88a793c1bbf1a9bfb3516a31d91e5a40b25d5c655bcc3108"
+  },
+  {
+    "path": "dox/Components/DoxBuilder.lua",
+    "sha256": "11876726419e57990590c5ab2a04561636c8a31cd053ca3745efa58788ab8dad"
+  },
+  {
+    "path": "dox/Components/DoxMime.lua",
+    "sha256": "5cca67bcd5d5609e780e5770c47da077e9cc8a624608165db6b19865edf2aaeb"
+  },
+  {
+    "path": "dox/Components/DoxSyntax.lua",
+    "sha256": "0cb47af046755f2131076004b555b7e06872c9acfb3b357f533e9f01bcea1a8b"
+  },
+  {
+    "path": "dox/Parsers/DoxAda.lua",
+    "sha256": "9a289919518df6c538880a9a284b0b7a76a39991c5ded2f37b35041c1f7db0a7"
+  },
+  {
+    "path": "dox/Parsers/DoxAssemblyNasm.lua",
+    "sha256": "ea0e639ce8b9a3d5ac3553a41432b71c3e98c7cd65e69ca84032a68d35994ed4"
+  },
+  {
+    "path": "dox/Parsers/DoxAutoPlayMediaStudio.lua",
+    "sha256": "75e352ba5d3981f57c6071014d5400b4855f62596370269ef1df2d59f2b29bd8"
+  },
+  {
+    "path": "dox/Parsers/DoxC.lua",
+    "sha256": "db3bfc244f52c6b6e4f60ef5b58517a601d28ba4bb2d770813f108f15503da5f"
+  },
+  {
+    "path": "dox/Parsers/DoxCPlusPlus.lua",
+    "sha256": "44dd04d51b76315ece686f26e0b79e99c6b13359204b32547a63c32a484c62fc"
+  },
+  {
+    "path": "dox/Parsers/DoxCSharp.lua",
+    "sha256": "51b478f53e4d398b77fdc5904a9f21831a1167c712f0e641ce588af024aab679"
+  },
+  {
+    "path": "dox/Parsers/DoxCSS.lua",
+    "sha256": "379afe9b70e570af5e0499971a7d499617ce91dcb6c7eb770a69fd940b7a1799"
+  },
+  {
+    "path": "dox/Parsers/DoxDart.lua",
+    "sha256": "6a9db2c6b8335ef64b313dec6932f733955ad3355edf2cd953bedd26c484a891"
+  },
+  {
+    "path": "dox/Parsers/DoxElm.lua",
+    "sha256": "14701bd4e9aa6712931a8c6c268b000ffb006a951d2dd6e9932802a7adcb3fce"
+  },
+  {
+    "path": "dox/Parsers/DoxFortran.lua",
+    "sha256": "d02b564d60ee24b46d72cccf2a380d334d8d3b3dd0e07ce742804aa932dfefc0"
+  },
+  {
+    "path": "dox/Parsers/DoxFSharp.lua",
+    "sha256": "d8352bce00d93585f88d4ad8cb1a34d67a3eefaeba3f01edc3bc0d2c6cd3c665"
+  },
+  {
+    "path": "dox/Parsers/DoxGo.lua",
+    "sha256": "9a114bf2a0e595f028f56a39ed557664e20a520cd249298eed6ce6756b0c42c9"
+  },
+  {
+    "path": "dox/Parsers/DoxGroovy.lua",
+    "sha256": "898d776fe4a0e2753cb07c16838daa5cd7de249c7c936ca1f2ef948e916ec57e"
+  },
+  {
+    "path": "dox/Parsers/DoxHaskell.lua",
+    "sha256": "abb85245ae39352c25c0b12adbaad2628a2565673b08008437661a7509d3dad4"
+  },
+  {
+    "path": "dox/Parsers/DoxHTML.lua",
+    "sha256": "974cbfcaa018dd74a4232f0eeb107c0760e9a8bc608872fb980553ae356f09a8"
+  },
+  {
+    "path": "dox/Parsers/DoxJava.lua",
+    "sha256": "023a482f2c96df1147d0998759a2948b8e943aa46829527463aa85e3c0cebe7e"
+  },
+  {
+    "path": "dox/Parsers/DoxJavaScript.lua",
+    "sha256": "9595b9042a2a3afcf3c0cc3546e8e94bd1af4ac8ac17d22f55afef45d6e669e2"
+  },
+  {
+    "path": "dox/Parsers/DoxJulia.lua",
+    "sha256": "1b5c971e50a47ba55d7ab49aeba2e222c44989e32acec185893a8c75e26d9aae"
+  },
+  {
+    "path": "dox/Parsers/DoxKotlin.lua",
+    "sha256": "8e62a3fcccd2af27da35fd9451b3d6fe5290ad99e84536b6fd2e678d0a43964e"
+  },
+  {
+    "path": "dox/Parsers/DoxLua.lua",
+    "sha256": "868ae2a7dd93b8ebc372b2b417fe04f538348d06258c078ac92b1ee2b2c92af2"
+  },
+  {
+    "path": "dox/Parsers/DoxMatlab.lua",
+    "sha256": "981d05d9fa04bf3040c9fdb99dc039e172d54eb8eac7bae4c3634960ff467315"
+  },
+  {
+    "path": "dox/Parsers/DoxObjectiveC.lua",
+    "sha256": "52d704ccd70f7a8d6d80515bad9ecc3debfd8171d98907603248e741e422859c"
+  },
+  {
+    "path": "dox/Parsers/DoxPerl.lua",
+    "sha256": "8dce79eddb60aaa9278995d8564de1a524e954e7250b14355055c71f3b163bd8"
+  },
+  {
+    "path": "dox/Parsers/DoxPHP.lua",
+    "sha256": "99b84e607baca3442e4000080e79e4538a700bbf15c3c119bfab6a585e9a46f4"
+  },
+  {
+    "path": "dox/Parsers/DoxPython.lua",
+    "sha256": "b59f5975b42544d2f8fc757cca0da35b767adb5d681a61507440cb50ad2314dd"
+  },
+  {
+    "path": "dox/Parsers/DoxRuby.lua",
+    "sha256": "905b3081e9af7bbee755f4d4a3286c733a83f2f50a987791a930c0862d688f32"
+  },
+  {
+    "path": "dox/Parsers/DoxRust.lua",
+    "sha256": "134a3d0c4e9f2cc92a635efae3b3deaad34fa6ac197f900f846fabf3bf159b97"
+  },
+  {
+    "path": "dox/Parsers/DoxScala.lua",
+    "sha256": "c8566332d4152bec2f52bf6593d93c1c5e2a96b6920004093884d41cec84b639"
+  },
+  {
+    "path": "dox/Parsers/DoxSwift.lua",
+    "sha256": "e2cddd606b9fb431679625c307c6b979ca1506faeef55cf4434c5c02821e90bf"
+  },
+  {
+    "path": "dox/Parsers/DoxTypeScript.lua",
+    "sha256": "c62ac098353b1a9ac2a44433f94364eacd3006d120288397aace61b3ea74d1c6"
+  },
+  {
+    "path": "dox/Parsers/DoxXML.lua",
+    "sha256": "37e234461b349019f678a420896f6d69fc31272dee3c871fc1a7a718308a78d8"
+  },
+  {
+    "path": "dox/Dox.lua",
+    "sha256": "9e3e50e697ed85a3e083b2d5b73c6fe904c8cfce12faf5639816394f5dd500c9"
+  },
+  {
+    "path": "dox/DoxSyntax.lua",
+    "sha256": "f23bd990f8d419ac1c614708d1b8c1a17d85c350600265b963c3a4a4923c5618"
+  },
+  {
+    "path": "dox/Statics/DoxSyntaxEnum.lua",
+    "sha256": "479c067f33b1eef8e0510c1509bf6e5c215ca1233b9a19ebe72575c3126649a1"
+  }
+]

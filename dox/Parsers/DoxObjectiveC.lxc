@@ -1,0 +1,19 @@
+--[[!
+@fqxn Dox.DoxObjectiveC
+@desc Language-specific documentation parser retaining its syntax, MIME types and delimiters.
+!]]
+namespace Dox {
+    final class DoxObjectiveC : Dox.Parser requires(Dox.DoxMime, Dox.SYNTAX) {
+        private static createMimeTypes(sTitle) {
+            type.assert.string(sTitle, "%S+", "Dox Parser title name must not be blank.");
+            return {
+                Dox.DoxMime("m"),
+            };
+        }
+
+        public DoxObjectiveC(sTitle) {
+            base("DoxObjectiveC", sTitle, "!", "!", "@", Dox.SYNTAX.OBJECTIVE_C,
+                DoxObjectiveC.createMimeTypes(sTitle));
+        }
+    }
+}

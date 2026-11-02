@@ -1,0 +1,629 @@
+--[[!
+@fqxn Dox.Parser
+@desc Extensible documentation host. Parser subclasses supply delimiters and MIME definitions.
+    Builder values identify classes; resolveBuilder retains one shared builder per member.
+!]]
+namespace Dox {
+    class Parser requires(Dox.DoxBlock, Dox.DoxMime, Dox.DoxSyntax, Dox.DoxBlockTag,
+        Dox.DoxBuilderHTML, Dox.DoxBuilderPulsarLua, Dox.DoxBuilderGitHubWiki,
+        Dox.BUILDER, Dox.OUTPUT, Dox.PRISM, Dox.THEME, Dox.SYNTAX, LuaEx.Classes.SortedDictionary) {
+        private static _tBuilders = {};
+        private bannerURL = "";
+        private blockOpen = "";
+        private blockClose = "";
+        private blockTags = {};
+        private defaultBlockTags = {};
+        private blockStrings = {};
+        private builder = null;
+        private finalized = {};
+        private html = "";
+        private Intro = "";
+        private mimeTypes = LuaEx.Classes.SortedDictionary();
+        private name = "";
+        private output = "";
+        private OutputPath = "";
+        private prismCSS = "";
+        private prismTheme = null;
+        private requiredBlockTags = {};
+        private snippetClose = "";
+        private snippetOpen = "";
+        private syntax = null;
+        private tagOpen = "";
+        private theme = null;
+        private title = "";
+
+        public static resolveBuilder(eBuilder) {
+            assert(lxe.isMember(eBuilder, Dox.BUILDER), "Expected Dox.BUILDER member.");
+            local oBuilder = Parser._tBuilders[eBuilder];
+            if (not oBuilder) then
+                local cBuilder = class.getbyname(eBuilder.Value);
+                assert(class.is(cBuilder), "Unknown Dox builder class.");
+                oBuilder = cBuilder();
+                Parser._tBuilders[eBuilder] = oBuilder;
+            end
+            return oBuilder;
+        }
+
+        private static validateMimeTypes(tMimeTypes) {
+            type.assert.table(tMimeTypes, "number", nil, 1);
+            for _, oMime in pairs(tMimeTypes) do
+                assert(class.isinstanceof(oMime, Dox.DoxMime), "Expected native DoxMime.");
+            end
+        }
+
+        public __tostring() {
+            return this.name.." ("..this.blockOpen.." ... "..this.blockClose..")";
+        }
+
+        public final getIntro() { return this.Intro; }
+        public final setIntro(value) { this.Intro = value; return this; }
+        public getOutputPath() { return this.OutputPath; }
+        public setOutputPath(value) { this.OutputPath = value; return this; }
+
+        private static escapePattern(pattern) {
+            -- Escape special characters in the pattern
+            local escapedPattern = pattern:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1");
+
+            -- Preserve delimiter whitespace and accept Windows endings for newline terminators.
+            escapedPattern = escapedPattern:gsub("\n", "\r?\n");
+
+            return escapedPattern;
+        }
+
+        private static extractLuaComments(sInput) {
+            local nIndex    = 1;
+            local nLength   = #sInput;
+            local tComments = {};
+
+            while (nIndex <= nLength) do
+                local sCharacter = sInput:sub(nIndex, nIndex);
+
+                if (sCharacter == '"' or sCharacter == "'") then
+                    -- An escaped quote does not end a short string.
+                    local sQuote = sCharacter;
+                    nIndex = nIndex + 1;
+
+                    while (nIndex <= nLength) do
+                        sCharacter = sInput:sub(nIndex, nIndex);
+
+                        if (sCharacter == "\\") then
+                            nIndex = nIndex + 2;
+                        elseif (sCharacter == sQuote) then
+                            nIndex = nIndex + 1;
+                            break;
+                        else
+                            nIndex = nIndex + 1;
+                        end
+                    end
+
+                elseif (sInput:sub(nIndex, nIndex + 1) == "--" or sCharacter == "[") then
+                    local bComment = sCharacter == "-";
+                    local nStart   = nIndex + (bComment and 2 or 0);
+                    local nOpen, nContent, sEquals = sInput:find("%[(=*)%[", nStart);
+
+                    if (nOpen == nStart) then
+                        -- Lua long brackets close only at the matching equals level.
+                        local nClose, nAfter = sInput:find("]"..sEquals.."]", nContent + 1, true);
+
+                        if (not nClose) then
+                            break;
+                        end
+
+                        if (bComment and sEquals == "" and sInput:sub(nContent + 1, nContent + 1) == "!" and
+                            sInput:sub(nClose - 1, nClose - 1) == "!") then
+                            table.insert(tComments, sInput:sub(nIndex, nAfter));
+                        end
+
+                        nIndex = nAfter + 1;
+                    elseif (bComment) then
+                        -- Ordinary line comments may contain marker-like text.
+                        nIndex = sInput:find("[\r\n]", nStart) or (nLength + 1);
+                    else
+                        nIndex = nIndex + 1;
+                    end
+                else
+                    nIndex = nIndex + 1;
+                end
+            end
+
+            return table.concat(tComments, "\n");
+        }
+
+        private extractBlockStrings(sInput, oDoxMime) {
+            --local tBlockStrings         = {};
+            local pri           = this;
+            local fTrim         = string.trim;
+            local oDoxSyntax    = Dox.DoxSyntax.fromEnum(pri.syntax);
+            local sOpenPrefix   = oDoxSyntax.getCommentOpen();
+            local sCloseSuffix  = oDoxSyntax.getCommentClose();
+            local sBlockOpen    = pri.blockOpen;
+            local sBlockClose   = pri.blockClose;
+
+            -- Lua strings and ordinary comments must not introduce documentation blocks.
+            if (pri.syntax == Dox.SYNTAX.LUA) then
+                sInput = Parser.extractLuaComments(sInput);
+            end
+
+            local sPattern = Parser.escapePattern(sOpenPrefix..sBlockOpen).."(.-)"..Parser.escapePattern(sBlockClose..sCloseSuffix);
+            for sMatch in sInput:gmatch(sPattern) do
+                local fPreProcessor = oDoxMime.getPreProcessor();
+                local sUnprocessedBlock = fTrim(sMatch);
+                local sBlock = fPreProcessor(sUnprocessedBlock);
+
+                if not (pri.blockStrings[sBlock]) then
+                    pri.blockStrings[sBlock] = true;
+                end
+
+            end
+
+        }
+
+        private processBlockItem(oBlockTag, sContent) {
+            local sTableDataItems = "";
+            local nColumnCount    = oBlockTag.getColumnCount();
+            local sCurrent        = sContent;
+            local nStart          = 1;
+            local nEnd            = -1;
+            local tContent        = {};
+            local oBuilder        = Parser.resolveBuilder(this.builder);
+            -- Iterate over the number of columns
+            for x = 1, nColumnCount - 1 do
+                -- Find the index of the next space
+                local nStart, nEnd = sCurrent:find(" ", 1);
+
+                -- Check if a space is found
+                if not nStart then
+                    error("Unable to find space for column " .. x.." in block:\n"..sContent)--TODO better message
+                end
+
+                -- Extract the substring between the current start and end indices
+                tContent[x] = sCurrent:sub(1, nEnd - 1);
+
+                -- Update sCurrent to start from the next character after the space
+                sCurrent = sCurrent:sub(nEnd + 1);
+            end
+
+            -- Add the remaining part of sCurrent as the last content item
+            tContent[nColumnCount] = sCurrent;
+
+            for x = 1, #tContent do
+                local tWrapper = oBuilder.getColumnWrapper(oBlockTag.getDisplay(), x);
+
+                -- The parser supplies the language per example; shared builders keep no parser state.
+                if (oBlockTag.getDisplay() == "Example" and type(oBuilder.getExampleWrapper) == "function") then
+                    tWrapper = oBuilder.getExampleWrapper(this.syntax);
+                end
+                --local tWrapper   = oBlockTag.getColumnWrapper(x);
+                local sWrapFront = tWrapper[1];
+                local sWrapBack  = tWrapper[2];
+                --sTableDataItems = sTableDataItems.."<td>"..sWrapFront..tContent[x]..sWrapBack.."</td>";
+                sTableDataItems = sTableDataItems.."   "..sWrapFront..tContent[x]..sWrapBack.."";
+            end
+
+            local sDisplay = oBlockTag.getDisplay();
+            local sID = "";
+
+            if (sDisplay == "Example") then
+                sDisplay = sDisplay.." "..oBuilder.getCopyToClipboardButton();
+                sID = ' id="'..string.uuid()..'"'
+            end
+
+            return {
+                id = sID,
+                display = sDisplay,
+                content = sTableDataItems,--TODO break up content into columns as needed
+            };
+        }
+
+        private processBlockString() {
+            local pri = this;
+        }
+
+        private _refresh() {
+            local pri       = this;
+            local oBuilder  = Parser.resolveBuilder(pri.builder);
+
+            --create all the blocks
+            local tBlocks = {};
+            local nBlockID = 0;
+
+            for sRawBlock, _ in pairs(pri.blockStrings) do
+                nBlockID = nBlockID + 1;
+                --create the DoxBlock
+                tBlocks[nBlockID] = Dox.DoxBlock(   sRawBlock,      pri.syntax,     pri.tagOpen,
+                                                pri.blockTags,  pri.requiredBlockTags);
+            end
+
+            --call the builder's refresh method and reset the finalized data table
+            local tFinalized = oBuilder.refresh(tBlocks, function(oBlockTag, sContent)
+                return pri.processBlockItem(oBlockTag, sContent);
+            end);
+
+            if not (type(tFinalized) == "table") then
+                error("Error refreshing Dox data in method, 'refresh' in builder, '"..oBuilder.getName().."'. Method must return a table value. Got type, "..type(tFinalized)..".", 2);
+            end
+
+            pri.finalized = tFinalized;
+        }
+
+        protected Parser(sName, sTitle, sBlockOpen, sBlockClose, sTagOpen, eSyntax, tMimeTypes, ...) {
+            type.assert.string(sName,       "%S+",      "Dox subclass name must not be blank.");
+            type.assert.string(sTitle,      "%S+",      "Dox documentation title name must not be blank.");
+            type.assert.string(sBlockOpen,  "%S+",      "Block Open symbol must not be blank.");
+            type.assert.string(sBlockClose, "%S+",      "Block Close symbol must not be blank.");
+            type.assert.string(sTagOpen,    "%S+",      "Tag Open symbol must not be blank.");
+            assert(lxe.isMember(eSyntax, Dox.SYNTAX), "Expected Dox.SYNTAX member.");
+            Parser.validateMimeTypes(tMimeTypes);
+
+            local pri               = this;
+            pri.syntax              = eSyntax;
+            pri.prismTheme          = Dox.PRISM.OKAIDIA;
+            pri.theme               = Dox.THEME.MIDNIGHT_BLUE;
+            pri.builder             = Dox.BUILDER.HTML; --default builder, can be changed later
+                                      --Parser.resolveBuilder(pri.builder).setSyntax(this.syntax);
+            pri.blockOpen           = sBlockOpen;
+            pri.blockClose          = sBlockClose;
+            pri.name                = sName;
+            pri.title               = sTitle;
+            pri.tagOpen             = sTagOpen;
+            pri.requiredBlockTags   = {};
+
+            for _, oDoxMime in pairs(tMimeTypes) do
+                pri.mimeTypes.add(oDoxMime.getName(), oDoxMime);
+            end
+
+            --import all built-in BlockTags
+            for _, oBlockTag in ipairs(require("dox.Statics.BuiltInBlockTags")) do
+                local oClonedBlockTag = clone(oBlockTag);
+                table.insert(pri.blockTags, oClonedBlockTag);
+
+                if (oBlockTag.isRequired()) then
+                    table.insert(pri.requiredBlockTags, oClonedBlockTag);
+                end
+
+            end
+
+            --create and inject the example block tag (language-specific)
+            --local tExampleWrapper = Parser.resolveBuilder(pri.builder).getExampleWrapper(eSyntax);
+            --table.insert(pri.blockTags,
+            --    DoxBlockTag({"ex", "example"}, "Example", false, true, false, false, 0)--,
+                            --{tExampleWrapper.open, tExampleWrapper.close})
+            --);
+
+            --store all input BlockTags and log required ones found
+            for nIndex, oBlockTag in ipairs({...}) do
+                --validate the type
+                assert(class.isinstanceof(oBlockTag, Dox.DoxBlockTag), "Expected native DoxBlockTag.");
+
+                --search for required blocktags conflicts
+                for _, oBuiltInBlockTag in pairs(pri.blockTags) do
+
+                    for sAlias in oBuiltInBlockTag.eachAlias() do
+
+                        if ( oBlockTag.hasAlias(sAlias) ) then
+                            error(  "Error creating Dox subclass, '${subclass}'.\nBuilt-in BlockTag, '${display}', cannot be overriden or duplicated." %
+                                    {subclass = sName,
+                                     display = oBuiltInBlockTag.getDisplay()},
+                                     2);
+                        end
+
+                    end
+
+                end
+
+                --clone the blocktag
+                local oClonedBlockTag = clone(oBlockTag);
+                --store the block tag
+                table.insert(pri.blockTags, oClonedBlockTag);
+
+                --if the BlockTag is required, store it
+                if (oBlockTag.isRequired()) then
+                    table.insert(pri.requiredBlockTags, oClonedBlockTag);
+                end
+
+            end
+
+
+            -- Retain the instance's original order for resets without changing shared defaults.
+            pri.defaultBlockTags = clone(pri.blockTags);
+
+            -- Reject aliases shared by different tags before parsing any documentation.
+            local tAliases = {};
+
+            for _, oBlockTag in ipairs(pri.blockTags) do
+                for sAlias in oBlockTag.eachAlias() do
+                    if (tAliases[sAlias]) then
+                        error("Duplicate Dox BlockTag alias: "..sAlias, 2);
+                    end
+
+                    tAliases[sAlias] = true;
+                end
+            end
+
+        }
+
+        protected final _eachBlockTag() {
+            local nIndex = 0;
+            local tBlockTags = this.blockTags;
+
+            return function()
+                nIndex = nIndex + 1;
+                local oBlockTag = tBlockTags[nIndex];
+
+                if (oBlockTag) then
+                    return oBlockTag.getDisplay(), oBlockTag;
+                end
+            end;
+        }
+
+        protected final getBlockTagByDisplay(sDisplay) {
+            type.assert.string(sDisplay, "%S+");
+            local vRet;
+
+            for _, oBlockTag in ipairs(this.blockTags) do
+
+                if (oBlockTag.getDisplay() == sDisplay) then
+                    vRet = oBlockTag;
+                    break;
+                end
+
+            end
+
+            return vRet;
+        }
+
+        public final addMimeType(oDoxMime) {
+            assert(class.isinstanceof(oDoxMime, Dox.DoxMime), "Expected native DoxMime.");
+            this.mimeTypes.add(oDoxMime.getName(), oDoxMime);
+        }
+
+        public final eachBlockTag() {
+            local tBlockTags    = this.blockTags;
+            local nIndex        = 0;
+            local nMax          = #tBlockTags;
+
+            return function()
+                nIndex = nIndex + 1;
+
+                if (nIndex <= nMax) then
+                    return clone(tBlockTags[nIndex]);
+                end
+
+            end
+
+        }
+
+        public final export(sFilename) {
+            local pri      = this;
+            local oBuilder = Parser.resolveBuilder(pri.builder);
+            local pOut;
+
+            -- Each export prepares data for its selected builder before delegation.
+            this.refresh();
+            pOut, pri.output = oBuilder.export(pri.OutputPath, sFilename, pri.title, pri.Intro, pri.finalized,
+                                              pri.prismTheme, pri.bannerURL, pri.theme, pri.syntax);
+
+            return pOut;
+        }
+
+        public final getOutput() {
+            return this.output;
+        }
+
+        public final getSyntax() {
+            return this.syntax;
+        }
+
+        public final getMimeTypes() {
+            --return clone(this.mimeTypes);--TODO this must return an iterator
+            return this.mimeTypes;
+        }
+
+        public final getName() {
+            return this.name;
+        }
+
+        public final getBlockClose() {
+            return this.blockClose;
+        }
+
+        public final getBlockOpen() {
+            return this.blockOpen;
+        }
+
+        public final getTagOpen() {
+            return this.tagOpen;
+        }
+
+        public final importFile(pFile) {--, bSkipRefresh)
+            type.assert.string(pFile, "%S+");
+
+            --get the path parts (to find the filetype)
+            local tParts    = io.splitpath(pFile);
+            --TODO THROW ERROR ON tParts Fail
+            local sExt = tParts.extension:lower();
+            local oActiveDoxMime;
+
+            for _, oDoxMime in this.mimeTypes() do
+
+                if (sExt == oDoxMime.getName()) then
+                    oActiveDoxMime = oDoxMime;
+                    break;
+                end
+
+            end
+
+            if (oActiveDoxMime) then
+                local hFile = io.open(pFile, "r");
+
+                if not (hFile) then
+                    error("Error importing file to Dox.\nCould not open file: '"..pFile.."'.");
+                else
+
+                    local sContent = hFile:read("*all");
+                    this.importString(sContent, oActiveDoxMime, true);
+                    --this.extractBlockStrings(sContent);
+                    hFile:close();
+
+                    --if not (bSkipRefresh) then
+                    --    this.refresh();
+                    --end
+
+                end
+
+            end
+
+        }
+
+        public final importFiles(tFiles) {--, bSkipRefresh)
+            type.assert.table(tFiles, "number", "string", 1);
+
+            for nIndex, pFile in pairs(tFiles) do
+                type.assert.string(pFile, "%S+");
+
+                --get the path parts (to find the filetype)
+                local tParts    = io.splitpath(pFile);
+                --TODO THROW ERROR ON tParts Fail
+                local sExt = tParts.extension:lower();
+                local oActiveDoxMime;
+
+                for _, oDoxMime in this.mimeTypes() do
+
+                    if (sExt == oDoxMime.getName()) then
+                        oActiveDoxMime = oDoxMime;
+                        break;
+                    end
+
+                end
+
+                if (oActiveDoxMime) then
+                    local hFile = io.open(pFile, "r");
+
+                    if not (hFile) then
+                        error("Error importing file to Dox.\nCould not open file: '"..pFile.."'.");
+                    else
+
+                        local sContent = hFile:read("*all");
+                        this.importString(sContent, oActiveDoxMime, true);
+                        --this.extractBlockStrings(sContent);
+                        hFile:close();
+
+                        --if not (bSkipRefresh) then
+                        --    this.refresh();
+                        --end
+
+                    end
+
+                end
+
+            end
+
+        }
+
+        public final importString(sInput, oDoxMime) {--, bSkipRefresh)
+            assert(class.isinstanceof(oDoxMime, Dox.DoxMime), "Expected native DoxMime.");
+            type.assert.string(sInput);
+            local sWorking = sInput;
+
+            this.extractBlockStrings(sWorking, oDoxMime);
+
+            --if not (bSkipRefresh) then
+            --    this.refresh();
+            --end
+
+        }
+
+        public final refresh() {
+            this._refresh();
+        }
+
+        public final setBanner(sURL) {
+            type.assert.string(sURL);
+            this.bannerURL = sURL;
+        }
+
+        public final setBlockTagOrder(tAliases) {
+            local pri = this;
+
+            if (tAliases == nil) then
+                pri.blockTags = clone(pri.defaultBlockTags);
+                return;
+            end
+
+            if (rawtype(tAliases) ~= "table") then
+                error("Dox tag order must be an alias list or nil.", 2);
+            end
+
+            local nCount = 0;
+
+            for nIndex in pairs(tAliases) do
+                if (rawtype(nIndex) ~= "number" or nIndex % 1 ~= 0 or nIndex < 1) then
+                    error("Dox tag order must be a contiguous alias list.", 2);
+                end
+
+                nCount = nCount + 1;
+            end
+
+            if (nCount == 0) then
+                pri.blockTags = clone(pri.defaultBlockTags);
+                return;
+            end
+
+            local tOrdered = {};
+            local tSelected = {};
+
+            for nIndex = 1, nCount do
+                local sAlias = tAliases[nIndex];
+
+                if (rawtype(sAlias) ~= "string" or not sAlias:match("^[^%s]+$")) then
+                    error("Dox tag order requires non-blank aliases in a contiguous list.", 2);
+                end
+
+                local oSelected;
+
+                for _, oBlockTag in ipairs(pri.blockTags) do
+                    if (oBlockTag.hasAlias(sAlias)) then
+                        oSelected = oBlockTag;
+                        break;
+                    end
+                end
+
+                if (not oSelected or tSelected[oSelected]) then
+                    error("Dox tag order contains an unknown or repeated tag: "..sAlias, 2);
+                end
+
+                tSelected[oSelected] = true;
+                tOrdered[#tOrdered + 1] = oSelected;
+            end
+
+            for _, oBlockTag in ipairs(pri.blockTags) do
+                if (not tSelected[oBlockTag]) then
+                    tOrdered[#tOrdered + 1] = oBlockTag;
+                end
+            end
+
+            pri.blockTags = tOrdered;
+        }
+
+        public final setBuilder(eBuilder) {
+            assert(lxe.isMember(eBuilder, Dox.BUILDER), "Expected Dox.BUILDER member.");
+            this.builder = eBuilder;
+            --eBuilder.value.setSyntax(this.syntax);
+        }
+
+        public final setPrismTheme(eTheme) {
+            assert(lxe.isMember(eTheme, Dox.PRISM), "Expected Dox.PRISM member.");
+            this.prismTheme = eTheme;
+        }
+
+        public final setTheme(eTheme) {
+            assert(lxe.isMember(eTheme, Dox.THEME), "Expected Dox.THEME member.");
+            this.theme = eTheme;
+        }
+
+        -- Finalized trees contain derived callbacks; rebuild on refresh/export.
+        private prepareSnapshot(tState) {
+            tState.pri.finalized = {};
+        }
+    }
+}

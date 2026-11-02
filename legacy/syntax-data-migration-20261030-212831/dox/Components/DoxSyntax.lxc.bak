@@ -1,0 +1,107 @@
+--[[!
+@fqxn Dox.DoxSyntax
+@desc Defines source-language comment delimiters, documentation escaping and Prism highlighting names.
+!]]
+namespace Dox {
+    final class DoxSyntax {
+        private name = "";
+        private commentOpen = "";
+        private commentClose = "";
+        private escapeCharacter = "";
+        private prismName = "";
+
+        -- Construction and restoration enforce the same delimiter rules.
+        private static validateDefinition(sName, sCommentOpen, sCommentClose, sEscapeCharacter, sPrismName) {
+            type.assert.string(sName,               "%S+");
+            type.assert.string(sCommentOpen,        "%S+");
+            type.assert.string(sCommentClose);
+
+            -- A newline is a valid terminator for line-based source comments.
+            if (sCommentClose == "") then
+                error("DoxSyntax closing delimiter cannot be empty.", 2);
+            end
+            type.assert.string(sEscapeCharacter,    "%S+");
+            type.assert.string(sPrismName,          "%S+");
+        }
+
+        --[[!
+        @fqxn Dox.DoxSyntax.Methods.DoxSyntax
+        @pulsarlua function DoxSyntax
+        @desc Creates a source-language syntax definition.
+        !]]
+        public DoxSyntax(sName, sCommentOpen, sCommentClose, sEscapeCharacter, sPrismName) {
+            DoxSyntax.validateDefinition(sName, sCommentOpen, sCommentClose, sEscapeCharacter, sPrismName);
+            local pri           = this;
+            pri.name            = sName;
+
+            pri.commentOpen     = sCommentOpen;
+            pri.commentClose    = sCommentClose;
+            pri.escapeCharacter = sEscapeCharacter;
+            pri.prismName       = sPrismName;
+        }
+
+        --[[!
+        @fqxn Dox.DoxSyntax.Methods.getCommentClose
+        @pulsarlua function DoxSyntax.getCommentClose
+        @desc Returns the closing source-comment delimiter.
+        !]]
+        public getCommentClose() {
+            return this.commentClose;
+        }
+
+        --[[!
+        @fqxn Dox.DoxSyntax.Methods.getCommentOpen
+        @pulsarlua function DoxSyntax.getCommentOpen
+        @desc Returns the opening source-comment delimiter.
+        !]]
+        public getCommentOpen() {
+            return this.commentOpen;
+        }
+
+        --[[!
+        @fqxn Dox.DoxSyntax.Methods.getEscapeCharacter
+        @pulsarlua function DoxSyntax.getEscapeCharacter
+        @desc Returns the documentation escape character.
+        !]]
+        public getEscapeCharacter() {
+            return this.escapeCharacter;
+        }
+
+        --[[!
+        @fqxn Dox.DoxSyntax.Methods.getEscapeCharater
+        @pulsarlua function DoxSyntax.getEscapeCharater
+        @desc Retains the original spelling for compatibility; use getEscapeCharacter in new code.
+        !]]
+        public getEscapeCharater() {
+            return this.escapeCharacter;
+        }
+
+        --[[!
+        @fqxn Dox.DoxSyntax.Methods.getName
+        @pulsarlua function DoxSyntax.getName
+        @desc Returns the language display name.
+        !]]
+        public getName() {
+            return this.name;
+        }
+
+        --[[!
+        @fqxn Dox.DoxSyntax.Methods.getPrismName
+        @pulsarlua function DoxSyntax.getPrismName
+        @desc Returns the Prism syntax-highlighting language name.
+        !]]
+        public getPrismName() {
+            return this.prismName;
+        }
+
+        --[[!
+        @fqxn Dox.DoxSyntax.validateSnapshot
+        @desc Validates native restored/copied definition fields without changing delimiters.
+        !]]
+        private validateSnapshot(tState) {
+            local pri = tState.pri;
+            DoxSyntax.validateDefinition(pri.name, pri.commentOpen, pri.commentClose,
+                pri.escapeCharacter, pri.prismName);
+        }
+    }
+}

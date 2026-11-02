@@ -1,4 +1,4 @@
-local DoxBlockTag   = DoxBlockTag;
+local DoxBlockTag   = Dox.DoxBlockTag;
 
 
 --[[!

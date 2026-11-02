@@ -1,0 +1,105 @@
+--[[!
+@fqxn Dox.DoxMime
+@desc Normalized file-extension mapping with a replaceable documentation preprocessor.
+    LuaEx discovers this native component; Dox startup migration remains separate.
+!]]
+namespace Dox {
+    class DoxMime {
+        private static _tDefaultProcessors = setmetatable({}, {__mode = "k"});
+        private name = "";
+        -- Boxing retains application callbacks in native graph persistence.
+        private preProcessor = {};
+
+        --[[!
+        @fqxn Dox.DoxMime.Methods.DoxMime
+        @pulsarlua function DoxMime
+        @desc Creates a file-extension mapping and optional documentation preprocessor.
+        @param string sName File extension, optionally starting with a dot.
+        @param function|nil fPreProcessor Converts raw documentation text; nil preserves it.
+        !]]
+        public DoxMime(sName, fPreProcessor) {
+            type.assert.string(sName, "%S+");
+            local sExtension = sName:gsub("^%.", ""):lower();
+
+            -- Match file extensions without accepting empty names or embedded whitespace.
+            if (sExtension == "" or sExtension:find("%s") or sExtension:find("[/\\.]")) then
+                error("DoxMime requires a single non-blank file extension.", 2);
+            end
+
+            if (fPreProcessor ~= nil and type(fPreProcessor) ~= "function") then
+                error("DoxMime preprocessor must be a function or nil.", 2);
+            end
+
+            this.name = sExtension;
+            this.preProcessor[1] = fPreProcessor or DoxMime.newDefaultProcessor();
+        }
+
+        --[[!
+        @fqxn Dox.DoxMime.Methods.getName
+        @pulsarlua function DoxMime.getName
+        @desc Returns the normalized lowercase file extension.
+        @return string sName The extension without a leading dot.
+        !]]
+        public getName() {
+            return this.name;
+        }
+
+        --[[!
+        @fqxn Dox.DoxMime.Methods.getPreProcessor
+        @pulsarlua function DoxMime.getPreProcessor
+        @desc Returns the documentation preprocessor.
+        @return function fPreProcessor The preprocessing function.
+        !]]
+        public getPreProcessor() {
+            return this.preProcessor[1];
+        }
+
+        --[[!
+        @fqxn Dox.DoxMime.Methods.setPreProcessor
+        @pulsarlua function DoxMime.setPreProcessor
+        @desc Replaces the documentation preprocessor.
+        @param function fPreProcessor The new preprocessing function.
+        !]]
+        public setPreProcessor(fPreProcessor) {
+            type.assert["function"](fPreProcessor);
+            this.preProcessor[1] = fPreProcessor;
+        }
+
+        -- Keep a distinct identity function for each defaulted instance, as before.
+        private static newDefaultProcessor() {
+            local fDefault = function(sInput) return sInput; end;
+            DoxMime._tDefaultProcessors[fDefault] = true;
+            return fDefault;
+        }
+
+        --[[!
+        @fqxn Dox.DoxMime.prepareSnapshot
+        @desc Replaces known internal identity callbacks with an empty default marker.
+            Custom application callbacks use native graph persistence.
+        !]]
+        private prepareSnapshot(tState) {
+            if (DoxMime._tDefaultProcessors[this.preProcessor[1]]) then
+                tState.pri.preProcessor = {};
+            end
+        }
+
+        --[[!
+        @fqxn Dox.DoxMime.validateSnapshot
+        @desc Validates normalized names and callback storage during native restore/copy.
+        !]]
+        private validateSnapshot(tState) {
+            local pri = tState.pri;
+            type.assert.string(pri.name, "%S+");
+            assert(pri.name == pri.name:lower() and not pri.name:find("[%s/\\.]"),
+                "Invalid saved DoxMime extension.");
+            assert(rawtype(pri.preProcessor) == "table", "Invalid saved DoxMime preprocessor.");
+            for key, value in pairs(pri.preProcessor) do
+                assert(key == 1, "Invalid saved DoxMime preprocessor storage.");
+                assert(rawtype(value) == "function", "Invalid saved DoxMime preprocessor.");
+            end
+            if (pri.preProcessor[1] == nil) then
+                pri.preProcessor = {DoxMime.newDefaultProcessor()};
+            end
+        }
+    }
+}

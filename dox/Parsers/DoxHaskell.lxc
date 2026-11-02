@@ -1,0 +1,19 @@
+--[[!
+@fqxn Dox.DoxHaskell
+@desc Language-specific documentation parser retaining its syntax, MIME types and delimiters.
+!]]
+namespace Dox {
+    final class DoxHaskell : Dox.Parser requires(Dox.DoxMime, Dox.SYNTAX) {
+        private static createMimeTypes(sTitle) {
+            type.assert.string(sTitle, "%S+", "Dox Parser title name must not be blank.");
+            return {
+                Dox.DoxMime("hs"),
+            };
+        }
+
+        public DoxHaskell(sTitle) {
+            base("DoxHaskell", sTitle, "!", "!", "@", Dox.SYNTAX.HASKELL,
+                DoxHaskell.createMimeTypes(sTitle));
+        }
+    }
+}

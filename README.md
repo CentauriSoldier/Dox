@@ -10,6 +10,30 @@ Keep explanations, parameters, return values and examples next to the code they
 describe. The same comments can give someone a page to read and useful
 information while they write code.
 
+## Native classes
+
+All components, builders and 31 language parsers use LuaEx's LXC/LXE systems.
+Put the Dox repository root on `package.path` before initializing LuaEx so it
+can discover the native declarations. Then require `dox.init` once. The entry
+point retains the LuaEx initialization prerequisite; it does not load classes,
+validate classes/enums, publish aliases or alter the search path.
+
+Use fully qualified names such as `Dox.DoxLua`, `Dox.DoxMime` and `Dox.Parser`.
+Language parsers derive from `Dox.Parser`; `Dox` is the namespace. Old global
+aliases such as `DoxLua` and `DoxAssemblyNASM` are no longer supplied. The NASM
+class is `Dox.DoxAssemblyNasm`, matching its original class-name spelling.
+
+`Dox.BUILDER` values identify builder classes. Use
+`Dox.Parser.resolveBuilder(Dox.BUILDER.HTML)` to obtain the shared builder object.
+`Dox.SYNTAX` values contain immutable syntax data; use
+`Dox.DoxSyntax.fromEnum(Dox.SYNTAX.LUA)` to resolve the cached syntax object.
+Native enum payloads use `.Value`. Page/Prism theme names and values are
+preserved, and `Dox.OUTPUT.HTML.Value` remains 1.
+
+Legacy Lua class sources and the old syntax enum are preserved under `legacy`;
+their active copies have been retired. See [HANDOFF.md](HANDOFF.md) for migration
+and verification details.
+
 ## One source, two destinations
 
 **HTML documentation** brings documented names, descriptions and examples
@@ -68,7 +92,7 @@ local initLuaEx = require("LuaEx.load");
 initLuaEx();
 require("dox.init");
 
-local document = DoxLua("MyLibrary");
+local document = Dox.DoxLua("MyLibrary");
 document.setOutputPath("docs");
 document.importFiles({"MyLibrary.lua"});
 document.refresh();
@@ -102,12 +126,12 @@ documentation sections in the order that suits your project. Parsers, block
 tags and builders are separate components, with the implementation and API
 documentation available here:
 
-- [Dox API and output settings](dox/Dox.lua)
+- [Dox API and output settings](dox/Parser.lxc)
 - [Built-in documentation tags](dox/Statics/BuiltInBlockTags.lua)
 - [Language parsers](dox/Parsers/)
-- [HTML builder](dox/Builders/HTML/DoxBuilderHTML.lua) and
+- [HTML builder](dox/Builders/HTML/DoxBuilderHTML.lxc) and
   [page themes](dox/Builders/HTML/Themes.lua)
-- [Pulsar Lua builder](dox/Builders/Pulsar/Lua/DoxBuilderPulsarLua.lua)
+- [Pulsar Lua builder](dox/Builders/Pulsar/Lua/DoxBuilderPulsarLua.lxc)
 
 ---
 

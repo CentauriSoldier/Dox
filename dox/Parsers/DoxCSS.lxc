@@ -1,0 +1,19 @@
+--[[!
+@fqxn Dox.DoxCSS
+@desc Language-specific documentation parser retaining its syntax, MIME types and delimiters.
+!]]
+namespace Dox {
+    final class DoxCSS : Dox.Parser requires(Dox.DoxMime, Dox.SYNTAX) {
+        private static createMimeTypes(sTitle) {
+            type.assert.string(sTitle, "%S+", "Dox Parser title name must not be blank.");
+            return {
+                Dox.DoxMime("css"),
+            };
+        }
+
+        public DoxCSS(sTitle) {
+            base("DoxCSS", sTitle, "!", "!", "@", Dox.SYNTAX.CSS,
+                DoxCSS.createMimeTypes(sTitle));
+        }
+    }
+}
