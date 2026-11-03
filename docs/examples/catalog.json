@@ -1,0 +1,12 @@
+[
+  {
+    "id": "utilities/DoxExample.lua",
+    "title": "Dox documentation",
+    "group": "Utilities",
+    "path": "examples/utilities/DoxExample.lua",
+    "kind": "console",
+    "description": "Generate HTML from current LuaEx source using Dox.DoxLua, then verify the exported artifact.",
+    "codePath": "examples/code/utilities/DoxExample.lua",
+    "inputs": []
+  }
+]

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dox · Examples</title>
+  <link rel="stylesheet" href="examples/api/workbench/styles.css">
+  <link rel="stylesheet" href="examples/api/workbench/outputs.css">
+  <link rel="stylesheet" href="examples/api/workbench/inputs.css">
+  <script defer src="examples/api/workbench/bundle.js"></script>
+  <script defer src="examples/api/workbench/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="Examples.html"><span class="brand-mark">Dox</span>Dox<span class="brand-divider">/</span><span class="brand-section">Examples</span></a>
+    <div class="top-actions"><span id="runtime-status" class="status"><i></i>Loading Dox…</span></div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-heading">EXAMPLE LIBRARY<span id="example-count">—</span></div>
+      <label class="search"><span aria-hidden="true">⌕</span><input id="search" placeholder="Find an example…" aria-label="Filter examples"></label>
+      <nav id="example-list" aria-label="Examples"><p class="sidebar-empty">Loading examples…</p></nav>
+      <div class="sidebar-footer"><span class="mini-mark">{ }</span><div><strong>Real Lua. In your browser.</strong><small>Lua 5.4 · WebAssembly</small></div></div>
+    </aside>
+    <main>
+      <section id="welcome" class="welcome">
+        <span class="eyebrow">THE DOX WORKBENCH</span>
+        <h1>A place to try things.</h1>
+        <p>Explore the examples, change the code, and see what happens. Dox runs locally in your browser.</p>
+        <p class="welcome-note" id="welcome-note">Loading the included Dox examples…</p>
+      </section>
+      <section id="workbench" hidden>
+        <div class="example-heading"><div><span class="eyebrow" id="example-group">VISUAL EXAMPLES</span><h1 id="example-title">Examples</h1><p id="example-description"></p></div><span id="example-kind" class="kind-label">INTERACTIVE</span></div>
+        <div id="example-note" class="notice" hidden></div>
+        <form id="example-inputs" class="example-inputs" hidden>
+          <div class="input-heading"><strong>Try your own values</strong><span>Change parameters, then Run example.</span><button id="reset-inputs" type="button" class="text-button">Reset values</button></div>
+          <div id="input-fields" class="input-fields"></div>
+        </form>
+        <div class="workspace-toolbar"><div class="tabs" role="tablist" aria-label="Example workspace"><button id="visual-tab" role="tab" aria-selected="true">Visual</button><button id="code-tab" role="tab" aria-selected="false">Code</button></div><div class="run-actions"><span id="run-status" aria-live="polite">Ready to run</span><button id="stop" class="button subtle" disabled>Stop</button><button id="run" class="button primary">▶ Run code</button></div></div>
+        <section id="visual-empty" class="notice" hidden>This module has no visual demonstration yet. Its Code tab contains an editable, runnable tutorial.</section>
+        <section id="visual-panel" hidden></section>
+        <section id="code-panel" class="code-panel" hidden>
+          <div class="editor-pane"><div class="pane-heading"><span>LUA SOURCE</span><div><button id="restore-source" class="text-button">Restore source</button></div></div><div class="file-path" id="source-path"></div><textarea id="editor" spellcheck="false" aria-label="Lua example source code"></textarea><div class="editor-footer">Edit and run directly in this page.<span>Ctrl + Enter to run</span></div></div>
+          <div class="output-pane"><div class="pane-heading"><span>OUTPUT</span><button id="clear-output" class="text-button">Clear</button></div><pre id="output" tabindex="0" aria-label="Lua output"></pre><div id="generated-files" class="generated-files" hidden aria-label="Generated files"></div><div class="output-footer" id="output-footer">Each run starts with a fresh Lua environment.</div></div>
+        </section>
+      </section>
+      <footer class="page-footer"><span>Dox · Examples</span><a href="examples/api/README.md">Local runtimes & licenses ↗</a></footer>
+    </main>
+  </div>
+  <noscript>This workbench needs JavaScript enabled to run Lua in WebAssembly.</noscript>
+</body>
+</html>
