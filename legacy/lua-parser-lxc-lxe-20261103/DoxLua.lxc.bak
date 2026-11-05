@@ -1,0 +1,20 @@
+--[[!
+@fqxn Dox.DoxLua
+@desc Lua documentation parser retaining bracket preprocessing and the PulsarLua utility tag.
+!]]
+namespace Dox {
+    final class DoxLua : Dox.Parser requires(Dox.DoxMime, Dox.DoxBlockTag, Dox.SYNTAX) {
+        private static createMimeTypes(sTitle) {
+            type.assert.string(sTitle, "%S+", "Dox Parser title name must not be blank.");
+            return {
+                Dox.DoxMime("lua", require("dox.Parsers.LuaPreprocessor")()),
+            };
+        }
+
+        public DoxLua(sTitle) {
+            base("DoxLua", sTitle, "!", "!", "@", Dox.SYNTAX.LUA,
+                DoxLua.createMimeTypes(sTitle),
+                Dox.DoxBlockTag({"pulsarlua", "pullua"}, "PulsarLua", false, false, false, true));
+        }
+    }
+}

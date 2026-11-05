@@ -2,7 +2,7 @@
 local pTests=assert(debug.getinfo(1,"S").source:match("^@(.+)[/\\][^/\\]+$"));
 local pDox=pTests.."/..";
 package.path=pDox.."/?.lua;"..pDox.."/../LuaEx/?.lua;"..package.path;
-require("LuaEx.load")(2);
+require("LuaEx.init");
 local checks=0;
 local function check(value,message)assert(value,message);checks=checks+1;end
 local function reject(action)local ok,err=pcall(action);check(not ok,tostring(err));end
@@ -28,8 +28,14 @@ LXC.loadSources({["LuaParserReference.lxc"]=[=[namespace LuaParserTest {
 local function reference(title)local args=archivedArguments(title);return LuaParserTest.Reference(table.unpack(args,1,args.n));end
 local function mime(o)
     local found,count;count=0;
-    for name,value in o.getMimeTypes()()do check(name=="lua","Lua MIME key");found=value;count=count+1;end
-    check(count==1,"single Lua MIME");return found;
+    local native=class.isinstanceof(o,Parser);
+    for name,value in o.getMimeTypes()()do
+        check(name=="lua" or (native and (name=="lxc" or name=="lxe")),"Lua-family MIME key");
+        check(value.getName()==name,"MIME name matches key");
+        if name=="lua"then found=value;end
+        count=count+1;
+    end
+    check(count==(native and 3 or 1) and found~=nil,"expected Lua-family MIME set");return found;
 end
 local native=Parser("Lua test");local old=reference("Lua test");
 check(class.is(Parser) and class.getname(Parser)=="Dox.DoxLua","native class identity");
@@ -124,15 +130,18 @@ local ok,err=pcall(function()
     mime(changed).setPreProcessor(function(text)return text..suffix;end);
     local restored=deserialize(serialize(changed));
     check(mime(restored).getPreProcessor()("text")=="text custom","custom callback capture survives");
-    local open=io.open;local closed=false;
-    io.open=function(path,mode)
-        if path=="input.LUA"then check(mode=="r","Lua file read mode");return {read=function()return source;end,close=function()closed=true;end};end
-        return open(path,mode);
-    end;
-    local fileParser=Parser("Lua test");
-    local imported,importError=pcall(fileParser.importFile,"input.LUA");io.open=open;assert(imported,importError);
-    check(closed,"Lua file closed");
-    local stringParser=Parser("Lua test");stringParser.importString(source,mime(stringParser));
-    sameExport(fileParser,stringParser,"Lua file/string import");
+    for _,extension in ipairs({"LUA","LXC","LXE"})do
+        local open=io.open;local closed=false;
+        local path="input."..extension;
+        io.open=function(input,mode)
+            if input==path then check(mode=="r","Lua-family file read mode");return {read=function()return source;end,close=function()closed=true;end};end
+            return open(input,mode);
+        end;
+        local fileParser=Parser("Lua test");
+        local imported,importError=pcall(fileParser.importFile,path);io.open=open;assert(imported,importError);
+        check(closed,extension.." file closed");
+        local stringParser=Parser("Lua test");stringParser.importString(source,mime(stringParser));
+        sameExport(fileParser,stringParser,extension.." file/string import");
+    end
 end);string.uuid=uuid;assert(ok,err);
 print("PASS DoxLua parser: "..checks.." checks.");

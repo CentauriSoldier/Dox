@@ -33,9 +33,14 @@ return [[
 
     /* Page shell and compact project identity. */
     * { box-sizing: border-box; }
-    html { font-size: var(--base-font-size); }
+    html { font-size: var(--base-font-size); height: 100%; }
     body {
         margin: 0;
+        height: 100vh;
+        height: 100dvh;
+        display: grid;
+        grid-template-rows: auto auto minmax(0, 1fr);
+        overflow: hidden;
         background: var(--page);
         color: var(--text);
         font-family: "Segoe UI", system-ui, sans-serif;
@@ -60,17 +65,20 @@ return [[
     .breadcrumb-item + .breadcrumb-item::before { content: "/"; color: var(--muted); padding-right: 8px; float: none; }
     .breadcrumb-item.active { color: var(--text); font-weight: 700; }
     .breadcrumb a { text-decoration: none; }
-    .dox-workspace { display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: calc(100vh - 185px); }
-    #DOX_navmenu_wrapper { background: var(--surface); padding: 26px 18px; border-right: 1px solid var(--border); }
-    #DOX_navheading { font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); padding: 0 12px; margin: 0 0 14px; overflow-wrap: anywhere; }
-    #DOX_navmenu { margin: 0; padding: 0; list-style: none; gap: 5px; }
+    .dox-workspace { display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: 0; overflow: hidden; }
+    #DOX_navmenu_wrapper { background: var(--surface); padding: 26px 18px; border-right: 1px solid var(--border); display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+    #DOX_navheading { flex-shrink: 0; font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); padding: 0 12px; margin: 0 0 14px; overflow-wrap: anywhere; }
+    #DOX_navmenu { margin: 0; padding: 0; list-style: none; gap: 5px; flex: 1; flex-wrap: nowrap; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+    #DOX_navmenu > li { flex-shrink: 0; }
+    /* Keep parent navigation visible while only the topic list scrolls. */
+    #DOX_navmenu > li:has(.dox-up) { position: sticky; top: 0; z-index: 1; background: var(--surface); flex-shrink: 0; }
     #DOX_navmenu .nav-link { display: block; color: var(--navlink); padding: 11px 14px; border: 1px solid transparent; border-radius: 8px; text-decoration: none; overflow-wrap: anywhere; }
     #DOX_navmenu .nav-link:hover { background: var(--surface-raised); color: var(--navlinkhover); border-color: var(--border); }
     #DOX_navmenu .nav-link.active { background: var(--accent-soft); border-color: var(--selected-border); color: var(--selected-text); font-weight: 700; box-shadow: inset 3px 0 var(--accent); }
     #DOX_navmenu .dox-up { color: var(--muted); font-size: .85rem; margin-bottom: 10px; }
 
     /* Content cards separate documentation sections while keeping examples readable. */
-    #DOX_content_wrapper { padding: 28px 36px 60px; min-width: 0; }
+    #DOX_content_wrapper { padding: 28px 36px 60px; min-width: 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
     .dox-topic-header { margin: 0 auto 24px; max-width: 1050px; }
     #DOX_location { color: var(--muted); font-size: .8rem; margin: 0 0 4px; overflow-wrap: anywhere; }
     #DOX_topic { font-size: 1.75rem; letter-spacing: -.025em; margin: 0; overflow-wrap: anywhere; }
@@ -93,9 +101,10 @@ return [[
     /* Narrow screens retain both navigation and content without horizontal page overflow. */
     @media (max-width: 760px) {
         #titlebg, #DOX_breadcrumb-wrapper { padding-left: 20px; padding-right: 20px; }
-        .dox-workspace { grid-template-columns: 1fr; }
+        .dox-workspace { grid-template-columns: 1fr; grid-template-rows: minmax(0, 35%) minmax(0, 1fr); }
         #DOX_navmenu_wrapper { border-right: 0; border-bottom: 1px solid var(--border); padding: 18px; }
-        #DOX_navmenu { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+        #DOX_navmenu { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); align-content: start; }
+        #DOX_navmenu > li:has(.dox-up) { grid-column: 1 / -1; }
         #DOX_content_wrapper { padding: 24px 18px 40px; }
         .section-content { padding: 16px; }
     }

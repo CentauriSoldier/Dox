@@ -1,6 +1,6 @@
 --[[!
 @fqxn Dox.DoxLua
-@desc Lua documentation parser retaining bracket preprocessing and the PulsarLua utility tag.
+@desc Lua, LXC and LXE documentation parser retaining bracket preprocessing and the PulsarLua utility tag.
 !]]
 namespace Dox {
     final class DoxLua : Dox.Parser requires(Dox.DoxMime, Dox.DoxBlockTag, Dox.SYNTAX) {
@@ -8,6 +8,8 @@ namespace Dox {
             type.assert.string(sTitle, "%S+", "Dox Parser title name must not be blank.");
             return {
                 Dox.DoxMime("lua", require("dox.Parsers.LuaPreprocessor")()),
+                Dox.DoxMime("lxc", require("dox.Parsers.LuaPreprocessor")()),
+                Dox.DoxMime("lxe", require("dox.Parsers.LuaPreprocessor")()),
             };
         }
 
